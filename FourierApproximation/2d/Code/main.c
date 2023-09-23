@@ -1,166 +1,109 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Solution.c"
+#include "Solution.h"
 
-double u(double x)
+double u(double x, double y)
 {
-    return x * (1 - x) * cos(x * x);
+    return x * (1 - x) * y * (1 - y);
 }
-
-void PrintTable(double *knots, int N, double *coefs, double (*u)(double))
-{
-    printf("   Knotes               Fourier              f\n");
-    for (int i = 1; i < N - 1; ++i)
-    {
-        double xi = knots[i];
-        printf("%20.15lf %20.15lf %20.15lf \n", xi, FourierCompute(coefs, N, xi), u(xi));
-        double xi1 = 2 * xi / 3 + knots[i + 1] / 3;
-        printf("%20.15lf %20.15lf %20.15lf \n", xi1, FourierCompute(coefs, N, xi1), u(xi1));
-        double xi2 = xi / 3 + 2 * knots[i + 1] / 3;
-        printf("%20.15lf %20.15lf %20.15lf \n", xi2, FourierCompute(coefs, N, xi2), u(xi2));
+ 
+void PrintMatrix(double * Matrix, int N) {
+    for(int k = 0; k < N*N; k++) {
+        if (k % N == 0) { printf("\n"); }
+        printf("%10.5lf ", (Matrix + k)[0]);
     }
-    double xi = knots[N - 1];
-    printf("%20.15lf %20.15lf %20.15lf \n", xi, FourierCompute(coefs, N, xi), u(xi));
-}
-
-void WriteResult(double *knots, int N, double *coefs, double (*f)(double), FILE *out)
-{
-    for (int i = 1; i < N - 1; ++i)
-    {
-        double xi = knots[i];
-        fprintf(out, "%20.15lf %20.15lf %20.15lf \n", xi, FourierCompute(coefs, N, xi), f(xi));
-        double xi1 = 2 * xi / 3 + knots[i + 1] / 3;
-        fprintf(out, "%20.15lf %20.15lf %20.15lf \n", xi1, FourierCompute(coefs, N, xi1), f(xi1));
-        double xi2 = xi / 3 + 2 * knots[i + 1] / 3;
-        fprintf(out, "%20.15lf %20.15lf %20.15lf \n", xi2, FourierCompute(coefs, N, xi2), f(xi2));
-    }
-    double xi = knots[N - 1];
-    fprintf(out, "%20.15lf %20.15lf %20.15lf \n", xi, FourierCompute(coefs, N, xi), f(xi));
-}
-
-void WriteSkrypt(int N, char *testfilename, FILE *out)
-{
-
-    fprintf(out, "#! /usr/bin/gnuplot -persist\n");
-    fprintf(out, "set terminal png size 1000,1000 enhanced font \"Helvetica Bold, 20\"\n");
-    fprintf(out, "set output \"%s.png\"\n\n", testfilename);
-
-    fprintf(out, "set style line 1 lt 1 linecolor rgb \"red\" lw 1 pt 1\n");
-    fprintf(out, "set style line 2 lt 1 linecolor rgb \"blue\" lw 1 pt 1\n");
-
-    //    fprintf(out, "set yrange [0:5]");
-    fprintf(out, "set xrange [0:1]\n");
-
-    fprintf(out, "set title \"%s - %d knots \"\n", testfilename, N);
-
-    fprintf(out, "set grid\n\n");
-
-    fprintf(out, "plot  \"%s\" using 1:2 ls 1 title \"Interpolation Fourier Row\" with lines, ", testfilename);
-    fprintf(out, "\"%s\" using 1:3 ls 2 title \"Original function\", ", testfilename);
+    printf("\n");
 }
 
 int main(int argc, char *argv[])
 {
-    int N; // число узлов
-    FILE *fp;
-    FILE *sk;
+    int N = 6;
+    double x = 0;
+    double y = 0;
 
-    double *netmemory;
-    double *umemory;
-    double *phimemory;
-    double *cNks;
+    double * Umatrix;
+    double * Dmatrix;
+    double * Cmatrix;
 
-    int flag = 0;
+    double * netmemory;
+    double * fmemory;
+    double * net;
+    double * umemory;
+    double * phimemory;
 
     if (argc < 3)
     {
         printf("Wrong number of parameters, must be 2 in format:\n");
-        printf("N name \n");
-        printf("where: \n N - number of knots \n name - name of the file with answer \n");
+        printf("x y \n");
         return -1;
     }
 
-    N = atoi(argv[1]); // число узлов
+    x = atof(argv[1]); // левая
+    y = atof(argv[2]);
 
-    if (N <= 2)
-    {
-        printf("Wrong N: it must be >= 2\n");
-        return -1;
+    Umatrix = (double *)malloc((N) * (N) * sizeof(double));
+    Dmatrix = (double *)malloc((N) * (N) * sizeof(double));
+    Cmatrix = (double *)malloc((N) * (N) * sizeof(double));
+
+    netmemory = (double *)malloc((N + 5) * sizeof(double));
+    fmemory = (double *)malloc((N + 5) * sizeof(double));
+    net = (double *)malloc((N + 5) * sizeof(double));
+    umemory = (double *)malloc((N + 5) * sizeof(double));
+    phimemory = (double *)malloc((N + 5) * sizeof(double));
+
+    GenerateNet(net, N - 1);
+    printf("\n Umatrix: \n");
+    FullUMatrix(Umatrix, N, net, u);
+    PrintMatrix(Umatrix, N);
+
+    printf("\n Dmatrix: \n");
+    FullDMatrix(Dmatrix, Umatrix, N, umemory, phimemory);
+    PrintMatrix(Dmatrix, N);
+
+    printf("\n Cmatrix: \n");
+    FullCMatrix(Dmatrix, Cmatrix, N, fmemory, umemory, phimemory);
+    PrintMatrix(Cmatrix, N);
+
+//    printf("\n Cmatrix: \n");
+//    PrintMatrix(Cmatrix, N);
+
+    printf("net:\n");
+
+    for(int h = 0; h < N; ++h) {
+        printf("%lf ", net[h]);
     }
+    printf("\n"); 
+    for(int h = 1; h < N; h++) {
+        printf("%lf ", FourierCompute(Cmatrix + 2*N, N, net[h]));
+    }
+    printf("\n"); 
+
     
-    printf("N = %d \n", N);
-
-    netmemory = (double *)malloc((N + 1) * sizeof(double));
-    umemory = (double *)malloc((N + 1) * sizeof(double));
-    phimemory = (double *)malloc((N + 1) * sizeof(double));
-    cNks = (double *)malloc((N + 1) * sizeof(double));
-
-    printf("memory allocated \n");
-
-    if(WriteCNkTo(N, cNks, u, netmemory, umemory, phimemory) == NET_GENERATION_ERROR) 
-    {
-        printf("cNks not calculated - net generation error \n\n\n");
-        return -1;
+/*    for(int h = 1; h < N; h++) {
+        printf("%lf ", FourierCompute(Dmatrix + 2*N, N, net[h]));
     }
+    printf("\n"); */
 
- /*   printf(" \n N etmemory: \n"); for(int k = 0; k < N + 1; k ++)  printf("%20.15lf ", netmemory[k]); printf("\n umemory: \n");
+/*
+    printf("\n Umatrix: \n");
+    PrintMatrix(Umatrix, N);
+    printf("\n Dmatrix: \n");
+    PrintMatrix(Dmatrix, N);
+    printf("\n Cmatrix: \n");
+    PrintMatrix(Cmatrix, N);
+*/
+    printf("Answer: %10.10lf \n\n", Calc2DFourier(Cmatrix, N, x, y));
 
-    for(int k = 0; k < N + 1; k ++) 
-    {
-        printf("%20.15lf ", umemory[k]);
-    }
-
-            printf("\n cNks: \n");
-//    GenerateNet(netmemory, N);
-    for(int k = 0; k < N + 1; k ++) 
-    {
-        printf("%20.15lf ", cNks[k]);
-    } */
-
-    printf("cNks calculated \n");
-
-    if (argv[2][0] == 'n' && argv[2][1] == 'o')
-    {
-        flag = 1;
-    }
-
-    printf("trying to open file %s \n", argv[2]);
-
-    if (flag == 0 && (fp = fopen(argv[2], "w")) == NULL) // имя файла, в который нужно записать ответ
-    {
-        printf("Не удалось открыть файл");
-        return 0;
-    }
-
-
-
-    printf("file opened \n");
-
-    if (flag)
-        PrintTable(netmemory, N, cNks, u);
-    else
-    {
-        WriteResult(netmemory, N, cNks, u, fp);
-        if ((sk = fopen("printAll.gpi", "w+")) == NULL)
-        {
-            printf("Не удалось открыть файл");
-            
-            fclose(fp);
-            return 0;
-        }
-        WriteSkrypt(N, argv[2], sk);
-        fclose(fp);
-        fclose(sk);
-    }
-
-    printf("result written \n");
-
+    free(Umatrix);
+    free(Dmatrix);
+    free(Cmatrix);
 
     free(netmemory);
+    free(fmemory);
+    free(net);
     free(umemory);
     free(phimemory);
-    free(cNks);
 
     return 0;
 }

@@ -1,5 +1,5 @@
 all: 
-	gcc main.c -lm
+	gcc main.c Solution.c -lm
 
 nm:
 	gcc pcalculation.c -lm

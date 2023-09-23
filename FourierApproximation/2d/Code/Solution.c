@@ -101,8 +101,8 @@ void FullDMatrix(double *Dmatrix, double *Umatrix, int N, double *umemory, doubl
 //    printf("\n");
     for (int j = 0; j < N; j += 1)
     {
-        (Dmatrix + j * N)[0] = 0;
-        (Dmatrix + j * N)[N-1] = 0;
+        Dmatrix[j * N] = 0;
+        Dmatrix[j * N + N-1] = 0;
         WriteCNkTo(N - 1, Dmatrix + j * N, Umatrix + j * N, umemory, phimemory);
     }
 }
@@ -111,8 +111,8 @@ void FullCMatrix(double *Dmatrix, double *Cmatrix, int N, double *fmemory, doubl
 {
     for (int i = 0; i < N; i += 1)
     {
-        (Cmatrix + i * N)[0] = 0;
-        (Cmatrix + i * N)[N-1] = 0;
+        Cmatrix[i * N] = 0;
+        Cmatrix[i * N + N-1] = 0;
         for(int h = 0; h < N; ++h) {
             fmemory[h] = Dmatrix[h * N + i];
         }
@@ -133,9 +133,9 @@ void FindFourierCoefs(double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
 double Calc2DFourier(double *Cmatrix, int N, double x, double y)
 {
     double ans = 0;
-    for (int m = 1; m < N; ++m)
+    for (int m = 1; m < N + 1; ++m)
     {
-        for (int n = 1; n < N; ++n)
+        for (int n = 1; n < N + 1; ++n)
         {
             ans += Cmatrix[e(m, n, N)] * sin(M_PI * m * x) * sin(M_PI * n * y);
         }

@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <math.h>
+
 #include "Solution.h"
 
 double u(double x, double y)
 {
-    return x * (1 - x) * y * (1 - y);
+    return sin(x * 3 * 3.1415926535) * sin(y* 2 * 3.1415926535);
 }
  
 void PrintMatrix(double * Matrix, int N) {
     for(int k = 0; k < N*N; k++) {
         if (k % N == 0) { printf("\n"); }
-        printf("%10.5lf ", (Matrix + k)[0]);
+        printf("%20.15lf ", (Matrix + k)[0]);
     }
     printf("\n");
 }
@@ -55,7 +57,7 @@ int main(int argc, char *argv[])
     GenerateNet(net, N - 1);
     printf("\n Umatrix: \n");
     FullUMatrix(Umatrix, N, net, u);
-    PrintMatrix(Umatrix, N);
+    //PrintMatrix(Umatrix, N);
 
     printf("\n Dmatrix: \n");
     FullDMatrix(Dmatrix, Umatrix, N, umemory, phimemory);
@@ -63,10 +65,10 @@ int main(int argc, char *argv[])
 
     printf("\n Cmatrix: \n");
     FullCMatrix(Dmatrix, Cmatrix, N, fmemory, umemory, phimemory);
-    PrintMatrix(Cmatrix, N);
+    //PrintMatrix(Cmatrix, N);
 
 //    printf("\n Cmatrix: \n");
-//    PrintMatrix(Cmatrix, N);
+    PrintMatrix(Cmatrix, N);
 
     printf("net:\n");
 

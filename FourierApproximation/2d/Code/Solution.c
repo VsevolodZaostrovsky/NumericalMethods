@@ -137,7 +137,7 @@ double Calc2DFourier(double *Cmatrix, int N, double x, double y)
     {
         for (int n = 1; n < N + 1; ++n)
         {
-            ans += Cmatrix[e(m, n, N)] * sin(M_PI * m * x) * sin(M_PI * n * y);
+            ans += Cmatrix[e(m, n, N)] * sin(M_PI * (m - 1) * x) * sin(M_PI * (n - 1) * y);
         }
     }
     return ans;

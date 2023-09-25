@@ -142,3 +142,12 @@ double Calc2DFourier(double *Cmatrix, int N, double x, double y)
     }
     return ans;
 }
+
+double FullFurierCompute(double x, double y,
+        double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
+            double *fmemory, double *net, double (*u)(double, double),
+                double *netmemory, double *umemory, double *phimemory) 
+                {
+                    FindFourierCoefs(Umatrix, Dmatrix, Cmatrix, N, fmemory, net, u, netmemory, umemory, phimemory);
+                    return Calc2DFourier(Cmatrix, N, x, y);
+                }

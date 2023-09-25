@@ -3,21 +3,24 @@
 
 #include "Solution.c"
 
-double u(double x)
+double u(double x, double y)
 {
-    return x * (1 - x) * cos(x * x);
+    return x * (1 - x) * y * (1 - y);
 }
 
 double mod(double x) { return x * (x > 0) - x * (x < 0); }
 
-double UniNorm01(double (*f)(double), double (*u)(double), int N)
+double UniNorm01(double (*f)(double, double), double (*u)(double, double), int N)
 {
     double h = 1 / (double)(N);
     double max = 0;
     for (double x = 0; x < 1; x += h)
     {
-        if (mod(f(x) - u(x)) > max)
-            max = mod(f(x) - u(x));
+        for (double y = 0; y < 1; y += h)
+        {
+            if (mod(f(x, y) - u(x, y)) > max)
+                max = mod(f(x, y) - u(x, y));
+        }
     }
     return max;
 }
@@ -27,7 +30,7 @@ void WriteSkrypt(int N, char *testfilename, FILE *out)
 
     fprintf(out, "#! /usr/bin/gnuplot -persist\n");
     fprintf(out, "set terminal png size 1000,1000 enhanced font \"Helvetica Bold, 20\"\n");
-    fprintf(out, "set output \"%s.png\"\n\n", testfilename);
+    fprintf(out, "set output \"Images/%s.png\"\n\n", testfilename);
 
     fprintf(out, "set style line 1 lt 1 linecolor rgb \"red\" lw 1 pt 1\n");
 
@@ -51,12 +54,18 @@ int main(int argc, char *argv[])
     int N; // число узлов
     FILE *fp;
     FILE *sk;
-    int NumKnots = 4;
+    int NumKnots = 2;
+    double FFC;
+
+    double *Umatrix;
+    double *Dmatrix;
+    double *Cmatrix;
 
     double *netmemory;
+    double *fmemory;
+    double *net;
     double *umemory;
     double *phimemory;
-    double *cNks;
 
     double *lognorms;
     double *loghs;
@@ -83,33 +92,47 @@ int main(int argc, char *argv[])
 
     printf("N = %d \n", N);
 
-    netmemory = (double *)malloc(5 * (N + 1) * sizeof(double));
-    umemory = (double *)malloc(5 * (N + 1) * sizeof(double));
-    phimemory = (double *)malloc(5 * (N + 1) * sizeof(double));
-    cNks = (double *)malloc(5 * (N + 1) * sizeof(double));
+    Umatrix = (double *)malloc((N) * (N) * (NumKnots + 2) * sizeof(double));
+    Dmatrix = (double *)malloc((N) * (N) * (NumKnots + 2) * sizeof(double));
+    Cmatrix = (double *)malloc((N) * (N) * (NumKnots + 2) * sizeof(double));
+
+    netmemory = (double *)malloc((N + 5) * (NumKnots + 2) * sizeof(double));
+    fmemory = (double *)malloc((N + 5) * (NumKnots + 2) * sizeof(double));
+    net = (double *)malloc((N + 5) * (NumKnots + 2) * sizeof(double));
+    umemory = (double *)malloc((N + 5) * (NumKnots + 2) * sizeof(double));
+    phimemory = (double *)malloc((N + 5) * (NumKnots + 2) * sizeof(double));
 
     lognorms = (double *)malloc(NumKnots * sizeof(double));
     loghs = (double *)malloc(NumKnots * sizeof(double));
 
     printf("memory allocated \n");
 
-    for (int k = 1; k < NumKnots + 1; ++k)
+    hForNorm = 1 / ((double)(N * 5));
+    MaxForNorm = 1e-10;
+    for (double x = 0; x < 1; x += hForNorm)
     {
-        if (WriteCNkTo(N * k, cNks, u, netmemory, umemory, phimemory) == NET_GENERATION_ERROR)
+        for (double y = 0; y < 1; y += hForNorm)
         {
-            printf("cNks not calculated - net generation error \n\n\n");
-            return -1;
+            FFC = FullFurierCompute(x, y, Umatrix, Dmatrix, Cmatrix, N, fmemory, net, u, netmemory, umemory, phimemory);
+            if (mod(FFC - u(x, y)) > MaxForNorm)
+                MaxForNorm = mod(FFC - u(x, y));
         }
-        hForNorm = 1 / ((double)(N * k));
-        MaxForNorm = 1e-10;
-        for (double x = 0; x < 1; x += hForNorm)
-        {
-            if (mod(FourierCompute(cNks, N * k, x) - u(x)) > MaxForNorm)
-                MaxForNorm = mod(FourierCompute(cNks, N * k, x) - u(x));
-        }
-        lognorms[k - 1] = log(1 / MaxForNorm);
-        loghs[k - 1] = log(1 / hForNorm);
     }
+    lognorms[0] = log(1 / MaxForNorm);
+    loghs[0] = log(N);
+
+    MaxForNorm = 1e-10;
+    for (double x = 0; x < 1; x += hForNorm)
+    {
+        for (double y = 0; y < 1; y += hForNorm)
+        {
+            FFC = FullFurierCompute(x, y, Umatrix, Dmatrix, Cmatrix, N * 2, fmemory, net, u, netmemory, umemory, phimemory);
+            if (mod(FFC - u(x, y)) > MaxForNorm)
+                MaxForNorm = mod(FFC - u(x, y));
+        }
+    }
+    lognorms[1] = log(1 / MaxForNorm);
+    loghs[1] = log(N * 2);
 
     if ((fp = fopen(argv[2], "w")) == NULL) // имя файла, в который нужно записать ответ
     {
@@ -131,16 +154,21 @@ int main(int argc, char *argv[])
 
     printf("result written \n");
 
-    if(mod(loghs[0] -loghs[1]) > 1e-12 && mod(loghs[2] -loghs[3]) > 1e-12)
+    if (mod(loghs[0] - loghs[1]) > 1e-12)
     {
-        p = 0.5 * ((lognorms[0] - lognorms[1]) / (loghs[0] -loghs[1]) + (lognorms[3] - lognorms[2]) / (loghs[3] -loghs[2]));
-    } 
+        p = (lognorms[1] - lognorms[0]) / (loghs[1] - loghs[0]);
+    }
     printf("The answer: p = %20.15lf \n", p);
 
+    free(Umatrix);
+    free(Dmatrix);
+    free(Cmatrix);
+
     free(netmemory);
+    free(fmemory);
+    free(net);
     free(umemory);
     free(phimemory);
-    free(cNks);
     free(lognorms);
     free(loghs);
 

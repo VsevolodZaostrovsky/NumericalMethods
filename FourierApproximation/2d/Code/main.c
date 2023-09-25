@@ -28,7 +28,7 @@ void WriteSkrypt(int N, char *testfilename, FILE *out)
 
     fprintf(out, "#! /usr/bin/gnuplot -persist\n");
     fprintf(out, "set terminal png size 1000,1000 enhanced font \"Helvetica Bold, 20\"\n");
-    fprintf(out, "set output \"%s.png\"\n\n", testfilename);
+    fprintf(out, "set output \"Images/%s.png\"\n\n", testfilename);
 
     fprintf(out, "set style line 1 lt 1 linecolor rgb \"red\" lw 1 pt 1\n");
     fprintf(out, "set style line 2 lt 1 linecolor rgb \"blue\" lw 1 pt 1\n");

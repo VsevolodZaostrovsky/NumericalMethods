@@ -6,7 +6,7 @@
 
 double u(double x, double y)
 {
-    return x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y);
+    return x * (1 - x) * y * (1 - y);
 }
 
 double mod(double x) { return x * (x > 0) - x * (x < 0); }

@@ -93,33 +93,33 @@
 
 \begin{center}
 
-{Всеволод Заостровский, 409 группа}\\
-{\bfseries Отчёт по задаче "Приближение с помощью построения двумерного ряда Фурье".\\}
-\vspace{1cm}
+    {Всеволод Заостровский, 409 группа}\\
+    {\bfseries Отчёт по задаче "Приближение с помощью построения двумерного ряда Фурье".\\}
+    \vspace{1cm}
 
 \end{center}
 
 \section{Постановка задачи.}
 Для функции $u(x) \in C^{\infty}[0, 1]$, удовлетворяющей краевым условиям:
 \begin{align*}
-    & u |_{\Omega} = 0,
+     & u |_{\Omega} = 0,
 \end{align*}
 необходимо выписать двумерный тригонометрический ряд Фурье и сформулировать теорему сходимости. Затем, на сетке:
 
 \begin{align*}
-    & x_0 = \frac{-h_x}{2}, \; y_0 = \frac{-h_y}{2},\\
-    & x_N = 1, \; y_N = 1, \\
-    & h_x = h_y = h = \frac{1}{N - 0.5},
-\end{align*}     
+     & x_0 = \frac{-h_x}{2}, \; y_0 = \frac{-h_y}{2}, \\
+     & x_N = 1, \; y_N = 1,                           \\
+     & h_x = h_y = h = \frac{1}{N - 0.5},
+\end{align*}
 
 выписать двумерный дискретный тригонометрический ряд Фурье. \par
-Найти дискретное скалярное произведение, сохраняющее ортогональность базисных функций. 
-Нормировать базисные функции. 
+Найти дискретное скалярное произведение, сохраняющее ортогональность базисных функций.
+Нормировать базисные функции.
 \par
 И, наконец, для некоторой тестовой функции из указанного класса численно найти порядок скодимости её дискретного ряда Фурье.
 
 \section{Тригонометрический ряд Фурье.}
-Функцию $u(x, y) \in C^{\infty}[0, 1]^2$ можно разложить в ряд Фурье, 
+Функцию $u(x, y) \in C^{\infty}[0, 1]^2$ можно разложить в ряд Фурье,
 взяв синусы в качестве базисных функций:
 \begin{equation*}
     u(x) = \sum_{m, n = 1}^{\infty} c_{mn} \sin {\pi m x} \sin {\pi n y}.
@@ -127,63 +127,63 @@
 \par
 Перейдём к рассмотрению конечного числа узлов. Выпишем условия на сетку:
 \begin{align*}
-    & u_{ij} := u(x_i, y_j), \; h = \frac{1}{N - 0.5}, \; x_i = y_i := \frac{-h}{2} + i h \\
-    & u_{ij} = \sum_{c_{mn}} c_{mn} \phi_i^m \phi_j^n, \\
-    & \phi_i^m := \sin{\pi m (\frac{-h_x}{2} + i h_x)} = \sin{\pi m (\frac{-h}{2} + i h)} \\
-    & \phi_j^n := \sin{\pi n (\frac{-h_y}{2} + j h_y)} = \sin{\pi n (\frac{-h}{2} + j h)} \\
-    & \phi^m := (\phi_1^m ... \phi_{N-1}^m).
-\end{align*} 
-Убедимся, что указанные функции ортогональны относительно скалярного произведения 
+     & u_{ij} := u(x_i, y_j), \; h = \frac{1}{N - 0.5}, \; x_i = y_i := \frac{-h}{2} + i h \\
+     & u_{ij} = \sum_{c_{mn}} c_{mn} \phi_i^m \phi_j^n,                                    \\
+     & \phi_i^m := \sin{\pi m (\frac{-h_x}{2} + i h_x)} = \sin{\pi m (\frac{-h}{2} + i h)} \\
+     & \phi_j^n := \sin{\pi n (\frac{-h_y}{2} + j h_y)} = \sin{\pi n (\frac{-h}{2} + j h)} \\
+     & \phi^m := (\phi_1^m ... \phi_{N-1}^m).
+\end{align*}
+Убедимся, что указанные функции ортогональны относительно скалярного произведения
 ${(\phi^k, \phi^j) = \sum_{m = 1}^{N - 1}\phi_m^k \phi_m^j h}$:
 
 \begin{align*}
-    & (\phi^k, \phi^j) = \sum_{m = 1}^{N - 1} \phi_m^k \phi_m^j h 
-    = \sum_{m = 1}^{N - 1} \sin{\pi k (\frac{-h}{2} + m h)} \sin{\pi j (\frac{-h}{2} + m h)} h \\ 
-    & = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - j))} - \cos{(\pi h (m - \frac{1}{2})(k + j))} ] h.
+     & (\phi^k, \phi^j) = \sum_{m = 1}^{N - 1} \phi_m^k \phi_m^j h
+    = \sum_{m = 1}^{N - 1} \sin{\pi k (\frac{-h}{2} + m h)} \sin{\pi j (\frac{-h}{2} + m h)} h                                   \\
+     & = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - j))} - \cos{(\pi h (m - \frac{1}{2})(k + j))} ] h.
 \end{align*}
 
 Заметим, что при $\alpha \neq 0$ справедливо:
 \begin{align*}
-    & \sum_{m = 1}^{N - 1} \cos(\alpha m - \frac{\alpha}{2}) = Re\sum_{m = 1}^{N - 1} e^{i (\alpha m - \frac{\alpha}{2})} 
-     = Re \frac{e^{\frac{i \alpha}{2}(e^{i \alpha (N - 1)} - 1)}}{e^{i \alpha - 1}} 
-     = \frac{Im [-1 + e^{i (N - 1) \alpha}]}{2 \sin(\alpha/2)} \\
-    & = \frac{\sin{(N - 1) \alpha}}{2 \sin(\alpha/2)}.
+     & \sum_{m = 1}^{N - 1} \cos(\alpha m - \frac{\alpha}{2}) = Re\sum_{m = 1}^{N - 1} e^{i (\alpha m - \frac{\alpha}{2})}
+    = Re \frac{e^{\frac{i \alpha}{2}(e^{i \alpha (N - 1)} - 1)}}{e^{i \alpha - 1}}
+    = \frac{Im [-1 + e^{i (N - 1) \alpha}]}{2 \sin(\alpha/2)}                                                              \\
+     & = \frac{\sin{(N - 1) \alpha}}{2 \sin(\alpha/2)}.
 \end{align*}
 
 Отсюда при $k \neq j$:
 
 \begin{align*}
-    & (\phi^k, \phi^j) 
-    = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - j))} - \cos{(\pi h (m - \frac{1}{2})(k + j))} ] h \\
-    & = h \left[ \frac{\sin{(N - 1) \pi h (k - j)}}{4 \sin(\pi h (k - j)/2)} - \frac{\sin{(N - 1) \pi h (k + j)}}{4 \sin(\pi h (k + j)/2)} \right] \\
-    & = h \left[ \frac{\sin(\pi (k - j) - \pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
-        - \frac{\sin(\pi (k + j) - \pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right] \\
-    & = h \left[ \frac{(-1)^{k-j}\sin(\pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
-    - \frac{(-1)^{k+j}\sin(\pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right] \\
-    & = \frac{h}{2} [(-1)^{k-j}\sin(\pi h (k - j)/2) - (-1)^{k+j}\sin(\pi h (k + j)/2)] = 0.
+     & (\phi^k, \phi^j)
+    = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - j))} - \cos{(\pi h (m - \frac{1}{2})(k + j))} ] h                        \\
+     & = h \left[ \frac{\sin{(N - 1) \pi h (k - j)}}{4 \sin(\pi h (k - j)/2)} - \frac{\sin{(N - 1) \pi h (k + j)}}{4 \sin(\pi h (k + j)/2)} \right] \\
+     & = h \left[ \frac{\sin(\pi (k - j) - \pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
+    - \frac{\sin(\pi (k + j) - \pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right]                                                                      \\
+     & = h \left[ \frac{(-1)^{k-j}\sin(\pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
+    - \frac{(-1)^{k+j}\sin(\pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right]                                                                          \\
+     & = \frac{h}{2} [(-1)^{k-j}\sin(\pi h (k - j)/2) - (-1)^{k+j}\sin(\pi h (k + j)/2)] = 0.
 \end{align*}
 
-В ином случае, 
+В ином случае,
 \begin{align*}
-    & (\phi^k, \phi^k) 
+     & (\phi^k, \phi^k)
     = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - k))} - \cos{(\pi h (m - \frac{1}{2})(k + k))} ] h \\
-    & = h \left[ \frac{N - 1}{2} - \frac{\sin{2 (N - 1) \pi h k}}{4 \sin(\pi h k)} \right] 
+     & = h \left[ \frac{N - 1}{2} - \frac{\sin{2 (N - 1) \pi h k}}{4 \sin(\pi h k)} \right]
     = \frac{2 N - 1}{4} \frac{2}{2 N - 1} = \frac{1}{2}.
 \end{align*}
 
 Отсюда, очевидно, система функций $\psi_{ij}^{mn} := \phi_i^m \phi_j^n $. \par
-Искать коэффициенты будем по следующему алгоритму: 
+Искать коэффициенты будем по следующему алгоритму:
 \begin{enumerate}
     \item Вычислим матрицу $u_{ij}$.
     \item Разложим $u_{ij}$ в одномерный ряд Фурье:
-        \begin{equation*}
-            u_{ij} = \sum _{m = 1}^{N - 1} \phi_i^m d_m^j.
-        \end{equation*}
-        Полученные коэффициенты запишем в новую матрицу.
+          \begin{equation*}
+              u_{ij} = \sum _{m = 1}^{N - 1} \phi_i^m d_m^j.
+          \end{equation*}
+          Полученные коэффициенты запишем в новую матрицу.
     \item По вектору $d_m^j$ восстановим коэффициенты $c_{mn}$ посредством ещё одного разложения в ряд:
-        \begin{equation*}
-            d_m^j = \sum _{n = 1}^{N - 1} c_{mn} \phi_j^n.
-        \end{equation*}
+          \begin{equation*}
+              d_m^j = \sum _{n = 1}^{N - 1} c_{mn} \phi_j^n.
+          \end{equation*}
 \end{enumerate}
 
 
@@ -197,11 +197,13 @@ ${(\phi^k, \phi^j) = \sum_{m = 1}^{N - 1}\phi_m^k \phi_m^j h}$:
 }
     \end{lstlisting}
 
-    \begin{figure}
-        \centering
-        \includegraphics[scale=0.5]{Images/t1.txt.png}
-        \caption{Результаты теста функции $x * (1 - x) * y * (1 - y)$.}
-    \end{figure}
+Результат определения порядка: $p = 0.864876065683578$.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{Images/t1.txt.png}
+    \caption{Результаты теста функции $x * (1 - x) * y * (1 - y)$.}
+\end{figure}
 
 \begin{figure}
     \centering
@@ -218,12 +220,12 @@ ${(\phi^k, \phi^j) = \sum_{m = 1}^{N - 1}\phi_m^k \phi_m^j h}$:
     return x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y);
 }
     \end{lstlisting}
-
-    \begin{figure}
-        \centering
-        \includegraphics[scale=0.5]{Images/t2.txt.png}
-        \caption{Результаты теста функции $x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y)$.}
-    \end{figure}
+Результат определения порядка: $0.973459824594227$.
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{Images/t2.txt.png}
+    \caption{Результаты теста функции $x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y)$.}
+\end{figure}
 
 \begin{figure}
     \centering

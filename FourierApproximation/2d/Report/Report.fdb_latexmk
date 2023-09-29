@@ -1,11 +1,11 @@
 # Fdb version 3
-["pdflatex"] 1695964204 "e:/Программы/VSC/GHrepos/NumericalMethods/FourierApproximation/2d/Report/Report.tex" "Report.pdf" "Report" 1695964206
+["pdflatex"] 1695964585 "e:/Программы/VSC/GHrepos/NumericalMethods/FourierApproximation/2d/Report/Report.tex" "Report.pdf" "Report" 1695964587
   "Images/nmtest1.txt.png" 1695620503 14226 3075ceba4fa3d7b6154bba7a7113e29f ""
   "Images/t1.txt.png" 1695963603 17013 4703895a8c28248dcb35218a5683996e ""
   "Images/t2.txt.png" 1695964031 17185 1fbd14a1a7e56feea96647cc2755118d ""
   "Images/tn2.txt.png" 1695964071 14700 3e2783e50c718ad16bb52845ab606cad ""
-  "Report.aux" 1695964206 1465 5c1e1e10663229ea58333233dee45669 "pdflatex"
-  "Report.tex" 1695964200 9346 36f3fb2d126c33c5e21f4bb31b82a3de ""
+  "Report.aux" 1695964587 1465 5c1e1e10663229ea58333233dee45669 "pdflatex"
+  "Report.tex" 1695964581 9813 54bb0b393f0831ca71b7a0fd7bef91aa ""
   "c:/Users/zaos2/.texlive2022/texmf-var/fonts/tfm/lh/lh-t2a/labx1440.tfm" 1657876125 3304 6a543c07045572737981351171e0505e ""
   "c:/Users/zaos2/.texlive2022/texmf-var/fonts/tfm/lh/lh-t2a/labx1728.tfm" 1668797294 3312 d199be9bd555944e2403193d58a0256a ""
   "c:/Users/zaos2/.texlive2022/texmf-var/fonts/tfm/lh/lh-t2a/labx2074.tfm" 1660379316 3316 0992aa03d0c75498a0b6fb905d9eaab6 ""
@@ -185,7 +185,7 @@
   "c:/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1657567264 4634946 d2848b86361d48ab78eef9225f65482b ""
   "c:/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1657567426 2864805 7d544713492beb1fb1b2d8e798fd088a ""
   "c:/texlive/2022/texmf.cnf" 1657567242 713 e69b156964470283e0530f5060668171 ""
-  "e:/Программы/VSC/GHrepos/NumericalMethods/FourierApproximation/2d/Report/Report.tex" 1695964200 9346 36f3fb2d126c33c5e21f4bb31b82a3de ""
+  "e:/Программы/VSC/GHrepos/NumericalMethods/FourierApproximation/2d/Report/Report.tex" 1695964581 9813 54bb0b393f0831ca71b7a0fd7bef91aa ""
   (generated)
   "Report.aux"
   "Report.log"

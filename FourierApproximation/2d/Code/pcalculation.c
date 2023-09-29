@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "pcalculation.h"
 #include "Solution.c"
 
 double u(double x, double y)

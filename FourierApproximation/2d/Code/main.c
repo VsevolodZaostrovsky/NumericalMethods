@@ -4,6 +4,7 @@
 #include <math.h>
 
 #include "Solution.h"
+#include "main.h"
 
 double u(double x, double y)
 {
@@ -108,26 +109,26 @@ int main(int argc, char *argv[])
     phimemory = (double *)malloc((N + 5) * sizeof(double));
 
     GenerateNet(net, N - 1);
-//    printf("\n Umatrix: \n");
+    //    printf("\n Umatrix: \n");
     FullUMatrix(Umatrix, N, net, u);
     // PrintMatrix(Umatrix, N);
 
-//    printf("\n Dmatrix: \n");
+    //    printf("\n Dmatrix: \n");
     FullDMatrix(Dmatrix, Umatrix, N, umemory, phimemory);
-//    PrintMatrix(Dmatrix, N);
+    //    PrintMatrix(Dmatrix, N);
 
-//    printf("\n Cmatrix: \n");
+    //    printf("\n Cmatrix: \n");
     FullCMatrix(Dmatrix, Cmatrix, N, fmemory, umemory, phimemory);
 
     WriteResult(net, Cmatrix, N, u, fp);
 
     if ((sk = fopen("printAll.gpi", "w+")) == NULL)
-        {
-            printf("Не удалось открыть файл");
-            
-            fclose(fp);
-            return 0;
-        }
+    {
+        printf("Не удалось открыть файл");
+
+        fclose(fp);
+        return 0;
+    }
 
     WriteSkrypt(N, argv[2], sk);
     // PrintMatrix(Cmatrix, N);
@@ -135,18 +136,18 @@ int main(int argc, char *argv[])
     //    printf("\n Cmatrix: \n");
     // PrintMatrix(Cmatrix, N);
 
-/*    printf("net:\n");
+    /*    printf("net:\n");
 
-    for (int h = 0; h < N; ++h)
-    {
-        printf("%lf ", net[h]);
-    }
-    printf("\n");
-    for (int h = 1; h < N; h++)
-    {
-        printf("%lf ", FourierCompute(Cmatrix + 2 * N, N, net[h]));
-    }
-    printf("\n"); */
+        for (int h = 0; h < N; ++h)
+        {
+            printf("%lf ", net[h]);
+        }
+        printf("\n");
+        for (int h = 1; h < N; h++)
+        {
+            printf("%lf ", FourierCompute(Cmatrix + 2 * N, N, net[h]));
+        }
+        printf("\n"); */
 
     /*    for(int h = 1; h < N; h++) {
             printf("%lf ", FourierCompute(Dmatrix + 2*N, N, net[h]));

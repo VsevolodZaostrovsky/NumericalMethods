@@ -6,12 +6,12 @@
 #define M_PI 3.14159265358979323846
 #define e(i, j, n) ((i - 1) * (n) + (j - 1))
 
-double FourierCompute(double * coefs, int N, double x) 
+double FourierCompute(double *coefs, int N, double x)
 {
     double ans = 0;
-    for(int m = 1; m < N; ++m)
+    for (int m = 1; m < N; ++m)
     {
-        ans += coefs[m] * sin( M_PI * m * x );
+        ans += coefs[m] * sin(M_PI * m * x);
     }
     return ans;
 }
@@ -56,17 +56,17 @@ int WriteCNkTo(int N, double *cNks, double *u, double *umemory, double *phimemor
 {
     double h = 1 / (N - 0.5);
 
-/*    if (GenerateNet(netmemory, N) == NET_GENERATION_ERROR)
-    {
-        return NET_GENERATION_ERROR;
-    } */
+    /*    if (GenerateNet(netmemory, N) == NET_GENERATION_ERROR)
+        {
+            return NET_GENERATION_ERROR;
+        } */
 
     for (int m = 1; m < N; ++m)
     {
         umemory[m] = u[m];
-//        printf("umemory %d: %lf ", m, u[m]);
+        //        printf("umemory %d: %lf ", m, u[m]);
     }
-//    printf("\n");
+    //    printf("\n");
     umemory[0] = 0;
 
     for (int k = 1; k < N; ++k)
@@ -98,11 +98,11 @@ void FullUMatrix(double *Umatrix, int N, double *net, double (*u)(double, double
 
 void FullDMatrix(double *Dmatrix, double *Umatrix, int N, double *umemory, double *phimemory)
 {
-//    printf("\n");
+    //    printf("\n");
     for (int j = 0; j < N; j += 1)
     {
         Dmatrix[j * N] = 0;
-        Dmatrix[j * N + N-1] = 0;
+        Dmatrix[j * N + N - 1] = 0;
         WriteCNkTo(N - 1, Dmatrix + j * N, Umatrix + j * N, umemory, phimemory);
     }
 }
@@ -112,8 +112,9 @@ void FullCMatrix(double *Dmatrix, double *Cmatrix, int N, double *fmemory, doubl
     for (int i = 0; i < N; i += 1)
     {
         Cmatrix[i * N] = 0;
-        Cmatrix[i * N + N-1] = 0;
-        for(int h = 0; h < N; ++h) {
+        Cmatrix[i * N + N - 1] = 0;
+        for (int h = 0; h < N; ++h)
+        {
             fmemory[h] = Dmatrix[h * N + i];
         }
         WriteCNkTo(N - 1, Cmatrix + i * N, fmemory, umemory, phimemory);
@@ -144,10 +145,10 @@ double Calc2DFourier(double *Cmatrix, int N, double x, double y)
 }
 
 double FullFurierCompute(double x, double y,
-        double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
-            double *fmemory, double *net, double (*u)(double, double),
-                double *netmemory, double *umemory, double *phimemory) 
-                {
-                    FindFourierCoefs(Umatrix, Dmatrix, Cmatrix, N, fmemory, net, u, netmemory, umemory, phimemory);
-                    return Calc2DFourier(Cmatrix, N, x, y);
-                }
+                         double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
+                         double *fmemory, double *net, double (*u)(double, double),
+                         double *netmemory, double *umemory, double *phimemory)
+{
+    FindFourierCoefs(Umatrix, Dmatrix, Cmatrix, N, fmemory, net, u, netmemory, umemory, phimemory);
+    return Calc2DFourier(Cmatrix, N, x, y);
+}

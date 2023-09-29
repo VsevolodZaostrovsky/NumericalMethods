@@ -9,3 +9,10 @@ void FullCMatrix(double *Dmatrix, double *Cmatrix, int N, double *fmemory, doubl
 double Calc2DFourier(double *Cmatrix, int N, double x, double y);
 
 double FourierCompute(double * coefs, int N, double x);
+
+double Calc2DFourier(double *Cmatrix, int N, double x, double y);
+
+double FullFurierCompute(double x, double y,
+        double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
+            double *fmemory, double *net, double (*u)(double, double),
+                double *netmemory, double *umemory, double *phimemory);

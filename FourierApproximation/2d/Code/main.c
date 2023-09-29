@@ -8,7 +8,7 @@
 
 double u(double x, double y)
 {
-    return x * (1 - x) * y * (1 - y);
+    return x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y);
 }
 
 void PrintMatrix(double *Matrix, int N)
@@ -42,7 +42,7 @@ void WriteSkrypt(int N, char *testfilename, FILE *out)
     fprintf(out, "set grid\n\n");
 
     fprintf(out, "splot  \"%s\" using 1:2:3 ls 1 title \"Interpolation Fourier Row\", ", testfilename);
-    fprintf(out, "\"%s\" using 1:2:4 ls 2 title \"Original function\", ", testfilename);
+    fprintf(out, "\"%s\" using 1:2:4 ls 2 title \"Original function\"", testfilename);
 }
 
 void WriteResult(double *net, double *Cmatrix, int N, double (*u)(double, double), FILE *out)

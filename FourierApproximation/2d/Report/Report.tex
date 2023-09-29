@@ -185,7 +185,52 @@ ${(\phi^k, \phi^j) = \sum_{m = 1}^{N - 1}\phi_m^k \phi_m^j h}$:
             d_m^j = \sum _{n = 1}^{N - 1} c_{mn} \phi_j^n.
         \end{equation*}
 \end{enumerate}
-\section{Тесты.}
+
+
+\section{Тесты}
+\subsection{Тест 1}
+Рассматривалась функция:
+\begin{lstlisting}[language=c]
+    double u(double x)
+{
+    return x * (1 - x) * y * (1 - y);
+}
+    \end{lstlisting}
+
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{Images/t1.txt.png}
+        \caption{Результаты теста функции $x * (1 - x) * y * (1 - y)$.}
+    \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{Images/nmtest1.txt.png}
+    \caption{Результаты теста функции $x * (1 - x) * y * (1 - y)$.}
+\end{figure}
+
+
+\subsection{Тест 2}
+Рассматривалась функция:
+\begin{lstlisting}[language=c]
+    double u(double x, double y)
+{
+    return x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y);
+}
+    \end{lstlisting}
+
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.5]{Images/t2.txt.png}
+        \caption{Результаты теста функции $x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y)$.}
+    \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.5]{Images/tn2.txt.png}
+    \caption{Результаты теста функции $x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y)$.}
+\end{figure}
+
 
 
 \end{document}

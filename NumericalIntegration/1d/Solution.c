@@ -15,3 +15,29 @@ double IntegralG (double a, double b, double (*f)(double))
 
     return (b - a) / 18 * (5 * f(xminus) + 8 * f(x0) + 5 * f(xminus));
 }
+
+// составная квадратура Симпсона и квадратуру Гаусса
+double IntegralQS (double a, double b, double (*f)(double), int N) 
+{
+    double step = (b - a) / N;
+    double ans = 0;
+
+    for(double start = a; start < b; start += step) {
+        ans += IntegralS(start, start + step, f);
+    } 
+
+    return ans;
+}
+
+// составная квадратура Гаусса
+double IntegralQG (double a, double b, double (*f)(double), int N) 
+{
+    double step = (b - a) / N;
+    double ans = 0;
+
+    for(double start = a; start < b; start += step) {
+        ans += IntegralG(start, start + step, f);
+    } 
+
+    return ans;
+}

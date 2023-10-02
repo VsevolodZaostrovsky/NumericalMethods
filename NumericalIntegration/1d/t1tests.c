@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "Solution.h"
+
+double f(double x, int n) { return pow(x, n); }
+
+double f0(double x) { return pow(x, 0); }
+
+double f1(double x) { return pow(x, 1); }
+
+double f2(double x) { return pow(x, 2); }
+
+double f3(double x) { return pow(x, 3); }
+
+double f5(double x) { return pow(x, 5); }
+
+double f9(double x) { return pow(x, 9); }
+
+
+int main(int argc, char *argv[])
+{
+    double a, b;
+    int n;
+
+    if (argc < 3)
+    {
+        printf("Wrong number of parameters, must be 2 in format:\n");
+        printf("a b \n");
+        return -1;
+    }
+    
+
+    a = atof(argv[1]); // число узлов
+    b = atof(argv[2]); 
+
+    printf("Sympson 0: %20.15lf\n", IntegralS(a, b, f0));
+    printf("Gauss 0: %20.15lf\n", IntegralG(a, b, f0));
+
+    printf("Sympson 1: %20.15lf\n", IntegralS(a, b, f1));
+    printf("Gauss 1: %20.15lf\n", IntegralG(a, b, f1));
+
+    printf("Sympson 2: %20.15lf\n", IntegralS(a, b, f2));
+    printf("Gauss 2: %20.15lf\n", IntegralG(a, b, f2));
+
+    printf("Sympson 3: %20.15lf\n", IntegralS(a, b, f3));
+    printf("Gauss 3: %20.15lf\n", IntegralG(a, b, f3));
+
+    printf("Sympson 5: %20.15lf\n", IntegralS(a, b, f5));
+    printf("Gauss 5: %20.15lf\n", IntegralG(a, b, f5));
+
+    printf("Sympson 9: %20.15lf\n", IntegralS(a, b, f9));
+    printf("Gauss 9: %20.15lf\n", IntegralG(a, b, f9));
+}

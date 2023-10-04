@@ -3,19 +3,17 @@
 
 #include "Solution.h"
 
-double f(double x, int n) { return pow(x, n); }
+double f0(double x) { return 1; }
 
-double f0(double x) { return pow(x, 0); }
+double f1(double x) { return x; }
 
-double f1(double x) { return pow(x, 1); }
+double f2(double x) { return x * x; }
 
-double f2(double x) { return pow(x, 2); }
+double f3(double x) { return x * x * x; }
 
-double f3(double x) { return pow(x, 3); }
+double f5(double x) { return x * x * x * x * x; }
 
-double f5(double x) { return pow(x, 5); }
-
-double f9(double x) { return pow(x, 9); }
+double f9(double x) { return x * x * x * x * x * x * x * x * x; }
 
 
 int main(int argc, char *argv[])

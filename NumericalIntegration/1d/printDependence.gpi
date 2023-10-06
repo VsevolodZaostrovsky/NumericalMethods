@@ -1,0 +1,8 @@
+#! /usr/bin/gnuplot -persist
+set terminal png size 1000,1000 enhanced font "Helvetica Bold, 20"
+set output "dep.png"
+
+set title "Dependency "
+set grid
+
+plot  "points.txt" using 1:2 title "S1" with lines, "points.txt" using 1:3 title "G1" with lines, "points.txt" using 1:4 title "S2" with lines, "points.txt" using 1:5 title "G2" with lines, "points.txt" using 1:6 title "S3" with lines, "points.txt" using 1:7 title "G3" with lines, (-4*x) title "-4x", (-6*x) title "-6x"

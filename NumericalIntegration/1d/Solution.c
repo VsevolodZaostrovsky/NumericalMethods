@@ -22,8 +22,8 @@ double IntegralQS (double a, double b, double (*f)(double), int N)
     double step = (b - a) / N;
     double ans = 0;
 
-    for(double start = a; start < b; start += step) {
-        ans += IntegralS(start, start + step, f);
+    for(int i = 0; i < N; i++) {
+        ans += IntegralS(a + i * step, a + (i + 1) * step, f);
     } 
 
     return ans;
@@ -35,8 +35,8 @@ double IntegralQG (double a, double b, double (*f)(double), int N)
     double step = (b - a) / N;
     double ans = 0;
 
-    for(double start = a; start < b; start += step) {
-        ans += IntegralG(start, start + step, f);
+    for(int i = 0; i < N; i++) {
+        ans += IntegralG(a + i * step, a + (i + 1) * step, f);
     } 
 
     return ans;

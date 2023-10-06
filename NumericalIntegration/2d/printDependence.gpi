@@ -1,0 +1,10 @@
+#! /usr/bin/gnuplot -persist
+set terminal png size 1000,1000 enhanced font "Helvetica Bold, 20"
+set output "dep4.png"
+
+set title "Dependency"
+set grid
+
+f(x) = - x
+
+plot  "points.txt" using 1:2 title "S1" with lines, f(x) title "-x"

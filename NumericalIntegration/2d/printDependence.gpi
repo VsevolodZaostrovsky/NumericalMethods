@@ -5,6 +5,6 @@ set output "dep4.png"
 set title "Dependency"
 set grid
 
-f(x) = - x
+f(x) = - 4 * x
 
-plot  "points.txt" using 1:2 title "S1" with lines, f(x) title "-x"
+plot  "points.txt" using 1:2 title "S1" with lines, f(x) title "-4x"

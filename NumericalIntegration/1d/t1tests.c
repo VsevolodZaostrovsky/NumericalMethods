@@ -2,8 +2,14 @@
 #include <stdlib.h>
 
 #include "Solution.h"
+double f0(double x);
+double f1(double x);
+double f2(double x);
+double f3(double x);
+double f5(double x);
+double f9(double x);
 
-double f0(double x) { return 1; }
+double f0(double x) { return 1 + x * 0; }
 
 double f1(double x) { return x; }
 
@@ -19,7 +25,6 @@ double f9(double x) { return x * x * x * x * x * x * x * x * x; }
 int main(int argc, char *argv[])
 {
     double a, b;
-    int n;
 
     if (argc < 3)
     {

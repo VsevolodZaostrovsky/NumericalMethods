@@ -13,7 +13,7 @@ double IntegralG (double a, double b, double (*f)(double))
     double xminus = x0 - (b - a) / 2 * sqrt(3 / 5);
     double xplus = x0 + (b - a) / 2 * sqrt(3 / 5);
 
-    return (b - a) / 18 * (5 * f(xminus) + 8 * f(x0) + 5 * f(xminus));
+    return (b - a) / 18 * (5 * f(xminus) + 8 * f(x0) + 5 * f(xplus));
 }
 
 // составная квадратура Симпсона и квадратуру Гаусса

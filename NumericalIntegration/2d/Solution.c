@@ -2,7 +2,7 @@
 
 void WriteTriangulation(int N, double Lx, double Ly, FILE *out)
 {
-    int isedge = 1;
+
     double hx = Lx / N;
     double hy = Ly / N;
     int leftup = 0;
@@ -85,8 +85,8 @@ void WriteTriangulation(int N, double Lx, double Ly, FILE *out)
 double Integrate(int N, double (*f)(double, double))
 {
     double ans = 0;
-    int leftup = 0;
-    int an, cn, bn;
+
+//     int an, cn, bn;
     double anx, any, bnx, bny, cnx, cny;
     double h = 1 / (double)(N);
 
@@ -94,29 +94,25 @@ double Integrate(int N, double (*f)(double, double))
     {
         for (int i = 1; i < N + 1; ++i)
         {
-            an = i + (j - 1) * (N + 1);
-            bn = an + 1;
-            cn = bn + N + 1;
-            anx = (an % (N + 1)) * h;
-            any = (an / (N + 1)) * h;
-            bnx = (bn % (N + 1)) * h;
-            bny = (bn / (N + 1)) * h;
-            cnx = (cn % (N + 1)) * h;
-            cny = (cn / (N + 1)) * h;
+            anx = (i - 1) * h;
+            any = (j - 1) * h;
+            bnx = anx + h;
+            bny = any;
+            cnx = anx;
+            cny = any + h;
+            //printf("%20.15lf %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf\n", anx, any, bnx, bny, cnx, cny);
 
-            ans += 0.5 * h * h* (f((anx + bnx)/2, (any + bny)/2) + f((anx + cnx)/2, (any + cny)/2) + f((cnx + bnx)/2, (cny + bny)/2)) / 3;
+            ans += 0.5 * h * h* (f((anx + bnx)/2., (any + bny)/2.) + f((anx + cnx)/2., (any + cny)/2.) + f((cnx + bnx)/2., (cny + bny)/2.)) / 3.;
 
-            an = i + (j - 1) * (N + 1) + 1;
-            bn = an + N + 1;
-            cn = bn + N + 2;
-            anx = (an % (N + 1)) * h;
-            any = (an / (N + 1)) * h;
-            bnx = (bn % (N + 1)) * h;
-            bny = (bn / (N + 1)) * h;
-            cnx = (cn % (N + 1)) * h;
-            cny = (cn / (N + 1)) * h;
+            anx = (i) * h;
+            any = (j) * h;
+            bnx = anx - h;
+            bny = any;
+            cnx = anx;
+            cny = any - h;
+            //printf("%20.15lf %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf\n", anx, any, bnx, bny, cnx, cny);
 
-            ans += 0.5 * h * h * (f((anx + bnx)/2, (any + bny)/2) + f((anx + cnx)/2, (any + cny)/2) + f((cnx + bnx)/2, (cny + bny)/2)) / 3;
+            ans += 0.5 * h * h * (f((anx + bnx)/2., (any + bny)/2.) + f((anx + cnx)/2., (any + cny)/2.) + f((cnx + bnx)/2., (cny + bny)/2.)) / 3.;
         }
     }
     

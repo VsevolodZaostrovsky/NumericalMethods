@@ -4,6 +4,10 @@
 
 #include "Solution.h"
 
+double f1(double x);
+double f2(double x);
+double f3(double x);
+
 double f1(double x) { return cos(100 * x); }
 
 double f2(double x) { return exp(-1000 * x); }
@@ -61,4 +65,6 @@ int main(int argc, char *argv[])
         LG3 = log(fabs(IntegralQG(-0.9, 0.9, f3, N) - 2.23954));
         fprintf(fp, "%20.15lf %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf %20.15lf\n", log((double)(N)), LS1, LG1, LS2, LG2, LS3, LG3);
     }
+    
+    fclose(fp);
 }

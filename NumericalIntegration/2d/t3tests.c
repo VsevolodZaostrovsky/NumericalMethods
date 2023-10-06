@@ -8,7 +8,6 @@ int main(int argc, char *argv[])
     int N = 100;
     double Lx, Ly;
     FILE *fp;
-    FILE *sk;
 
     if (argc < 5)
     {
@@ -28,5 +27,6 @@ int main(int argc, char *argv[])
     }
 
     WriteTriangulation(N, Lx, Ly, fp);
+    fclose(fp);
     return 0;
 }

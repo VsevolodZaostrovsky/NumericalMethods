@@ -1,16 +1,18 @@
 #include "Solution.h"
 #include <math.h>
 
+double f(double x, double y);
+
 double f(double x, double y) {
-    return x * x * x * x + y * y * x * x + y * y * y * y;
+    return x * x * x * x  + y * x * y * x + y * y * y * y;
 }
 
 
 int main(int argc, char *argv[])
 {
-    int N, ON;
+    int N;
+    int ON;
     double ca = 23. / 45.;
-    double h;
     FILE *fp;
 
     if (argc < 3)
@@ -37,5 +39,6 @@ int main(int argc, char *argv[])
         N = ON + k;
         fprintf(fp, "%20.15lf %20.15lf\n", log(N), log(fabs(Integrate(N, f) - ca)));
     }
+    fclose(fp);
     return 0;
 }

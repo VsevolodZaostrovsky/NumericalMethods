@@ -1,0 +1,137 @@
+\documentclass[14pt,a4paper]{extarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage{amssymb,amsmath,mathrsfs,amsthm}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage[footnotesize]{caption2}
+\usepackage{indentfirst}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{url}
+
+\usepackage{enumitem}
+
+%\usepackage[ruled,section]{algorithm}
+%\usepackage[noend]{algorithmic}
+%\usepackage[all]{xy}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tcolorbox}
+
+%Библиотека для блок-схем
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+% Параметры страницы
+\textheight=24cm
+\textwidth=16cm
+\oddsidemargin=5mm
+\evensidemargin=-5mm
+\marginparwidth=36pt
+\topmargin=-1cm
+\footnotesep=3ex
+%\flushbottom
+\raggedbottom
+\tolerance 3000
+% подавить эффект "висячих стpок"
+\clubpenalty=10000
+\widowpenalty=10000
+%\renewcommand{\baselinestretch}{1.1}
+\renewcommand{\baselinestretch}{1.5} %для печати с большим интервалом
+
+\newcommand{\angstrom}{\mbox{\normalfont\AA}}
+
+\newtheorem{definition}{Определение} % задаём выводимое слово (для определений)
+\newtheorem{example}{Замечание} % задаём выводимое слово (для определений)
+\newtheorem{theorem}{Теорема} % задаём выводимое слово (для определений)
+\newtheorem{construction}{Конструкция} % задаём выводимое слово (для определений)
+
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\var}{var}
+\DeclareMathOperator*{\cov}{cov}
+\DeclareMathOperator*{\law}{Law}
+
+\newcommand{\1}{\mathbbm{1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+
+\newcommand{\independent}{\perp\!\!\!\!\perp}
+
+\newcommand\cA{{\cal A}}
+\newcommand\cE{{\cal E}}
+\newcommand\cC{{\cal C}}
+\newcommand\cF{{\cal F}}
+\newcommand\cG{{\cal G}}
+\newcommand\cK{{\cal K}}
+\newcommand\cL{{\cal L}}
+\newcommand\cB{{\cal B}}
+\newcommand\cN{{\cal N}}
+\newcommand\cM{{\cal M}}
+\newcommand\cX{{\cal X}}
+\newcommand\cD{{\cal D}}
+\newcommand\cR{{\cal R}}
+\newcommand\cP{{\cal P}}
+\newcommand\cQ{{\cal Q}}
+\newcommand\cS{{\cal S}}
+\newcommand\cT{{\cal T}}
+\newcommand\cV{{\cal V}}
+\newcommand\cZ{{\cal Z}}
+
+\newcommand{\textProposition}    {Предложение}
+\newcommand{\textTask}    {Задача}
+
+\begin{document}
+
+\begin{center}
+
+    {Всеволод Заостровский, 409 группа}\\
+    {\bfseries Отчёт по задаче ''Итерационные методы решения систем линейных уравнений''.\\}
+    \vspace{1cm}
+
+\end{center}
+
+\section{\textbf{Задача 1.}} Для решения системы линейных уравнений:
+\begin{align*}
+& -\frac{y_{k+1} - 2 y_k + y_{k-1}}{h^2} + p y_k = f_k, \;\;\;\;\; k = 1, \ldots, N - 1; \\
+& y_0 = y_N = 0; \\
+& h = \frac{1}{N}; \\
+& p \geq 0.
+\end{align*}
+реализуйте метод Фурье (т.е. метод разложения по собственным векторам) для базисных функций:
+\begin{equation}
+    \psi_k^{(n)} = \sin(\frac{\pi n k}{N})
+\end{equation}    
+
+\textbf{Решение.} 
+
+Вычислим $\lambda_n$: \\
+$
+{A \psi^{(n)}}_k =  -\frac{\psi^{(n)}_{k+1} - 2 \psi^{(n)}_k + \psi^{(n)}_{k-1}}{h^2} + p \psi^{(n)}_k \\
+= -\frac{\sin(\frac{\pi n (k+1)}{N}) - 2 \sin(\frac{\pi n k}{N}) + \sin(\frac{\pi n (k-1)}{N})}{h^2} + p \sin(\frac{\pi n k}{N}) \\
+= -\frac{\sin(\frac{\pi n k}{N}) \cos(\frac{\pi n}{N}) + \cos(\frac{\pi n k}{N}) \sin(\frac{\pi n}{N}) - 2 \sin(\frac{\pi n k}{N}) + \sin(\frac{\pi n k}{N}) \cos(\frac{\pi n}{N}) - \cos(\frac{\pi n k}{N}) \sin(\frac{\pi n}{N}) }{h^2} + p \sin(\frac{\pi n k}{N}) \\
+= -\frac{\sin(\frac{\pi n k}{N}) \cos(\frac{\pi n}{N}) - 2 \sin(\frac{\pi n k}{N}) + \sin(\frac{\pi n k}{N}) \cos(\frac{\pi n}{N})}{h^2} + p \sin(\frac{\pi n k}{N}) \\
+= -\frac{2 \sin(\frac{\pi n k}{N}) (\cos(\frac{\pi n}{N}) - 1)}{h^2} + p \sin(\frac{\pi n k}{N}) 
+=  \sin(\frac{\pi n k}{N}) (-\frac{2 (\cos(\frac{\pi n}{N}) - 1)}{h^2} + p).
+$ \\
+Отсюда:
+\begin{equation}
+    \lambda_n = N^2 (2 (\cos(\frac{\pi n}{N}) - 1)) + p.
+\end{equation}
+Кроме того, из указания к задаче:
+\begin{equation}
+    c_n = \frac{\left(f, \psi^{(n)} \right)}{\lambda_n \left(\psi^{(n)}, \psi^{(n)} \right)} 
+            = \frac{2 \left(f, \psi^{(n)} \right)}{\lambda_n}.
+\end{equation}
+Решение же можно найти в виде:
+\begin{equation}
+    y_k = \sum_{n=1}^{N-1} c_n \psi_k^{(m)}.
+\end{equation}
+
+\end{document}

@@ -1,4 +1,4 @@
 all: 
-	gcc test1.c solution.c -lm -o LS1
-	gcc test2.c solution.c -lm -o LS2
-	gcc test3.c solution.c -lm -o LS3
+	gcc solution.c test1.c -lm -o LS1
+	gcc solution.c test2.c -lm -o LS2
+	gcc solution.c test3.c -lm -o LS3

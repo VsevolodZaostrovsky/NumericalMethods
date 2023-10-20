@@ -39,8 +39,7 @@ int main(int argc, char *argv[])
 
     out = fopen(argv[4], "w");
 
-    FourierMatrixWithoutZeros(p, N, A); // Исправить ошибку - матрица на 1 больше создается
-
+    FourierMatrixWithoutZeros(p, N, A); 
     FormBFromA(A, N, b);
 
     evm = Lambdan(1, N + 1, p);

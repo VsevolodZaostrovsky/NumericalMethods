@@ -1,6 +1,4 @@
 #include "solution.h"
-
-#define PI  3.141592653589793238462
 // double Richardson(double *x, const double *A, const double *b, double tau, int n, double eps, int mIter);
 
 // double psi(int k, int n, int N);
@@ -25,6 +23,18 @@ void FormBFromA(double *A, int N, double *b)
 {
     b[0] = 0;
     for (int k = 1; k < N; k++)
+    {
+        b[k] = 0;
+        for (int j = 0; j < N; j += 2)
+        {
+            b[k] += A[k * N + j];
+        }
+    }
+}
+
+void FormBFromA1(double *A, int N, double *b)
+{
+    for (int k = 0; k < N; k++)
     {
         b[k] = 0;
         for (int j = 0; j < N; j += 2)
@@ -88,10 +98,24 @@ double ErNorm(const double *A, const double *b, double *x, int N, double *mem)
 
     for (int i = 0; i < N; i++)
     {
-        ans += fabs(b[i] - mem[i]);
+        ans += (b[i] - mem[i]) * (b[i] - mem[i]);
     }
 
-    return ans;
+    return sqrt(ans);
+}
+
+double ErNormInf(const double *A, const double *b, double *x, int N, double *mem)
+{
+    double ans = 0;
+
+    multMatrixByVector(A, x, mem, N);
+
+    for (int i = 0; i < N; i++)
+    {
+        if(fabs((b[i] - mem[i])) > ans) ans = fabs((b[i] - mem[i]));
+    }
+
+    return sqrt(ans);
 }
 
 void FourierMatrix(double p, int N, double *M)  // (N+1)^2 memory needed 
@@ -206,8 +230,11 @@ double BSolver(double *x, const double *A, const double *B, const double *b, dou
             x[i] = x[i] + tau * mem1[i];
             // printf("%1.5lf = %1.5lf - %1.5lf * %1.5lf + %1.5lf * %1.5lf \n", x[i], mem[i], tau, mem[i], tau, b[i]);
         }
+        // print_vector(x, n);
         // printf("\n");
     }
+
+    return ErNormInf(A, b, x, n, mem);
 }
 
 int read_matrix(FILE *inp, double *matrix, int dim)
@@ -246,14 +273,32 @@ void ReverseFourierMatrixWithoutZeros(double p, double * B, int N, double * mem1
     {   
         mem2[i] = 1;
         FourierMethod(mem1, N, p, mem2);
-        printf("vectoe: ");
-        print_vector(mem1, N);
-        printf("vectoe[1]: %20.15lf \n", mem1[1]);
+        // printf("vectoe: ");
+        // print_vector(mem1, N);
+        // printf("vectoe[1]: %20.15lf \n", mem1[1]);
         mem2[i] = 0;
 
         for(int j = 0; j < N - 1; j++) 
         {
             B[j + (i - 1) * (N - 1)] = mem1[j + 1];
+        }
+    }
+}
+
+void Task3Matrix(double * A, int N) 
+{
+    double h = PI / (double)(N + 1);
+
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+        {
+            if (i == j)
+                A[i * N + j] = 1. + sin(PI * (i + 1) * h) * sin(PI * (i + 1) * h) + 2.0 / h / h;
+            else if (i - j == 1 || i - j == -1)
+                A[i * N + j] = -1.0 / h / h;
+            else
+                A[i * N + j] = 0;
         }
     }
 }

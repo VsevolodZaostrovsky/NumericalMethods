@@ -1,0 +1,8 @@
+#! /usr/bin/gnuplot -persist
+set terminal png size 1000,1000 enhanced font "Helvetica Bold, 20"
+set output "Error2.png"
+
+set title "Error Task 2"
+set grid
+
+plot  "out.txt" using 1:2 title "Practical Error" with lines, "out.txt" using 1:3 title "Theoretical Error" with lines

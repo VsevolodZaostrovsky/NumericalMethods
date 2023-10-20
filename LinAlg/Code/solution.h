@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#define PI  3.141592653589793238462
+
 double psi(int k, int n, int N);
 
 double Lambdan(int n, int N, double p);
@@ -36,3 +38,9 @@ void FourierMatrixWithoutZeros(double p, int N, double *M);
 double Findq(const double *A, int n);
 
 void ReverseFourierMatrixWithoutZeros(double p, double * B, int N, double * mem1, double * mem2);
+
+void Task3Matrix(double * A, int N);
+
+double ErNormInf(const double *A, const double *b, double *x, int N, double *mem);
+
+void FormBFromA1(double *A, int N, double *b);

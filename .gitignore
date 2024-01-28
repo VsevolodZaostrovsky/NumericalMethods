@@ -1,7 +1,25 @@
 # строки начинающиеся на # - это комментарии, они не учитываются
 
 # Исключить все файлы с расширение .a
-*.a
-*.o
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.ini
+*.lot
+*.lof
+*.pyc
+*.pygtex
+*.pygstyle
+*.txt
 
 vscode/

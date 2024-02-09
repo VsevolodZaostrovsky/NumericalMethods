@@ -110,8 +110,55 @@
 \end{equation}    
 
 \textbf{Решение.} 
+Сперва, найдём базисные функции:
+$
+\\
+-y_{k+1} + 2 y_k - y_{k-1} + p y_k h^2 = f_k h^2 \\
+y_{k+1} - 2(1 + \frac{p h^2}{2}) y_k + y_{k-1} = - f_k h^2 \\
+$
+Выпишем характеристическое уравнение и решим его однородный вариант:
+$
+\\
+y_{k+1} - 2(1 + \frac{p h^2}{2}) y_k + y_{k-1} = 0. \\
+y_{k+1} - 2 q y_k + y_{k-1} = 0 \\
+\mu^2 - 2 q \mu + 1 = 0 \\
+\mu_{1, 2} = q \pm \sqrt(q^2 - 1) \\
+$
+Пусть $\mu_1 = \mu_2$. Тогда:
+$
+\\
+y_k = C_1 + k C_2 \\
+y_0 = C_1 + 0 \cdot C_2 = 0 \rightarrow C_1 = 0 \\
+y_N = 0 + N \cdot C_2 = 0 \rightarrow C_2 = 0 \\
+$
+Этот случай даёт тривиальное решение. Далее считаем, что $\mu_1 \neq \mu_2$.
+$
+\\
+y_k = C_1 \mu_1^k + C_2 \mu^k_2 \\
+y_0 = C_1 + C_2 = 0 \rightarrow C_1 = - C_2 \\
+y_N = C_1 \mu_1^N + C_2 \mu_2^N \rightarrow C_1 (\mu_1^N - \mu_2^N) = 0  
+\rightarrow (\text{случай $C_1 = 0$ тривиален}) \\
+\rightarrow (\frac{\mu_1}{\mu_2}) ^ N = 1 
+\rightarrow \frac{\mu_1}{\mu_2} = e^{\frac{2 \pi i k}{N}} \rightarrow \\
+(\text{из характеристического уравнения и теоремы Виета имеем $\mu_1 \mu_2 = 1$ }) \\
+\rightarrow \mu_1^2 = e^{\frac{2 \pi i k}{N}} \\
+\rightarrow 
+    \left\{
+        \begin{array}{ccc}
+        \mu_1 & = & e^{\frac{ \pi i k}{N}}, k \in \{1 \cdots N-1\} \\
+        \mu_2 & = & e^{\frac{ - \pi i k}{N}}, k \in \{1 \cdots N-1\} \\
+        \end{array}
+    \right.
+    \\
+$
+Отсюда получаем ответ:
+$\\
+y_k^{(n)} = C_1 (e^{\frac{ \pi i k}{N}} - e^{\frac{ - \pi i k}{N}}) = \hat C_1 \sin(\frac{\pi n k}{N}).
+$
 
-Вычислим $\lambda_n$: \\
+
+
+Вычислим $\lambda_n$ и заодно проверим, является ли найденная функция собственной: \\
 $
 {A \psi^{(n)}}_k =  -\frac{\psi^{(n)}_{k+1} - 2 \psi^{(n)}_k + \psi^{(n)}_{k-1}}{h^2} + p \psi^{(n)}_k \\
 = -\frac{\sin(\frac{\pi n (k+1)}{N}) - 2 \sin(\frac{\pi n k}{N}) + \sin(\frac{\pi n (k-1)}{N})}{h^2} + p \sin(\frac{\pi n k}{N}) \\

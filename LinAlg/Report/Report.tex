@@ -141,8 +141,7 @@ y_N = C_1 \mu_1^N + C_2 \mu_2^N \rightarrow C_1 (\mu_1^N - \mu_2^N) = 0
 \rightarrow (\frac{\mu_1}{\mu_2}) ^ N = 1 
 \rightarrow \frac{\mu_1}{\mu_2} = e^{\frac{2 \pi i k}{N}} \rightarrow \\
 \text{из характеристического уравнения и теоремы Виета имеем $\mu_1 \mu_2 = 1$ } \\
-\rightarrow \mu_1^2 = e^{\frac{2 \pi i k}{N}} \footnote{Корень $ - e^{\frac{ \pi i k}{N}}$ даёт тот же ответ, 
-поскольку минус съедает константа.}\\
+\rightarrow \mu_1^2 = e^{\frac{2 \pi i k}{N}} \\
 \rightarrow 
     \left\{
         \begin{array}{ccc}
@@ -152,7 +151,8 @@ y_N = C_1 \mu_1^N + C_2 \mu_2^N \rightarrow C_1 (\mu_1^N - \mu_2^N) = 0
     \right.
     \\
 $
-Отсюда получаем ответ:
+Отсюда получаем ответ\footnote{Ранее мы пренебрегли корнем $ - e^{\frac{ \pi i k}{N}}$, но он даёт тот же ответ, 
+поскольку минус съедает константа.}:
 $\\
 y_k^{(n)} = C_1 (e^{\frac{ \pi i k}{N}} - e^{\frac{ - \pi i k}{N}}) = \hat C_1 \sin(\frac{\pi n k}{N}).
 $

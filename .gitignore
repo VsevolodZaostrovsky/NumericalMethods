@@ -20,7 +20,7 @@
 *.pyc
 *.pygtex
 *.pygstyle
-*.txt
+# *.txt
 
 vscode/
 .vscode

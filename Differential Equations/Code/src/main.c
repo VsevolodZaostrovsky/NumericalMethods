@@ -6,6 +6,7 @@
 double solution1(double y0, double A, double h, double* y) { 
     int N = (int)(1 / h);
     y[0] = y0;
+    // printf("%lf \n", h * A);
     for(int k = 1; k < N; k++){
         y[k] = y[k - 1] * (1 - A * h);
     }
@@ -78,7 +79,7 @@ double L0norm(double *x, double *y, int len) {
 
 int main(void) {
     int N = 1e6;
-    double A = 1;
+    double A = 1.;
     double h = 1 / (double)(N);
 
     double *xans;
@@ -87,12 +88,24 @@ int main(void) {
     xans = (double*) malloc(N * sizeof(double));
     x    = (double*) malloc(N * sizeof(double));
 
-    ans(h, A, xans);
     // solution2(1., A, h, x);
-    // solution3(1., A, h, x);
-    // solution4(1., 1. - A * h, A, h, x);
-    // solution5(1., 1. - A * h, A, h, x);
-    // solution6(1., 1. - A * h, A, h, x);
+    ans(h, A, xans);// 
+    solution3(1., A, h, x);
+    ans(h, A, xans);// 
+    solution4(1., 1. - A * h, A, h, x);
+    ans(h, A, xans);// 
+    solution5(1., 1. - A * h, A, h, x);
+    ans(h, A, xans);// 
+    solution6(1., 1. - A * h, A, h, x);
+ans(h, A, xans);
+
+    // solution1(1., 1., 0.01, x);
+ans(h, A, xans);
+
+    // for(int k = 0; k < 100; k++){
+    //     printf("%lf ", x[k]);
+    // }
+    // printf("\n");
 
     FILE *S1;
     S1 = fopen("out.txt", "w");
@@ -101,9 +114,9 @@ int main(void) {
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
-            case 0: A = 1;   break;
-            case 1: A = 10;  break;
-            case 2: A = 1000; break;
+            case 0: A = 1.;   break;
+            case 1: A = 10.;  break;
+            case 2: A = 1000.; break;
             default: break;
             }
         for(int i = 0; i < 4; i++) {
@@ -117,12 +130,13 @@ int main(void) {
             }
 
             solution1(1., A, h, x);
-            fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
+            ans(h, A, xans);
+            fprintf(S1, " $%3.4lf$ &", L0norm(xans, x, (int)(1 / h)));
         }
         fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
     }
 
-        fprintf(S1, "\n 2 & ");   
+    fprintf(S1, "\n 2 & ");   
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -142,12 +156,13 @@ int main(void) {
             }
 
             solution2(1., A, h, x);
+            ans(h, A, xans);//         
             fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
         }
         fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
     }
 
-        fprintf(S1, "\n 3 & ");   
+    fprintf(S1, "\n 3 & ");   
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -167,12 +182,13 @@ int main(void) {
             }
 
             solution3(1., A, h, x);
+            ans(h, A, xans);//         
             fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
         }
         fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
     }
 
-        fprintf(S1, "\n 4 & ");   
+    fprintf(S1, "\n 4 & ");   
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -192,12 +208,13 @@ int main(void) {
             }
 
             solution4(1., 1. - A*h, A, h, x);
+            ans(h, A, xans);//         
             fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
         }
         fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
     }
 
-        fprintf(S1, "\n 5 & ");   
+    fprintf(S1, "\n 5 & ");   
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -217,12 +234,13 @@ int main(void) {
             }
 
             solution5(1., 1. - A*h, A, h, x);
+            ans(h, A, xans);//         
             fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
         }
         fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
     }
 
-        fprintf(S1, "\n 6 & ");   
+    fprintf(S1, "\n 6 & ");   
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -242,12 +260,13 @@ int main(void) {
             }
 
             solution6(1., 1. - A*h, A, h, x);
+            ans(h, A, xans);//         
             fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
         }
         fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
     }
 
-    fprintf(S1, "\end\{tabular\} \n\\end\{center\}\\caption\{Требуемая табличка\}.\} \n\\label\{Aggreg1CU\} \\end\{table\} \n "); 
+    fprintf(S1, "\end\{tabular\} \n\\end\{center\}\\caption\{Требуемая табличка\}. \n\\label\{Aggreg1CU\} \\end\{table\} \n "); 
     
     free(x);
     free(xans);

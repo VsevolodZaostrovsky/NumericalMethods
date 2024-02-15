@@ -108,8 +108,8 @@ int main(void) {
     // printf("\n");
 
     FILE *S1;
-    S1 = fopen("out.txt", "w");
-    fprintf(S1, " \\begin\{table\}[h!] \n\\begin\{center\} \n\\begin\{tabular\}\{|c|c|c|c|c|c|c|\} \n\\hline \nНомер  & $E_1$ & $E_2$ & $E_3$ & $E_6$ & $m$ & $A$ \\\\ \\hline");   
+    S1 = fopen("restable.tex", "w");
+    fprintf(S1, " \\begin{table}[h!] \n\\begin{center} \n\\begin{tabular}{|c|c|c|c|c|c|c|} \n\\hline \nНомер  & $E_1$ & $E_2$ & $E_3$ & $E_6$ & $m$ & $A$ \\\\ \\hline");   
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -309,7 +309,7 @@ int main(void) {
         
     }
 
-    fprintf(S1, "\\end\{tabular\} \n\\end\{center\}\\caption\{Результаты вычислений\}  \n\\label\{Aggreg1CU\} \\end\{table\} \n "); 
+    fprintf(S1, "\\end{tabular} \n\\end{center}\\caption{Результаты вычислений}  \n\\label{Aggreg1CU} \\end{table} \n "); 
     
     free(x);
     free(xans);

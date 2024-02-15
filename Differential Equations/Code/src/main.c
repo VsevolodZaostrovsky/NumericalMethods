@@ -2,7 +2,6 @@
 #include <math.h>
 #include <stdio.h>
 
-
 double solution1(double y0, double A, double h, double* y) { 
     int N = (int)(1 / h);
     y[0] = y0;
@@ -35,7 +34,7 @@ double solution4(double y0, double y1, double A, double h, double* y) {
     int N = (int)(1 / h);
     y[0] = y0;
     for(int k = 1; k < N; k++){
-        y[k] = y[k - 1] - 2 * A * h * y[k - 2];
+        y[k] = y[k - 2] - 2 * A * h * y[k - 1];
     }
     return 1; 
     }
@@ -53,7 +52,7 @@ double solution6(double y0, double y1, double A, double h, double* y) {
     int N = (int)(1 / h);
     y[0] = y0;
     for(int k = 1; k < N; k++){
-        y[k] = 2 * ((A * h - 3) * y[k - 2] + 4 * y[k - 1]); 
+        y[k] = 2 * (A * h - 3) * y[k - 2] + 4 * y[k - 1]; 
     }
     return 1; 
     }
@@ -81,6 +80,7 @@ int main(void) {
     int N = 1e6;
     double A = 1.;
     double h = 1 / (double)(N);
+    double L0normNum = 0;
 
     double *xans;
     double *x;
@@ -97,10 +97,10 @@ int main(void) {
     solution5(1., 1. - A * h, A, h, x);
     ans(h, A, xans);// 
     solution6(1., 1. - A * h, A, h, x);
-ans(h, A, xans);
+    ans(h, A, xans);
 
     // solution1(1., 1., 0.01, x);
-ans(h, A, xans);
+    ans(h, A, xans);
 
     // for(int k = 0; k < 100; k++){
     //     printf("%lf ", x[k]);
@@ -109,8 +109,7 @@ ans(h, A, xans);
 
     FILE *S1;
     S1 = fopen("out.txt", "w");
-    fprintf(S1, " \\begin\{table\}[h!] \n\\begin\{center\} \n\\begin\{tabular\}\{|c|c|c|c|c|c|\} \n\\hline \nНомер  & $E_1 & $E_2$ & $E_3$ & $E_6$ & $m$ & $A$ \\\\ \\hline"); 
-    fprintf(S1, "\n 1 & ");   
+    fprintf(S1, " \\begin\{table\}[h!] \n\\begin\{center\} \n\\begin\{tabular\}\{|c|c|c|c|c|c|c|\} \n\\hline \nНомер  & $E_1$ & $E_2$ & $E_3$ & $E_6$ & $m$ & $A$ \\\\ \\hline");   
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -119,6 +118,7 @@ ans(h, A, xans);
             case 2: A = 1000.; break;
             default: break;
             }
+            fprintf(S1, "\n $1$ & ");
         for(int i = 0; i < 4; i++) {
             switch (i)
             {
@@ -129,14 +129,20 @@ ans(h, A, xans);
             default: break;
             }
 
+             
             solution1(1., A, h, x);
-            ans(h, A, xans);
-            fprintf(S1, " $%3.4lf$ &", L0norm(xans, x, (int)(1 / h)));
+            ans(h, A, xans);//
+            L0normNum = L0norm(xans, x, (int)(1 / h));
+            if(L0normNum < 1e2){         
+                fprintf(S1, " $%lf$ &", L0normNum);
+            }
+            else { fprintf(S1, " $\\infty$ &");}
+            // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-        fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
+            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+        
     }
-
-    fprintf(S1, "\n 2 & ");   
+  
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -145,6 +151,7 @@ ans(h, A, xans);
             case 2: A = 1000; break;
             default: break;
             }
+            fprintf(S1, "\n $2$ & ");
         for(int i = 0; i < 4; i++) {
             switch (i)
             {
@@ -156,13 +163,19 @@ ans(h, A, xans);
             }
 
             solution2(1., A, h, x);
-            ans(h, A, xans);//         
-            fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
+            // fprintf(S1, "\n $2$ & "); 
+            ans(h, A, xans);//
+            L0normNum = L0norm(xans, x, (int)(1 / h));
+            if(L0normNum < 1e2){         
+                fprintf(S1, " $%lf$ &", L0normNum);
+            }
+            else { fprintf(S1, " $\\infty$ &");}
+            // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-        fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
+            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+        
     }
-
-    fprintf(S1, "\n 3 & ");   
+ 
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -171,6 +184,7 @@ ans(h, A, xans);
             case 2: A = 1000; break;
             default: break;
             }
+            fprintf(S1, "\n $3$ & ");
         for(int i = 0; i < 4; i++) {
             switch (i)
             {
@@ -182,13 +196,20 @@ ans(h, A, xans);
             }
 
             solution3(1., A, h, x);
-            ans(h, A, xans);//         
-            fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
+            // fprintf(S1, "\n $3$ & ");  
+            ans(h, A, xans);//
+            L0normNum = L0norm(xans, x, (int)(1 / h));
+            if(L0normNum < 1e2){         
+                fprintf(S1, " $%lf$ &", L0normNum);
+            }
+            else { fprintf(S1, " $\\infty$ &");}
+            // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-        fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
+            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+        
     }
 
-    fprintf(S1, "\n 4 & ");   
+
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -197,6 +218,7 @@ ans(h, A, xans);
             case 2: A = 1000; break;
             default: break;
             }
+            fprintf(S1, "\n $4$ & ");
         for(int i = 0; i < 4; i++) {
             switch (i)
             {
@@ -208,13 +230,19 @@ ans(h, A, xans);
             }
 
             solution4(1., 1. - A*h, A, h, x);
-            ans(h, A, xans);//         
-            fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
+            // fprintf(S1, "\n $4$ & ");   
+            ans(h, A, xans);//
+            L0normNum = L0norm(xans, x, (int)(1 / h));
+            if(L0normNum < 1e2){         
+                fprintf(S1, " $%lf$ &", L0normNum);
+            }
+            else { fprintf(S1, " $\\infty$ &");}
+            // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-        fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
+            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+        
     }
-
-    fprintf(S1, "\n 5 & ");   
+ 
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -223,6 +251,7 @@ ans(h, A, xans);
             case 2: A = 1000; break;
             default: break;
             }
+            fprintf(S1, "\n $5$ & ");
         for(int i = 0; i < 4; i++) {
             switch (i)
             {
@@ -234,13 +263,19 @@ ans(h, A, xans);
             }
 
             solution5(1., 1. - A*h, A, h, x);
-            ans(h, A, xans);//         
-            fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
+            // fprintf(S1, "\n $5$ & ");  
+            ans(h, A, xans);//
+            L0normNum = L0norm(xans, x, (int)(1 / h));
+            if(L0normNum < 1e2){         
+                fprintf(S1, " $%lf$ &", L0normNum);
+            }
+            else { fprintf(S1, " $\\infty$ &");}
+            // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-        fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
+            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+        
     }
-
-    fprintf(S1, "\n 6 & ");   
+  
     for(int j = 0; j < 3; j++) {
         switch (j)
             {
@@ -249,6 +284,7 @@ ans(h, A, xans);
             case 2: A = 1000; break;
             default: break;
             }
+            fprintf(S1, "\n $6$ & ");
         for(int i = 0; i < 4; i++) {
             switch (i)
             {
@@ -260,13 +296,20 @@ ans(h, A, xans);
             }
 
             solution6(1., 1. - A*h, A, h, x);
-            ans(h, A, xans);//         
-            fprintf(S1, " $%lf$ &", L0norm(xans, x, (int)(1 / h)));
+            // fprintf(S1, "\n $6$ & ");  
+            ans(h, A, xans);//
+            L0normNum = L0norm(xans, x, (int)(1 / h));
+            if(L0normNum < 1e2){         
+                fprintf(S1, " $%lf$ &", L0normNum);
+            }
+            else { fprintf(S1, " $\\infty$ &");}
+            // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-        fprintf(S1, " $m$ & %lf \\\\ \\hline \n", A);
+            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+        
     }
 
-    fprintf(S1, "\end\{tabular\} \n\\end\{center\}\\caption\{Требуемая табличка\}. \n\\label\{Aggreg1CU\} \\end\{table\} \n "); 
+    fprintf(S1, "\\end\{tabular\} \n\\end\{center\}\\caption\{Результаты вычислений\}  \n\\label\{Aggreg1CU\} \\end\{table\} \n "); 
     
     free(x);
     free(xans);

@@ -42,7 +42,8 @@ double solution4(double y0, double y1, double A, double h, double* y) {
 double solution5(double y0, double y1, double A, double h, double* y) { 
     int N = (int)(1 / h);
     y[0] = y0;
-    for(int k = 1; k < N; k++){
+    y[1] = y1;
+    for(int k = 2; k < N; k++){
         y[k] = (2 * y[k - 1] - 0.5 * y[k - 2]) / (1.5 + A * h);
     }
     return 1; 
@@ -51,7 +52,8 @@ double solution5(double y0, double y1, double A, double h, double* y) {
 double solution6(double y0, double y1, double A, double h, double* y) { 
     int N = (int)(1 / h);
     y[0] = y0;
-    for(int k = 1; k < N; k++){
+    y[1] = y1;
+    for(int k = 2; k < N; k++){
         y[k] = 2 * (A * h - 3) * y[k - 2] + 4 * y[k - 1]; 
     }
     return 1; 
@@ -139,7 +141,7 @@ int main(void) {
             else { fprintf(S1, " $\\infty$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+            fprintf(S1, " $1$ & $%lf$ \\\\ \\hline \n", A);
         
     }
   
@@ -172,7 +174,7 @@ int main(void) {
             else { fprintf(S1, " $\\infty$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+            fprintf(S1, " $1$ & $%lf$ \\\\ \\hline \n", A);
         
     }
  
@@ -205,7 +207,7 @@ int main(void) {
             else { fprintf(S1, " $\\infty$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+            fprintf(S1, " $2$ & $%lf$ \\\\ \\hline \n", A);
         
     }
 
@@ -239,7 +241,7 @@ int main(void) {
             else { fprintf(S1, " $\\infty$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+            fprintf(S1, " $0$ & $%lf$ \\\\ \\hline \n", A);
         
     }
  
@@ -272,7 +274,7 @@ int main(void) {
             else { fprintf(S1, " $\\infty$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+            fprintf(S1, " $2$ & $%lf$ \\\\ \\hline \n", A);
         
     }
   
@@ -305,7 +307,7 @@ int main(void) {
             else { fprintf(S1, " $\\infty$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-            fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
+            fprintf(S1, " $1$ & $%lf$ \\\\ \\hline \n", A);
         
     }
 

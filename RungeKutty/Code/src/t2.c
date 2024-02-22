@@ -24,9 +24,16 @@ int main(void)
     x[0] = 0;
     y[0] = 1;
 
-    for(int j = 0; j < 100; j++)
+    for(int j = 1; j < 101; j++)
     {
-        yNext(x, y, ans, N, 0.01, f1, mem, mem1, mem2, mem3);
+        // k1(x, y, mem3, N, 0.01, f2);
+        // printf("\nk1 %lf, ", mem3[0]);
+        // k4(x, y, mem3, N, 0.01, f2, mem, mem1, mem2);
+        // printf("k4 %lf, ", mem3[0]);
+        // k5(x, y, mem3, N, 0.01, f2, mem, mem1, mem2);
+        // printf("k5 %lf \n", mem3[0]);
+
+        yNext(x, y, ans, N, 0.01, f2, mem, mem1, mem2, mem3);
         y[0] = ans[0];
         x[0] += 0.01;
         printf("%lf, ", y[0]);

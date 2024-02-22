@@ -1,6 +1,6 @@
 #include "Useful.h"
 
-void f1(double * x, double * y, double * ans, int n) 
+void f1(double x, double * y, double * ans, int n) 
 {
     for(int k = 0; k < n; k++)
         ans[k] = y[k];
@@ -8,15 +8,15 @@ void f1(double * x, double * y, double * ans, int n)
     return;
 }
 
-void f2(double * x, double * y, double * ans, int n) 
+void f2(double x, double * y, double * ans, int n) 
 {
     for(int k = 0; k < n; k++)
-        ans[k] = x[k];
+        ans[k] = x;
     
     return;
 }
 
-void f3(double * x, double * y, double * ans, int n) 
+void f3(double x, double * y, double * ans, int n) 
 {
     if (n != 2) 
     {
@@ -29,67 +29,67 @@ void f3(double * x, double * y, double * ans, int n)
     return;
 }
 
-void sol3(double * x, double * y, double * ans, int n) 
+void sol3(double x, double * y, double * ans, int n) 
 {
     if (n != 2) 
     {
         printf("Total error! \n\n");
         return;
     }
-    ans[0] = exp(-x[0]);
-    ans[1] = - exp(-x[0]);
+    ans[0] = exp(-x);
+    ans[1] = - exp(-x);
     
     return;
 }
 
-void f4(double * x, double * y, double * ans, int n) 
+void f4(double x, double * y, double * ans, int n) 
 {
     if (n != 2) 
     {
         printf("Total error! \n\n");
         return;
     }
-    ans[0] = 4 * x[0] * x[0] * x[0];
-    ans[1] = 3 * x[1] * x[1] + 2 * x[1];
+    ans[0] = 4 * x * x * x;
+    ans[1] = 3 * x * x + 2 * x;
     
     return;
 }
 
-void sol4(double * x, double * y, double * ans, int n) 
+void sol4(double x, double * y, double * ans, int n) 
 {
     if (n != 2) 
     {
         printf("Total error! \n\n");
         return;
     }
-    ans[0] = x[0] * x[0] * x[0] * x[0] + 1;
-    ans[1] = x[1] * x[1] * x[1] + x[1] * x[1] - 1;
+    ans[0] = x * x * x * x + 1;
+    ans[1] = x * x * x + x * x - 1;
     
     return;
 }
 
-void f5(double * x, double * y, double * ans, int n) 
+void f5(double x, double * y, double * ans, int n) 
 {
     if (n != 2) 
     {
         printf("Total error! \n\n");
         return;
     }
-    ans[0] = 5 * x[0] * x[0] * x[0] * x[0];
-    ans[1] = 3 * x[1] * x[1] + 2 * x[1];
+    ans[0] = 5 * x * x * x * x;
+    ans[1] = 3 * x * x + 2 * x;
     
     return;
 }
 
-void sol5(double * x, double * y, double * ans, int n) 
+void sol5(double x, double * y, double * ans, int n) 
 {
     if (n != 2) 
     {
         printf("Total error! \n\n");
         return;
     }
-    ans[0] = x[0] * x[0] * x[0] * x[0] * x[0] + 1;
-    ans[1] = x[1] * x[1] * x[1] + x[1] * x[1] - 1;
+    ans[0] = x * x * x * x * x + 1;
+    ans[1] = x * x * x + x * x - 1;
     
     return;
 }

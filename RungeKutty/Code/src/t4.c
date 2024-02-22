@@ -32,18 +32,18 @@ int main(void)
     x[1] = 0;
     y[1] = -1;
 
-    file = fopen("outsol.txt", "w");
+    file = fopen("out4.txt", "w");
 
 
     for(int j = 1; j < (int)(1. / h); j++)
     {
 
-        sol3(x, y, realans, N);
-        E(x, y, ans, N, h, f3, mem, mem1, mem2, mem3);
+        sol4(x, y, realans, N);
+        E(x, y, ans, N, h, f4, mem, mem1, mem2, mem3);
 
         fprintf(file, "%e %e %e %e %e %e %e\n", x[0], realans[0], realans[1], y[0], y[1], L0norm(realans, y, N), L0normOne(ans, N));
 
-        yNext(x, y, ans, N, h, f3, mem, mem1, mem2, mem3);
+        yNext(x, y, ans, N, h, f4, mem, mem1, mem2, mem3);
         y[0] = ans[0];
         x[0] += h;
         y[1] = ans[1];
@@ -63,6 +63,6 @@ int main(void)
     free(mem2);
     free(mem3);
     free(realans);
-
+    
     fclose(file);
 }

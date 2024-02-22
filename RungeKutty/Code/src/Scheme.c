@@ -88,6 +88,22 @@ void k5(double * x, double * y, double * ans, int n,
     return;
 }
 
+void E(double * x, double * y, double * ans, int n, 
+    double h, void (*function)(double*, double*, double*, int), 
+    double * mem, double * mem1, double * mem2, double * mem3) 
+{
+    k5(x, y, mem1, n, h, function, mem2, mem3, ans);
+    k4(x, y, mem, n, h, function, mem2, mem3, ans);
+    k3(x, y, mem2, n, h, function, mem3, mem2);
+    k1(x, y, mem3, n, h, function);
+    for(int k = 0; k < n; k++)
+    {
+        ans[k] = (2 * mem3[k] - 9 * mem2[k] + 8 * mem[k] - mem1[k]) / 30;
+    }
+
+    return;
+}
+
 void yNext(double * x0, double * y0, double * ans, int n, 
     double h, void (*function)(double*, double*, double*, int), 
     double * mem, double * mem1, double * mem2, double * mem3) 

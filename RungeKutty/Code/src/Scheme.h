@@ -17,6 +17,10 @@ void k5(double * x, double * y, double * ans, int n,
     double h, void (*function)(double*, double*, double*, int), 
     double * mem, double * mem1, double * mem2);
 
+void E(double * x, double * y, double * ans, int n, 
+    double h, void (*function)(double*, double*, double*, int), 
+    double * mem, double * mem1, double * mem2, double * mem3);
+
 void yNext(double * x0, double * y0, double * ans, int n, 
     double h, void (*function)(double*, double*, double*, int), 
     double * mem, double * mem1, double * mem2, double * mem3);

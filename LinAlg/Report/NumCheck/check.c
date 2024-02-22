@@ -1,6 +1,4 @@
-#include <math.h>
-#include <stdio.h>
-
+#include "check.h"
 
 double yk(int k, int n, int N)
 {

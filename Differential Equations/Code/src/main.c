@@ -1,6 +1,4 @@
-#include <stdlib.h>
-#include <math.h>
-#include <stdio.h>
+#include "main.h"
 
 double solution1(double y0, double A, double h, double* y) { 
     int N = (int)(1 / h);
@@ -76,7 +74,6 @@ double L0norm(double *x, double *y, int len) {
     }
     return max;
 }
-
 
 int main(void) {
     int N = 1e6;

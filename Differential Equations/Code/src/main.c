@@ -31,7 +31,8 @@ double solution3(double y0, double A, double h, double* y) {
 double solution4(double y0, double y1, double A, double h, double* y) { 
     int N = (int)(1 / h);
     y[0] = y0;
-    for(int k = 1; k < N; k++){
+    y[1] = y1;
+    for(int k = 2; k < N; k++){
         y[k] = y[k - 2] - 2 * A * h * y[k - 1];
     }
     return 1; 
@@ -132,10 +133,10 @@ int main(void) {
             solution1(1., A, h, x);
             ans(h, A, xans);//
             L0normNum = L0norm(xans, x, (int)(1 / h));
-            if(L0normNum < 1e3){         
+            if(L0normNum < 1e5){         
                 fprintf(S1, " $%lf$ &", L0normNum);
             }
-            else { fprintf(S1, " $>1e3$ &");}
+            else { fprintf(S1, " $>1e5$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
             fprintf(S1, " $1$ & $%lf$ \\\\ \\hline \n", A);
@@ -165,10 +166,10 @@ int main(void) {
             // fprintf(S1, "\n $2$ & "); 
             ans(h, A, xans);//
             L0normNum = L0norm(xans, x, (int)(1 / h));
-            if(L0normNum < 1e3){         
+            if(L0normNum < 1e5){         
                 fprintf(S1, " $%lf$ &", L0normNum);
             }
-            else { fprintf(S1, " $>1e3$ &");}
+            else { fprintf(S1, " $>1e5$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
             fprintf(S1, " $1$ & $%lf$ \\\\ \\hline \n", A);
@@ -198,10 +199,10 @@ int main(void) {
             // fprintf(S1, "\n $3$ & ");  
             ans(h, A, xans);//
             L0normNum = L0norm(xans, x, (int)(1 / h));
-            if(L0normNum < 1e3){         
+            if(L0normNum < 1e5){         
                 fprintf(S1, " $%lf$ &", L0normNum);
             }
-            else { fprintf(S1, " $>1e3$ &");}
+            else { fprintf(S1, " $>1e5$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
             fprintf(S1, " $2$ & $%lf$ \\\\ \\hline \n", A);
@@ -232,13 +233,13 @@ int main(void) {
             // fprintf(S1, "\n $4$ & ");   
             ans(h, A, xans);//
             L0normNum = L0norm(xans, x, (int)(1 / h));
-            if(L0normNum < 1e3){         
+            if(L0normNum < 1e5){         
                 fprintf(S1, " $%lf$ &", L0normNum);
             }
-            else { fprintf(S1, " $>1e3$ &");}
+            else { fprintf(S1, " $>1e5$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
-            fprintf(S1, " $0$ & $%lf$ \\\\ \\hline \n", A);
+            fprintf(S1, " $2$ & $%lf$ \\\\ \\hline \n", A);
         
     }
  
@@ -265,10 +266,10 @@ int main(void) {
             // fprintf(S1, "\n $5$ & ");  
             ans(h, A, xans);//
             L0normNum = L0norm(xans, x, (int)(1 / h));
-            if(L0normNum < 1e3){         
+            if(L0normNum < 1e5){         
                 fprintf(S1, " $%lf$ &", L0normNum);
             }
-            else { fprintf(S1, " $>1e3$ &");}
+            else { fprintf(S1, " $>1e5$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
             fprintf(S1, " $2$ & $%lf$ \\\\ \\hline \n", A);
@@ -298,10 +299,10 @@ int main(void) {
             // fprintf(S1, "\n $6$ & ");  
             ans(h, A, xans);//
             L0normNum = L0norm(xans, x, (int)(1 / h));
-            if(L0normNum < 1e3){         
+            if(L0normNum < 1e5){         
                 fprintf(S1, " $%lf$ &", L0normNum);
             }
-            else { fprintf(S1, " $>1e3$ &");}
+            else { fprintf(S1, " $>1e5$ &");}
             // fprintf(S1, " $m$ & $%lf$ \\\\ \\hline \n", A);
         }
             fprintf(S1, " $1$ & $%lf$ \\\\ \\hline \n", A);

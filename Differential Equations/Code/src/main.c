@@ -85,29 +85,12 @@ int main(void) {
     double *xans;
     double *x;
 
+    FILE *S1;
+
     xans = (double*) malloc(N * sizeof(double));
     x    = (double*) malloc(N * sizeof(double));
 
-    // solution2(1., A, h, x);
-    ans(h, A, xans);// 
-    solution3(1., A, h, x);
-    ans(h, A, xans);// 
-    solution4(1., 1. - A * h, A, h, x);
-    ans(h, A, xans);// 
-    solution5(1., 1. - A * h, A, h, x);
-    ans(h, A, xans);// 
-    solution6(1., 1. - A * h, A, h, x);
-    ans(h, A, xans);
 
-    // solution1(1., 1., 0.01, x);
-    ans(h, A, xans);
-
-    // for(int k = 0; k < 100; k++){
-    //     printf("%lf ", x[k]);
-    // }
-    // printf("\n");
-
-    FILE *S1;
     S1 = fopen("restable.tex", "w");
     fprintf(S1, " \\begin{table}[h!] \n\\begin{center} \n\\begin{tabular}{|c|c|c|c|c|c|c|} \n\\hline \nНомер  & $E_1$ & $E_2$ & $E_3$ & $E_6$ & $m$ & $A$ \\\\ \\hline");   
     for(int j = 0; j < 3; j++) {

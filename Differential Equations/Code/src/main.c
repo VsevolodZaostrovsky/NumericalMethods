@@ -61,7 +61,13 @@ double solution6(double y0, double y1, double A, double h, double* y) {
 double ans(double h, double A, double* y) { 
     int N = (int)(1 / h);
     for(int k = 0; k < N; k++){
-        y[k] = exp(- A * k * h);
+        if (A * k * h > 800) {
+            printf("\nans: Number too big to exp it!\n");
+            // return -1;
+            y[k] = 0;
+        }
+        else 
+            y[k] = exp(- A * k * h);
     }
     return 1; 
     }

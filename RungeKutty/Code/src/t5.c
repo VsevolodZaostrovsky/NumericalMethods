@@ -13,7 +13,7 @@ int main(void)
     double * mem3;
     FILE *file;
 
-    double h = 0.01;
+    double h = 1.;
 
     int N = 2;
 
@@ -32,7 +32,7 @@ int main(void)
     file = fopen("out5.txt", "w");
 
 
-    for(int j = 1; j < (int)(1. / h); j++)
+    for(int j = 1; j < (int)(10. / h); j++)
     {
 
         sol5(x, y, realans, N);

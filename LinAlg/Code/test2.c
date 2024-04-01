@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     double evm = 0;
     double evM = 0;
 
-
     double *A;
     double *b;
     double *x;
@@ -62,7 +61,8 @@ int main(int argc, char *argv[])
         dq *= q;
     }
 
-    // // print_matrix(A, N);
+    // printf("Matrix: \n");
+    // print_matrix(A, N);
 
     // for(int i = 0; i < N * N; i++) {
     //     printf("%20.15lf ", A[i]);

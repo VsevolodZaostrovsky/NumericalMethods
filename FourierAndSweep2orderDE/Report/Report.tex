@@ -48,6 +48,7 @@
 \newtheorem{definition}{Определение} % задаём выводимое слово (для определений)
 \newtheorem{example}{Замечание} % задаём выводимое слово (для определений)
 \newtheorem{theorem}{Теорема} % задаём выводимое слово (для определений)
+\newtheorem{proposition}{Утверждение} % задаём выводимое слово (для определений)
 \newtheorem{construction}{Конструкция} % задаём выводимое слово (для определений)
 
 \DeclareMathOperator*{\sgn}{sgn}
@@ -92,14 +93,88 @@
 \begin{center}
 
     {Всеволод Заостровский, 409 группа}\\
-    {\bfseries Отчёт по задаче ''Итерационные методы решения систем линейных уравнений''.\\}
+    {\bfseries Отчёт по задаче ''Численное решение дифференциальных уравнений второго порядка методами Фурье и прогонки''.\\}
     \vspace{1cm}
 
 \end{center}
 
-\section{\textbf{Задача 1.}} Необходимо решить задачу:
-\begin{equation*}
-    y'' = f(x, y)
-\end{equation*}
+\section{Постановка задачи.} Необходимо решить уравнение:
+\begin{equation} \label{diffeq1}
+    -y'' + p(x) y(x) = f(x, y).
+\end{equation}
+В моём варианте, краевые условия:
+\begin{align} \label{diffeqedge}
+    & y_0 = 0, \quad y_N = 0, \quad h = \frac{1}{N}. \\
+\end{align}
 
+\section{Численная схема и её сходимость.}
+
+Будем аппроксимировать дифференциальное уравнение схемой:
+\begin{equation} \label{scheme1}
+    -\frac{y_{k+1} - 2 y_k + y_{k-1}}{h^2} + p y_k = f_k, \quad k = 1, \ldots, N - 1;
+\end{equation}
+с краевыми условиями:
+\begin{align} \label{schemeedge}
+    & y_0 = y_N = 0; \\
+    & h = \frac{1}{N}; \\
+    & p \geq 0.
+\end{align}
+Исследуем сходимость схемы с помощью теоремы Филлипова.
+\begin{theorem}
+    \begin{enumerate}
+        \item \eqref{diffeq1} и \eqref{scheme1} --- линейны.
+        \item Существует единственное решение задачи \eqref{diffeq1} с краевыми условиями \eqref{diffeqedge}.
+        \item Разностная схема \eqref{scheme1} аппроксимирует задачу на решении с порядком 2:
+            \begin{equation*}
+                || L_h [y]_h - f_h || _{2, h} \leq C h^2.           
+            \end{equation*}
+        \item Разностная схема устойчива в норме $||\cdot||_{2,h}$:
+        \begin{equation*}
+            || A^{-1} ||_{2,h} \leq \text{const}.
+        \end{equation*}
+    \end{enumerate}
+\end{theorem}
+
+\begin{proposition}
+    Теорема Филлипова выполняется для задачи \eqref{diffeq1}--\eqref{diffeqedge} и схемы \eqref{scheme1}--\eqref{schemeedge}.
+\end{proposition}
+\begin{proof}
+    \begin{enumerate}
+        \item  \eqref{diffeq1} и \eqref{scheme1} --- линейны по определению.
+        \item Из теории дифференциальных уравнений известно, что такой тип уравнений имеет единственное решение.
+        \item По определению аппроксимации на решении,
+        \begin{align*}
+            & || L_h [y]_h - f_h || _{2, h} = || -\frac{y(x_{k+1}) - 2 y(x_k) + y(x_{k-1})}{h^2} + p y_k - f(x_k) || _{2, h} = \\ 
+            & =|| -\frac{1}{h^2}\left(y(x_{k}) + h y'(x_{k}) + \frac{h^2}{2} y''(x_{k}) + \frac{h^3}{6} y'''(x_{k}) + O(h^4)\right)  \\
+            & -\frac{1}{h^2}\left(y(x_{k}) - h y'(x_{k}) + \frac{h^2}{2} y''(x_{k}) - \frac{h^3}{6} y'''(x_{k}) + O(h^4)\right) \\ 
+            & + p y_k + \frac{2}{h^2} y(x_k) - f(x_k) || _{2, h} = || O(h^2) + \underbrace{(- y''(x_{k}) + p y_k - f(x_k))}_{=0 \text{, поскольку $y$ --- решение}} ||_{2, h} \leq C h^2 \\ .           
+        \end{align*}
+        При этом краевые условия даны точно. Таким образом, имеет 2 порядок аппроксимации на решении.
+        \item В отчёте к задаче по итерационным методам решения систем уравнений (см. каталог LinAlg) были найдены собственные значения 
+        (и собственные векторы) задачи выше (при условии, что $p = \text{const}$): 
+        \begin{equation*}
+            \lambda_n = p - 2 N^2 (\cos(\frac{\pi n}{N}) - 1) = \frac{4}{h^2} \sin^2(\frac{\pi n h}{2}) + p.
+        \end{equation*}
+        Поскольку $sin x \geq \frac{2}{\pi} x $ при $x \leq \frac{\pi}{2}$, для собственных значений имеем оценку:
+        \begin{equation*}
+            \lambda_n = \frac{4}{h^2} \sin^2(\frac{\pi n h}{2}) + p \geq \frac{4}{h^2} \frac{4}{\pi ^2} \frac{\pi ^2 n^2 h^2}{4} + p > \text{const} > 0.
+        \end{equation*}
+        Тогда
+        \begin{equation*}
+            || A^{-1} ||_{2,h} = max \frac{1}{\lambda(A)} \leq \text{const}.
+        \end{equation*}
+    \end{enumerate}
+    Таким образом, по теореме Филлипова, схема имеет порядок сходимости равный двум.
+\end{proof}
+
+\section{Програмная релизация решения дифференциального уравнения.}
+Для численной реализации схемы фактически необходимо решить систему уравнений \eqref{scheme1}--\eqref{schemeedge}. 
+В случае постоянного $p$ это можно сделать методом Фурье. В более общем случае --- методом прогонки. Реализуем оба метода.
+
+    % \begin{align*}
+    %     & -\frac{y_{k+1} - 2 y_k + y_{k-1}}{h^2} + p y_k = f_k, \;\;\;\;\; k = 1, \ldots, N - 1; \\
+    %     & y_0 = y_N = 0; \\
+    %     & h = \frac{1}{N}; \\
+    %     & p \geq 0.
+    %     \end{align*}
 \end{document}

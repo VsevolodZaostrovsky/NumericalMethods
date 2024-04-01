@@ -28,3 +28,6 @@ vscode/
 build
 cmake-build-debug
 .idea
+LinAlg/Code/LS1
+LinAlg/Code/LS2
+LinAlg/Code/LS3

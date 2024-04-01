@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
     mem = (double *)malloc((N + 1) * sizeof(double));
 
     FourierMatrix(p, N, A);
+    printf("Matrix: \n");
+    print_matrix(A, N + 1);
     // print_matrix(A, N + 1);
 
     FormBFromA(A, N, b);

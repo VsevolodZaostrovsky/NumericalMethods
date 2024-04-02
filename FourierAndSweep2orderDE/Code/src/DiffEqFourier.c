@@ -1,10 +1,11 @@
 #include "FourierMethod.h"
 
-double f(x, y){ return 0; }
+double f(double x){ return 1; }
 
-double full_b_f(double * b, double (*f)(double), int start, int end, double h){
+double full_b_f(double * b, double (*f)(double), int N){
     double delta = 0;
-    for(int j = start; j < end; j++) {
+    double h = (double)(1 / N);
+    for(int j = 0; j < N; j++) {
         b[j] = f(delta);
         delta += h;
     }
@@ -31,12 +32,13 @@ int main(int argc, char *argv[])
     b = (double *)malloc((N + 1) * sizeof(double));
     x = (double *)malloc((N + 1) * sizeof(double));
     mem = (double *)malloc((N + 1) * sizeof(double));
-
+    
+    full_b_f(b, f, N);
     FourierMethod(x, N, p, b);
     
-    printf("b: ");
-    print_vector(b, N + 1);
-    printf("ans: ");
+    // printf("b: ");
+    // print_vector(b, N + 1);
+    // printf("ans: ");
     print_vector(x, N + 1);
 
 

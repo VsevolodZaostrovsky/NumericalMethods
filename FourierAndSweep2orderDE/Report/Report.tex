@@ -126,7 +126,12 @@
         \item Существует единственное решение задачи \eqref{diffeq1} с краевыми условиями \eqref{diffeqedge}.
         \item Разностная схема \eqref{scheme1} аппроксимирует задачу на решении с порядком 2:
             \begin{equation*}
-                || L_h [y]_h - f_h || _{2, h} \leq C h^2.           
+                || L_h [y]_h - f_h || _{2, h} + || l_h [y]_h - \phi_h || _{2, h} \leq C h^2,           
+            \end{equation*}
+            где первое слагаемое отвечает норме разности схемы на решении, а вторая описывает точность 
+            приближения начальных условий. Кроме того, требуется, чтобы
+            \begin{equation*}
+                || f(x_k) - f_{k, h}|| _{2, h} \rightarrow 0 \text{ при } h \rightarrow 0.           
             \end{equation*}
         \item Разностная схема устойчива в норме $||\cdot||_{2,h}$:
         \begin{equation*}
@@ -153,9 +158,9 @@
         \item В отчёте к задаче по итерационным методам решения систем уравнений (см. каталог LinAlg) были найдены собственные значения 
         (и собственные векторы) задачи выше (при условии, что $p = \text{const}$): 
         \begin{equation*}
-            \lambda_n = p - 2 N^2 (\cos(\frac{\pi n}{N}) - 1) = \frac{4}{h^2} \sin^2(\frac{\pi n h}{2}) + p.
+            \lambda_n = p - 2 N^2 (\cos(\frac{\pi n}{N}) - 1) = \frac{4}{h^2} \sin^2(\frac{\pi n h}{2}) + p, \quad n = 1 \ldots N - 1.
         \end{equation*}
-        Поскольку $sin x \geq \frac{2}{\pi} x $ при $x \leq \frac{\pi}{2}$, для собственных значений имеем оценку:
+        Поскольку $\sin x \geq \frac{2}{\pi} x $ при $x \leq \frac{\pi}{2}$, для собственных значений имеем оценку:
         \begin{equation*}
             \lambda_n = \frac{4}{h^2} \sin^2(\frac{\pi n h}{2}) + p \geq \frac{4}{h^2} \frac{4}{\pi ^2} \frac{\pi ^2 n^2 h^2}{4} + p > \text{const} > 0.
         \end{equation*}

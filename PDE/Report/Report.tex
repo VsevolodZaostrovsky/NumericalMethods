@@ -11,6 +11,7 @@
 \usepackage{listings}
 \usepackage{float}
 \usepackage{url}
+\usepackage{amsmath}
 
 \usepackage{enumitem}
 
@@ -107,13 +108,49 @@
     u(0, t) = 0, \quad u(1, t) = 0, \quad u(x, 0) = u_0(x). 
 \end{equation}
 \section{Дискретизация дифференциального уравнения.}
-\begin{equation} \label{scheme1}
-    \frac{u_m^{n+1} - u_m^n}{\tau} = \frac{u_{m+1}^{n+1} - 2 u_{m}^{n+1} + u_{m-1}^{n+1}}{h^2} - p(x_n) u_m^{n+1} + f(t_{n+1}, x_n)
-\end{equation}
+\begin{align} \label{scheme1}
+    &\frac{u_m^{n+1} - u_m^n}{\tau} = \frac{u_{m+1}^{n+1} - 2 u_{m}^{n+1} + u_{m-1}^{n+1}}{h^2} - p(x_n) u_m^{n+1} + f(t_{n+1}, x_n),\\ 
+    & m = 1 \ldots M-1, \\
+    & n = 1 \ldots N-1. \\
+\end{align}
 В моём варианте, краевые условия:
 \begin{equation} \label{schemeedge}
     \forall n, m: \quad u_0^{n} = 0, \quad u_1^{n} = 0, \quad u_m^{0} = u_0(x_m). 
 \end{equation}
 
+Отсюда имеем:
+\begin{equation*} \label{scheme1}
+    -\frac{u_{m+1}^{n+1}}{h^2} + u_m^{n+1} (\frac{1}{\tau} + \frac{2}{h^2} + p(x_n)) - \frac{u_{m-1}^{n+1}}{h^2} = f(t_{m}, x_n) + \frac{u_m^n}{\tau}.
+\end{equation*}
+Таким образом, зная вектор $\{u_m^n\}_{m = 1, \ldots N-1}$ для нахождения вектора $\{u_m^{n+1}\}_{m = 1, \ldots M-1}$ необходимо решить систему:
+
+$F = \begin{pmatrix}
+    \frac{1}{\tau} + \frac{2}{h^2} + p(x_n)  &   -\frac{1}{h^2}                           & 0               & \ldots & 0 \\
+    -\frac{1}{h^2}                           &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_n)  & -\frac{1}{h^2}  & \ldots & 0  \\
+    % 0  &-\frac{1}{h^2}  &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_n)  & -\frac{1}{h^2} & \ldots & 0 \\
+    \ldots  &\ldots  &   \ldots  & \ldots  & \ldots \\
+    0 & \ldots & \ldots & 0 -\frac{1}{h^2}  &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_n) 
+\end{pmatrix}
+\begin{pmatrix}
+    u_1^{n + 1} \\
+    u_2^{n + 1} \\
+    \ldots \\
+    u_{M-2}^{n+1} \\
+    u_{M-1}^{n+1}
+\end{pmatrix}$, 
+где
+
+$F=
+\begin{pmatrix}
+    f(t_{1}, x_n) + u_1^{n} \\
+    f(t_{2}, x_n) + u_2^{n} \\
+    \ldots \\
+    f(t_{M-2}, x_n) + u_{M-2}^{n} \\
+    f(t_{M-1}, x_n) + u_{M-1}^{n}
+\end{pmatrix}$.
+
+
+
+Сделать это можно, к примеру, методом прогонки.
 
 \end{document}

@@ -52,4 +52,4 @@ double f(double x);
 
 double full_b_f(double * b, double (*f)(double), int N);
 
-double p(int k);
+double p(double x);

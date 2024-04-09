@@ -44,3 +44,12 @@ void Task3Matrix(double * A, int N);
 double ErNormInf(const double *A, const double *b, double *x, int N, double *mem);
 
 void FormBFromA1(double *A, int N, double *b);
+
+
+// for differential equation 
+
+double f(double x);
+
+double full_b_f(double * b, double (*f)(double), int N);
+
+double p(int k);

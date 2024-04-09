@@ -99,13 +99,13 @@
 \end{center}
 
 \section{Постановка задачи.} Необходимо решить уравнение:
-\begin{equation} \label{diffeq1}
+\begin{equation} \label{de1}
     -y'' + p(x) y(x) = f(x).
 \end{equation}
 В моём варианте, краевые условия:
-\begin{align} \label{diffeqedge}
-    & y_0 = 0, \quad y_N = 0, \quad h = \frac{1}{N}. \\
-\end{align}
+\begin{equation} \label{diffeqedge}
+    y_0 = 0, \quad y_N = 0, \quad h = \frac{1}{N}. 
+\end{equation}
 
 \section{Численная схема и её сходимость.}
 
@@ -122,8 +122,8 @@
 Исследуем сходимость схемы с помощью теоремы Филлипова.
 \begin{theorem}
     \begin{enumerate}
-        \item \eqref{diffeq1} и \eqref{scheme1} --- линейны.
-        \item Существует единственное решение задачи \eqref{diffeq1} с краевыми условиями \eqref{diffeqedge}.
+        \item \eqref{de1} и \eqref{scheme1} --- линейны.
+        \item Существует единственное решение задачи \eqref{de1} с краевыми условиями \eqref{diffeqedge}.
         \item Разностная схема \eqref{scheme1} аппроксимирует задачу на решении с порядком 2:
             \begin{equation*}
                 || L_h [y]_h - f_h || _{2, h} + || l_h [y]_h - \phi_h || _{2, h} \leq C h^2,           
@@ -141,11 +141,11 @@
 \end{theorem}
 
 \begin{proposition}
-    Теорема Филлипова выполняется для задачи \eqref{diffeq1}--\eqref{diffeqedge} и схемы \eqref{scheme1}--\eqref{schemeedge}.
+    Теорема Филлипова выполняется для задачи \eqref{de1}--\eqref{diffeqedge} и схемы \eqref{scheme1}--\eqref{schemeedge}.
 \end{proposition}
 \begin{proof}
     \begin{enumerate}
-        \item  \eqref{diffeq1} и \eqref{scheme1} --- линейны по определению.
+        \item  \eqref{de1} и \eqref{scheme1} --- линейны по определению.
         \item Из теории дифференциальных уравнений известно, что такой тип уравнений имеет единственное решение.
         \item По определению аппроксимации на решении,
         \begin{align*}
@@ -177,11 +177,11 @@
 В случае постоянного $p$ это можно сделать методом Фурье. В более общем случае --- методом прогонки. Были реализованы оба метода. См. папку /../Code/src .
 \subsection{Порядок сходимости схемы.}
 Поскольку схема имеет второй порядок сходимости, она должна быть точна на полиномах до 2 степени включительно. Рассмотрим задачу
-\begin{equation*} \label{diffeq1}
+\begin{equation*} 
     -y'' = 1,
 \end{equation*}
 с краевыми условиями:
-\begin{align*} \label{diffeqedge}
+\begin{align*} 
     & y(0) = 0, \quad y(1) = 0. \\
 \end{align*}
 Её решение: $y = \frac{-x(x-1)}{2}$. Решим эту задачу численно на небольшом количестве точек. Как видно из рисунков, графики точно совпали 
@@ -200,11 +200,11 @@
 
 \subsection{Корректность работы с $p\neq0$.}
 Теперь рассмотрим задачу
-\begin{equation*} \label{diffeq1}
+\begin{equation*} 
     -y'' + y = 1,
 \end{equation*}
 с краевыми условиями:
-\begin{align*} \label{diffeqedge}
+\begin{align*}
     & y(0) = 0, \quad y(1) = 0. \\
 \end{align*}
 Её решение: $y = C e^x - (1 + C) e^{-t} + 1$, где $C = -\frac{1}{e + 1}$. Погрешность численного решения не видна на графике. Она составляет примерно $3e-6$.

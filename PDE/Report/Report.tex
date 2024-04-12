@@ -107,9 +107,39 @@
 \begin{equation} \label{diffeqedge}
     u(0, t) = 0, \quad u(1, t) = 0, \quad u(x, 0) = u_0(x). 
 \end{equation}
+\section{Решение дифференциального уравнения (для тестов).}
+Будем искать решение в виде $u(t, x) = X(x) T(t)$. С учетом краевых условий, получим:
+\begin{align*} 
+    & u(0, x) = T(t) X(0) = 0 \Rightarrow X(0) = 0, \\
+    & u(1, x) = T(t) X(1) = 0 \Rightarrow X(1) = 0.
+\end{align*}
+Разрешим уравнение с учетом $u(t, x) = X(x) T(t)$:
+\begin{align*} 
+    & X T' = X'' T, \\
+    & \frac{X''}{X} = \frac{T'}{T} = -\lambda.
+\end{align*}
+Рассмотрим уравнение на $X$, чтобы найти значения $\lambda$, при которых решение нетривиально:
+\begin{align*} 
+    & X'' = -\lambda X, \\
+    & X = C_1 \sin(\sqrt{\lambda} x) + C_2 \cos (\sqrt{\lambda} x), \\
+    & X(0) = C_1 \sin(\sqrt{\lambda} 0) + C_2 \cos (\sqrt{\lambda} 0) = C_2 = 0 \Rightarrow C_2 = 0. \\
+    & X(1) = C_1 \sin(\sqrt{\lambda} 1) + 0 * \cos (\sqrt{\lambda} 1)= 0 \Rightarrow \\ 
+    & \Rightarrow \sin(\sqrt{\lambda}) = 0 \Rightarrow \sqrt{\lambda} = \pi k, k \in Z \Rightarrow \lambda = \pi^2 k^2, k \in Z.
+\end{align*}
+Случай $C_1 = 0$ дает тривиальное решение. С учетом вычислений выше, можем записать общий вид для $X$ и $T$:
+\begin{align*} 
+    & X = C_1 \sin(\pi k x), \quad T = C_2 \exp{(-\pi^2 k^2 t)}, \quad k \in Z.
+\end{align*}
+Таким образом, общее решение дифференциального уравнения:
+\begin{align*} 
+    & u = \sum_{n = 1}^{\infty} A_n \sin(\pi n x) \exp{(-\pi^2 n^2 t)}.
+\end{align*}
+
+
+
 \section{Дискретизация дифференциального уравнения.}
 \begin{align} \label{scheme1}
-    &\frac{u_m^{n+1} - u_m^n}{\tau} = \frac{u_{m+1}^{n+1} - 2 u_{m}^{n+1} + u_{m-1}^{n+1}}{h^2} - p(x_n) u_m^{n+1} + f(t_{n+1}, x_n),\\ 
+    &\frac{u_m^{n+1} - u_m^n}{\tau} = \frac{u_{m+1}^{n+1} - 2 u_{m}^{n+1} + u_{m-1}^{n+1}}{h^2} - p(x_m) u_m^{n+1} + f(t_{n}, x_{m+1}),\\ 
     & m = 1 \ldots M-1, \\
     & n = 1 \ldots N-1. \\
 \end{align}
@@ -117,19 +147,79 @@
 \begin{equation} \label{schemeedge}
     \forall n, m: \quad u_0^{n} = 0, \quad u_1^{n} = 0, \quad u_m^{0} = u_0(x_m). 
 \end{equation}
+\section{Аппроксимация на решении.}
+Разложим значения решения в ряд Тейлора:
 
+\begin{align*}
+    u(t_n, x_{m+1}) &= u(t_n, x_{m}) +    h u_x(t_n, x_{m}) 
+    + \frac{h^2}{2}u_{xx}(t_n, x_{m}) +    \frac{h^3}{6}u_{xxx}(t_n, x_{m}) \\ &+    \frac{h^4}{24}u_{xxxx}(t_n, x_{m}) + O(h^5) \\
+    u(t_n, x_{m-1}) &= u(t_n, x_{m}) -    h u_x(t_n, x_{m}) 
+    + \frac{h^2}{2}u_{xx}(t_n, x_{m}) -    \frac{h^3}{6}u_{xxx}(t_n, x_{m}) \\ &+    \frac{h^4}{24}u_{xxxx}(t_n, x_{m}) + O(h^5) \\
+    u(t_{n+1}, x_m) &= u(t_{n}, x_m)+ \tau u_x(t_{n}, x_m) + \frac{\tau^2}{2}u_{tt}(t_n, x_{m}) + \frac{\tau^3}{6}u_{ttt}(t_n, x_{m}) \\
+    &+ \frac{\tau^4}{24}u_{tttt}(t_n, x_{m}) + O(\tau^5) \\
+    u(t_{n-1}, x_m) &= u(t_{n}, x_m)- \tau u_x(t_{n}, x_m) + \frac{\tau^2}{2}u_{tt}(t_n, x_{m}) - \frac{\tau^3}{6}u_{ttt}(t_n, x_{m}) \\
+    &+ \frac{\tau^4}{24}u_{tttt}(t_n, x_{m}) + O(\tau^5) \\
+\end{align*}
+Отсюда имеем:
+\begin{align*}
+    \frac{u_m^{n+1} - u_m^n}{\tau} &=   \frac{u(t_{n+1}, x_m) - u(t_n, x_m)}{\tau} = u_t(t_{n}, x_m) \\
+    &+\frac{\tau}{2}u_{tt}(t_n, x_{m}) + \frac{\tau^2}{6}u_{ttt}(t_n, x_{m}) + \frac{\tau^3}{24}u_{tttt}(t_n, x_{m}) + O(\tau^4) \\
+    \frac{u_{m+1}^{n+1} - 2 u_{m}^{n+1} + u_{m-1}^{n+1}}{h^2} &= \frac{u(t_{n+1}, x_{m+1}) - 2 u(t_{n+1}, x_{m}) + u(t_{n+1}, x_{m-1})}{h^2} = \\
+    &= u_{xx}(t_n, x_{m}) + \frac{h^2}{12}u_{xxxx}(t_n, x_{m}) + O(h^4)\\
+\end{align*}
+
+Подставив эти выражения в дифференциальное уравнение, получим:
+\begin{align*}
+    &||\frac{u_m^{n+1} - u_m^n}{\tau} - \frac{u_{m+1}^{n+1} + 2 u_{m}^{n+1} + u_{m-1}^{n+1}}{h^2} + p(x_m) u_m^{n+1} - f(t_{n}, x_{m+1})|| = \\
+    &= ||- u_{xx}(t_n, x_{m}) + O(h^2) + u_t(t_{n}, x_m) + O(\tau) + p(x_m) u_m^{n+1} - f(t_{n}, x_{m+1}) || =\\
+    &= O(h^2 + \tau). \\
+\end{align*}
+С учетом того, что начальные условия даны точно и, очевидно, $|f(t_n, x_m) - f_m^n| \rightarrow 0$, получаем, что порядок аппроксимации на решении 
+данной схемы составляет $O(\tau + h^2)$.
+
+
+
+\section{Устойчивость схемы.}
+Удобная для анализа форма записи схемы имеет вид:
+\begin{align*}
+    u_m^{n+1} - u_m^n = \rho (u_{m+1}^{n+1} - 2 u_{m}^{n+1} + u_{m-1}^{n+1}) - \tau p(x_m) u_m^{n+1} + \tau f(t_{n}, x_{m+1}), \quad \rho = \frac{\tau}{h^2}.
+\end{align*}
+
+Выбирая из всех значений $u_m^{n+1}$, по модулю равных $\left\|u^{n+1}\right\|$, такое, у которого индекс $m$ принимает наименьшее значение, имеем
+$$
+\left|u_m^{n+1}\right|>\left|u_{m-1}^{n+1}\right| \text { и }\left|u_m^{n+1}\right| \geqslant\left|u_{m+1}^{n+1}\right| .
+$$
+
+Отсюда $\left|2 u_m^{n+1}\right|>\left|u_{m-1}^{n+1}\right|+\left|u_{m+1}^{n+1}\right|$, и знак выражения $2 u_m^{n+1}-u_{m-1}^{n+1}-u_{m+1}^{n+1}$ совпадает со знаком $u_m^{n+1}$, т. е. справедлива оценка снизу
+$$
+\left\|u^{n+1}\right\|=\left|u_m^{n+1}\right| \leq \left|u_m^{n+1}+\rho\left(2 u_m^{n+1}-u_{m-1}^{n+1}-u_{m+1}^{n+1}\right)\right|=\left|u_m^n+\tau f_m^{n+1}\right| .
+$$
+
+Таким образом, при любых шагах сетки $\tau$ и $h$ справедливо неравенство $\left\|u^{n+1}\right\| \leq \left\|u^n\right\|+\tau\left\|f^{n+1}\right\|$. Из него 
+получаем:
+
+$\begin{aligned}\left\|u^{n+1}\right\| & \leq \left\|u^n\right\| +\tau\left\|f^n\right\| 
+     \leq \left\|u^{n-1}\right\|+\tau\left(\left\|f^n\right\|+\left\|f^{n-1}\right\|\right) 
+    \leq  \ldots \leq \\ &\leq \left\|u^0\right\|+\sum_{k=0}^n \tau\left\|f^k\right\|
+    \leq \left\|u^0\right\|+(n+1) \tau \max _k\left\|f^k\right\| .\end{aligned}$
+
+Таким образом, схема бехусловно устойчива.
+
+\section{Алгоритм построения сети.}
 Отсюда имеем:
 \begin{equation*} \label{scheme1}
-    -\frac{u_{m+1}^{n+1}}{h^2} + u_m^{n+1} (\frac{1}{\tau} + \frac{2}{h^2} + p(x_n)) - \frac{u_{m-1}^{n+1}}{h^2} = f(t_{m}, x_n) + \frac{u_m^n}{\tau}.
+    -\frac{u_{m+1}^{n+1}}{h^2} + u_m^{n+1} (\frac{1}{\tau} 
+    + \frac{2}{h^2} + p(x_m)) - \frac{u_{m-1}^{n+1}}{h^2} = f(t_{n}, x_{m+1}) + \frac{u_m^n}{\tau}.
 \end{equation*}
+
 Таким образом, зная вектор $\{u_m^n\}_{m = 1, \ldots N-1}$ для нахождения вектора $\{u_m^{n+1}\}_{m = 1, \ldots M-1}$ необходимо решить систему:
 
 $F = \begin{pmatrix}
-    \frac{1}{\tau} + \frac{2}{h^2} + p(x_n)  &   -\frac{1}{h^2}                           & 0               & \ldots & 0 \\
-    -\frac{1}{h^2}                           &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_n)  & -\frac{1}{h^2}  & \ldots & 0  \\
-    % 0  &-\frac{1}{h^2}  &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_n)  & -\frac{1}{h^2} & \ldots & 0 \\
+    \frac{1}{\tau} + \frac{2}{h^2} + p(x_m)  &   -\frac{1}{h^2}                           & 0               & \ldots & 0 \\
+    -\frac{1}{h^2}                           &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_m)  & -\frac{1}{h^2}  & \ldots & 0  \\
+    % 0  &-\frac{1}{h^2}  &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_m)  & -\frac{1}{h^2} & \ldots & 0 \\
     \ldots  &\ldots  &   \ldots  & \ldots  & \ldots \\
-    0 & \ldots & \ldots & 0 -\frac{1}{h^2}  &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_n) 
+    0 & \ldots & \ldots & 0 -\frac{1}{h^2}  &   \frac{1}{\tau} + \frac{2}{h^2} + p(x_m) 
 \end{pmatrix}
 \begin{pmatrix}
     u_1^{n + 1} \\
@@ -142,11 +232,11 @@ $F = \begin{pmatrix}
 
 $F=
 \begin{pmatrix}
-    f(t_{1}, x_n) + u_1^{n} \\
-    f(t_{2}, x_n) + u_2^{n} \\
+    f(t_{1}, x_{m+1}) + \frac{u_1^{n}}{\tau} \\
+    f(t_{2}, x_{m+1}) + \frac{u_2^{n}}{\tau} \\
     \ldots \\
-    f(t_{M-2}, x_n) + u_{M-2}^{n} \\
-    f(t_{M-1}, x_n) + u_{M-1}^{n}
+    f(t_{n-2}, x_{m+1}) + \frac{u_{M-2}^{n}}{\tau} \\
+    f(t_{n-1}, x_{m+1}) + \frac{u_{M-1}^{n}}{\tau}
 \end{pmatrix}$.
 
 

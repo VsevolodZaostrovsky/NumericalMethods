@@ -1,3 +1,3 @@
-double f(double x, double t);
+double func(double t, double x);
 
 double p(double x);

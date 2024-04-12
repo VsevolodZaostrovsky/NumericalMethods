@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6)
-project(RungeKutt)
+project(PDE)
 
 set(SOURCE_FILES src/FourierMethod.c)
 add_executable(DiffEqFourier ${SOURCE_FILES} src/DiffEqFourier.c)

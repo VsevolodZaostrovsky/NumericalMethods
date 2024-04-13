@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
     M = atoi(argv[2]);
 
 
-    h   = 1. / (double)(N);
-    tau = 1. / (double)(M);
+    h   = 1. / (double)(N - 1);
+    tau = 1. / (double)(M - 1);
 
     a     = (double *)malloc((M + N + 1) * sizeof(double));
     b     = (double *)malloc((M + N + 1) * sizeof(double));
@@ -45,9 +45,9 @@ int main(int argc, char *argv[])
     alpha = (double *)malloc((M + N + 1) * sizeof(double));
     beta  = (double *)malloc((M + N + 1) * sizeof(double));
     differentialNet = (double *)malloc(N * M * sizeof(double));
-    for(int k = 0; k < M; k++){ differentialNet[k] = u0(k * h); }
+    for(int k = 0; k < M; k++){ differentialNet[k] = u0(k * tau); }
 
-    for(int i = 0; i < N - 2; i++)
+    for(int i = 0; i < N - 1; i++)
     {
         for(int k = 0; k < M - 2; k++)
         {
@@ -68,25 +68,25 @@ int main(int argc, char *argv[])
             // printf("%lf %lf %lf %lf\n", a[k], b[k], c[k], f[k]);
         }
 
-
+        // printf("before sweep %d", i);
         sweep_method(a, b, c, f, y, alpha, beta, M - 3);
-        for(int k = 0; k < M - 2; k++)
-        {
-            // printf("%lf \n", y[k]);
-        }
+        // for(int k = 0; k < M - 2; k++)
+        // {
+        //     printf("%lf \n", y[k]);
+        // }
         for(int k = 0; k < M - 2; k++){ 
             differentialNet[M * (i + 1) + k + 1] = y[k]; 
         // printf("%lf ", y[k]);
         }
         differentialNet[M * (i + 1) + 0] = 0;
-        differentialNet[M * (i + 1) + N - 1] = 0;
+        differentialNet[M * (i + 1) + M - 1] = 0;
     }
     
 
     for(int i = 0; i < N; i++)
     {
         for(int j = 0; j < M; j++)
-            printf("%10.5lf ", differentialNet[i * N + j]);
+            printf("%10.5lf ", differentialNet[i * M + j]);
         printf("\n");
     }
     printf("\n");
@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
     free(y);
     free(alpha);
     free(beta);
+    free(differentialNet);
 
     return 0;
 }

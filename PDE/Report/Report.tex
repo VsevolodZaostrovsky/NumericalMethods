@@ -92,11 +92,9 @@
 \begin{document}
 
 \begin{center}
-
     {Всеволод Заостровский, 409 группа}\\
     {\bfseries Отчёт по задаче ''Численное решение дифференциальных уравнений с частными производными. Нявная схема для уравнения теплопроводности''.\\}
     \vspace{1cm}
-
 \end{center}
 
 \section{Постановка задачи.} Необходимо решить уравнение:
@@ -107,7 +105,9 @@
 \begin{equation} \label{diffeqedge}
     u(0, t) = 0, \quad u(1, t) = 0, \quad u(x, 0) = u_0(x). 
 \end{equation}
-\section{Решение дифференциального уравнения (для тестов).}
+
+
+\section{Решение дифференциального уравнения (для тестов).}\label{solution}
 Будем искать решение в виде $u(t, x) = X(x) T(t)$. С учетом краевых условий, получим:
 \begin{align*} 
     & u(0, x) = T(t) X(0) = 0 \Rightarrow X(0) = 0, \\
@@ -189,12 +189,10 @@
 $$
 \left|u_m^{n+1}\right|>\left|u_{m-1}^{n+1}\right| \text { и }\left|u_m^{n+1}\right| \geqslant\left|u_{m+1}^{n+1}\right| .
 $$
-
 Отсюда $\left|2 u_m^{n+1}\right|>\left|u_{m-1}^{n+1}\right|+\left|u_{m+1}^{n+1}\right|$, и знак выражения $2 u_m^{n+1}-u_{m-1}^{n+1}-u_{m+1}^{n+1}$ совпадает со знаком $u_m^{n+1}$, т. е. справедлива оценка снизу
 $$
 \left\|u^{n+1}\right\|=\left|u_m^{n+1}\right| \leq \left|u_m^{n+1}+\rho\left(2 u_m^{n+1}-u_{m-1}^{n+1}-u_{m+1}^{n+1}\right)\right|=\left|u_m^n+\tau f_m^{n+1}\right| .
 $$
-
 Таким образом, при любых шагах сетки $\tau$ и $h$ справедливо неравенство $\left\|u^{n+1}\right\| \leq \left\|u^n\right\|+\tau\left\|f^{n+1}\right\|$. Из него 
 получаем:
 
@@ -211,6 +209,17 @@ $\begin{aligned}\left\|u^{n+1}\right\| & \leq \left\|u^n\right\| +\tau\left\|f^n
     -\frac{u_{m+1}^{n+1}}{h^2} + u_m^{n+1} (\frac{1}{\tau} 
     + \frac{2}{h^2} + p(x_m)) - \frac{u_{m-1}^{n+1}}{h^2} = f(t_{n}, x_{m+1}) + \frac{u_m^n}{\tau}.
 \end{equation*}
+
+Фактически, требуется построить значения функции на сети. Процесс построения описывается рисунком \ref{scheme}: 
+известны значения в левой, правой и нижней границах квадрата $[0,1] \times [0, 1]$. Значение в каждом узле определяется
+значениями соседних узлов: слева, справа и непосредственно под ним. 
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{figs/scheme.pdf}
+    \caption{Графическое представление задачи и порядка вычисления значений в узлах сетки}
+    \label{scheme}
+\end{figure}
 
 Таким образом, зная вектор $\{u_m^n\}_{m = 1, \ldots N-1}$ для нахождения вектора $\{u_m^{n+1}\}_{m = 1, \ldots M-1}$ необходимо решить систему:
 
@@ -240,7 +249,53 @@ $F=
 \end{pmatrix}$.
 
 
-
 Сделать это можно, к примеру, методом прогонки.
+
+\section{Тесты}
+В разделе \ref{solution} найдено представление решения в виде ряда, коэффициенты которого определяются из условия $u(x, 0) = u_0(x)$. 
+Для тестов возьмём  
+$$u_0(x) = u(x,0)=\sin(\pi n x) .$$ 
+В этом случае легко видеть из разложения общего решения в ряд, что
+$$ u(t, x) = \sin(\pi x) \exp{(-\pi^2 t)}. $$
+Было проведено два теста скорости сходимости: 
+\begin{enumerate}
+    \item $(N, M) = \left\{(i, i), \quad i \in \{100, 200, 300, 400, 500\} \right\}$ --- для проверки сходимоти $O(\tau)$.
+    \item $(N, M) = \left\{(i^2, i), \quad i \in \{10, 20, 30\} \right\}$ --- для проверки сходимоти $O(h^2)$.
+\end{enumerate}
+Если $\delta(N, M) = \max_{n\leq N, m \leq M} |u(t_n, x_m) - u_h(t_n, x_m)| = O(h^2 + \tau), $ то: 
+\begin{enumerate}
+    \item при хорошем $h$ (в тесте взято $h = \tau  $): $ \ln\left(\delta(N, M)\right) \approx \ln(\tau) + \text{const},$
+    \item при плохом  $h$ (в тесте взято $h = \sqrt{\tau}$): $ \ln\left(\delta(N, M)\right) \approx \ln(h) + \text{const}.$
+\end{enumerate}
+Из графиков \ref{t1} и \ref{t2} видно, что эти условия выполнены. 
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{figs/OrderCon1.pdf}
+    \caption{Зависимость погрешности от размера сетки в первой серии тестов}
+    \label{t1}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{figs/OrderCon2.pdf}
+    \caption{Зависимость погрешности от размера сетки во второй серии тестов}
+    \label{t2}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{figs/p500500.png}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{figs/TeorSol.png}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.6]{figs/t10010.png}
+\end{figure}
 
 \end{document}

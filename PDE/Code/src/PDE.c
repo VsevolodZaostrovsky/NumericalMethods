@@ -25,17 +25,24 @@ int main(int argc, char *argv[])
 
     if (argc < 3)
     {
-        printf("Wrong number of parameters, must be 1 in format:\n");
-        printf("N M\n");
+        printf("Wrong number of parameters, must be 2 in format:\n");
+        printf("N - x M - time\n");
         return -1;
     }
 
     N = atoi(argv[1]);
     M = atoi(argv[2]);
 
+        if (N < 3 || M < 3)
+    {
+        printf("Wrong parameters, must be:\n");
+        printf("N >= 3 M >= 3\n");
+        return -1;
+    }
 
-    h   = 1. / (double)(N - 1);
-    tau = 1. / (double)(M - 1);
+
+    h   = 1. / (double)(M - 1);
+    tau = 1. / (double)(N - 1);
 
     a     = (double *)malloc((M + N + 1) * sizeof(double));
     b     = (double *)malloc((M + N + 1) * sizeof(double));
@@ -45,7 +52,7 @@ int main(int argc, char *argv[])
     alpha = (double *)malloc((M + N + 1) * sizeof(double));
     beta  = (double *)malloc((M + N + 1) * sizeof(double));
     differentialNet = (double *)malloc(N * M * sizeof(double));
-    for(int k = 0; k < M; k++){ differentialNet[k] = u0(k * tau); }
+    for(int k = 0; k < M; k++){ differentialNet[k] = u0(k * h); }
 
     for(int i = 0; i < N - 1; i++)
     {

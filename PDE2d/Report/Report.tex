@@ -1,0 +1,266 @@
+\documentclass[14pt,a4paper]{extarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage{amssymb,amsmath,mathrsfs,amsthm}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage[footnotesize]{caption2}
+\usepackage{indentfirst}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{url}
+\usepackage{amsmath}
+
+\usepackage{enumitem}
+
+%\usepackage[ruled,section]{algorithm}
+%\usepackage[noend]{algorithmic}
+%\usepackage[all]{xy}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tcolorbox}
+
+%Библиотека для блок-схем
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+% Параметры страницы
+\textheight=24cm
+\textwidth=16cm
+\oddsidemargin=5mm
+\evensidemargin=-5mm
+\marginparwidth=36pt
+\topmargin=-1cm
+\footnotesep=3ex
+%\flushbottom
+\raggedbottom
+\tolerance 3000
+% подавить эффект "висячих стpок"
+\clubpenalty=10000
+\widowpenalty=10000
+%\renewcommand{\baselinestretch}{1.1}
+\renewcommand{\baselinestretch}{1.5} %для печати с большим интервалом
+
+\newcommand{\angstrom}{\mbox{\normalfont\AA}}
+
+\newtheorem{definition}{Определение} % задаём выводимое слово (для определений)
+\newtheorem{example}{Замечание} % задаём выводимое слово (для определений)
+\newtheorem{theorem}{Теорема} % задаём выводимое слово (для определений)
+\newtheorem{proposition}{Утверждение} % задаём выводимое слово (для определений)
+\newtheorem{construction}{Конструкция} % задаём выводимое слово (для определений)
+
+\DeclareMathOperator*{\sgn}{sgn}
+\DeclareMathOperator*{\var}{var}
+\DeclareMathOperator*{\cov}{cov}
+\DeclareMathOperator*{\law}{Law}
+
+\newcommand{\1}{\mathbbm{1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+
+\newcommand{\independent}{\perp\!\!\!\!\perp}
+
+\newcommand\cA{{\cal A}}
+\newcommand\cE{{\cal E}}
+\newcommand\cC{{\cal C}}
+\newcommand\cF{{\cal F}}
+\newcommand\cG{{\cal G}}
+\newcommand\cK{{\cal K}}
+\newcommand\cL{{\cal L}}
+\newcommand\cB{{\cal B}}
+\newcommand\cN{{\cal N}}
+\newcommand\cM{{\cal M}}
+\newcommand\cX{{\cal X}}
+\newcommand\cD{{\cal D}}
+\newcommand\cR{{\cal R}}
+\newcommand\cP{{\cal P}}
+\newcommand\cQ{{\cal Q}}
+\newcommand\cS{{\cal S}}
+\newcommand\cT{{\cal T}}
+\newcommand\cV{{\cal V}}
+\newcommand\cZ{{\cal Z}}
+
+\newcommand{\textProposition}    {Предложение}
+\newcommand{\textTask}    {Задача}
+
+\begin{document}
+
+\begin{center}
+    {Всеволод Заостровский, 409 группа}\\
+    {\bfseries Отчёт по задаче '' Метод Фурье для уравнения теплопроводности для двумерного оператора Лапласа''.\\}
+    \vspace{1cm}
+\end{center}
+
+\section{Постановка задачи.} \label{diffeq1}
+Необходимо решить уравнение:
+\begin{equation*} 
+    u_t(t, x) = u_{xx}(t, x, y) + u_{yy}(t, x, y) + f(t, x, y).
+\end{equation*}
+Будем считать, что $0 \leq t,x,y \leq 1$. В моём варианте, краевые условия:
+\begin{align*} 
+    &u(t, x, y) \big| _{(x ,y) \in \partial \Omega} = 0, \quad \Omega = [0,1] \times [0,1]. \\
+    &u(0, x, y) = u^0(x, y), \quad (x, y) \in \Omega. 
+\end{align*}
+
+
+\section{Решение дифференциального уравнения (для тестов).}\label{solution}
+Будем искать решение в виде $u(t, x, y) = T(t) X(x) Y(y)$. С учетом краевых условий, получим:
+\begin{align*} 
+    & u(t, x, 0) = T(t) X(x) Y(0) = 0 \Rightarrow Y(0) = 0, \\
+    & u(t, x, 1) = T(t) X(x) Y(1) = 0 \Rightarrow Y(1) = 0, \\
+    & u(t, 0, y) = T(t) X(0) Y(y) = 0 \Rightarrow X(0) = 0, \\
+    & u(t, 1, y) = T(t) X(1) Y(y) = 0 \Rightarrow X(1) = 0.
+\end{align*}
+Разрешим уравнение с учетом $u(t, x) = T(t) X(x) Y(y)$:
+\begin{align*} 
+    & T' X Y = T X'' Y + T X Y'', \\
+    & \frac{X''}{X} + \frac{Y''}{Y} = \frac{T'}{T} = -\lambda.
+\end{align*}
+
+
+
+\section{Дискретизация дифференциального уравнения.} \label{scheme1}
+Исходной задаче (см. раздел \ref{diffeq1}) предлагается сопоставлять следующую схему:
+\begin{align*}
+    &\frac{u_{i, j}^{n+1} - u_{i, j}^n}{\tau} = \frac{u_{i+1, j}^{n+1} - 2 u_{i, j}^{n+1} + u_{i-1, j}^{n+1}}{h_X^2} + 
+    \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} + u_{i, j-1}^{n+1}}{h_Y^2} + f(t_{n}, x_{i+1}, y_{j+1}), \\
+    & i = 1 \ldots N_X, \quad j = 1 \ldots N_Y, \quad n = 1 \ldots N-1.
+\end{align*}
+Краевые условия примут вид:
+\begin{align*} 
+    &\forall i, j, n \in \{0, 1, \ldots N_X\}\times\{0, 1, \ldots N_Y\}\times\{0, 1, \ldots N\} ,\\
+    &u^n_h(1, j) = u^n_h(0, j) = u^n_h{(i, 0)} = u^n_h{(i, 1)} = 0, \\
+    &u^0_h{(i, j)} = u^0_h(i, j). 
+\end{align*}
+\section{Аппроксимация на решении.}
+Разложим значения решения в ряд Тейлора:
+\begin{align*}
+    u(t_n, x_{i+1}, y_j) &= u(t_n, x_{i}, y_j) +    h_X u_x(t_n, x_{i}, y_j) 
+    + \frac{h_X^2}{2}u_{xx}(t_n, x_{i}, y_j) \\ &+\frac{h_X^3}{6}u_{xxx}(t_n, x_{i}, y_j) +    \frac{h_X^4}{24}u_{xxxx}(t_n, x_{i}, y_j) + O(h_X^5) \\
+    u(t_n, x_{i-1}, y_{j}) &= u(t_n, x_{i}, y_j) - h_X u_x(t_n, x_{i}, y_j) 
+    + \frac{h_X^2}{2}u_{xx}(t_n, x_{i}, y_j) \\ &-   \frac{h_X^3}{6}u_{xxx}(t_n, x_{i}, y_j) +    \frac{h_X^4}{24}u_{xxxx}(t_n, x_{i}, y_j) + O(h_X^5) \\
+    u(t_n, x_{i}, y_{j+1}) &= u(t_n, x_{i}, y_j) +    h_Y u_y(t_n, x_{i}, y_j) 
+    + \frac{h_Y^2}{2}u_{yy}(t_n, x_{i}, y_j) \\ &+ \frac{h_Y^3}{6}u_{yyy}(t_n, x_{i}, y_j) +    \frac{h_Y^4}{24}u_{yyyy}(t_n, x_{i}, y_j) + O(h_Y^5) \\
+    u(t_n, x_{i}, y_{j-1}) &= u(t_n, x_{i}, y_j) - h_Y u_y(t_n, x_{i}, y_j) 
+    + \frac{h_Y^2}{2}u_{yy}(t_n, x_{i}, y_j) \\ &- \frac{h_Y^3}{6}u_{yyy}(t_n, x_{i}, y_j) +    \frac{h_Y^4}{24}u_{yyyy}(t_n, x_{i}, y_j) + O(h_Y^5) \\
+    u(t_{n+1}, x_i, y_j) &= u(t_{n}, x_i, y_j)+ \tau u_x(t_{n}, x_i, y_j) + \frac{\tau^2}{2}u_{tt}(t_n, x_i, y_j) + \frac{\tau^3}{6}u_{ttt}(t_n, x_i, y_j) \\
+    &+ \frac{\tau^4}{24}u_{tttt}(t_n, x_i, y_j) + O(\tau^5) \\
+    u(t_{n-1}, x_m) &= u(t_{n}, x_i, y_j)- \tau u_x(t_{n}, x_i, y_j) + \frac{\tau^2}{2}u_{tt}(t_n, x_i, y_j) - \frac{\tau^3}{6}u_{ttt}(t_n, x_i, y_j) \\
+    &+ \frac{\tau^4}{24}u_{tttt}(t_n, x_i, y_j) + O(\tau^5) \\
+\end{align*}
+Отсюда имеем:
+\begin{align*}
+    \frac{u_{i, j}^{n+1} - u_{i, j}^n}{\tau} &=   \frac{u(t_{n+1}, x_i, y_j) - u(t_n, x_i, y_j)}{\tau} = u_t(t_{n}, x_i, y_j) \\
+    &+\frac{\tau}{2}u_{tt}(t_n, x_{i}, y_j) + \frac{\tau^2}{6}u_{ttt}(t_n, x_{i}, y_j)+ \frac{\tau^3}{24}u_{tttt}(t_n, x_{i}, y_j) + O(\tau^4) \\
+    \frac{u_{i+1, j}^{n+1} - 2 u_{i, j}^{n+1} + u_{i-1, j}^{n+1}}{h_X^2} &= \frac{u(t_{n+1}, x_{i+1}, y_j) - 2 u(t_{n+1}, x_{i}, y_j) + u(t_{n+1}, x_{i-1}, y_j)}{h_X^2} = \\
+    &= u_{xx}(t_n, x_{i}, y_j) + \frac{h_X^2}{12}u_{xxxx}(t_n, x_{i}, y_j) + O(h_X^4)\\
+    \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} + u_{i, j-1}^{n+1}}{h_Y^2} &=\frac{u(t_{n+1}, x_{i}, y_{j+1}) - 2 u(t_{n+1}, x_{i}, y_j) + u(t_{n+1}, x_{i}, y_{j-1})}{h_Y^2} = \\
+    &= u_{yy}(t_n, x_{i}, y_j) + \frac{h_Y^2}{12}u_{yyyy}(t_n, x_{i}, y_j) + O(h_Y^4)
+\end{align*}
+Подставив эти выражения в дифференциальное уравнение, получим:
+\begin{align*}
+    &||\frac{u_{i, j}^{n+1} - u_{i, j}^n}{\tau} - \frac{u_{i+1, j}^{n+1} - 2 u_{i, j}^{n+1} + u_{i-1, j}^{n+1}}{h_X^2} - 
+    \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} + u_{i, j-1}^{n+1}}{h_Y^2} - f(t_{n}, x_{i+1}, y_{j+1})|| = \\
+    &= ||- u_{xx}(t_n, x_{i}, y_j) - u_{yy}(t_n, x_{i}, y_j) + u_t(t_{n}, x_i, y_j) - f(t_{n}, x_{i+1}, y_{j+1}) + O(\ldots)||=\\ &=
+     O(\tau + h_X^2 + h_Y^2).
+\end{align*}
+С учетом того, что начальные условия даны точно и, очевидно, $|f(t_n, x_i, y_j) - f_{i,j}^n| \rightarrow 0$, получаем, что порядок аппроксимации на решении 
+данной схемы составляет $O(\tau + h_X^2 + h_Y^2)$.
+
+
+
+\section{Алгоритм численного решения.}
+\subsection{Общая идея решения.}
+Запишем схему в виде:
+\begin{align*} 
+    &- \frac{u_{i+1, j}^{n+1} - 2 u_{i, j}^{n+1} + u_{i-1, j}^{n+1}}{h_X^2} - \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} + u_{i, j-1}^{n+1}}{h_Y^2} - \frac{u_{i, j}^{n+1}}{\tau} = \\&= 
+    -\frac{u_{i, j}^n}{\tau} + f(t_{n}, x_{i+1}, y_{j+1}).
+\end{align*}
+Фактически, это трехмерная система уравнений. Первый слой $u_{i, j}^{0} \big|^{n+1} _{0 \leq i, j, \leq 1}$ 
+известен из начального условия. Если, располагая этими данными, удастся вычислить следующий слой, то, повторяя процесс шаг за шагом мы вычислим всю матрицу. Это возможно, поскольку, если считать $u^{n} =\text{const}$ схема выше представляет собой систему линейных уравнений относительно $u_{i, j}^{n+1}$. 
+Далее подробно описан процесс нахождения сети методом Фурье.
+\subsection{Получение $n + 1$ слоя из $n$-го.}
+Если нам известен слой $u_{i, j}^{n} \big|^{n = \text{const}} _{0 \leq i, j, \leq 1}$, то для определения слоя $u_{i, j}^{n} \big|^{n+1} _{0 \leq i, j, \leq 1}$ необходимо решить систему уравнений выше. Проще всего сделать это методом Фурье. Заметим, что эта система образует схему для дифференциальной задачи:
+\begin{align*} 
+    & - \Delta u(x, y) - p u(x , y) = \hat f(x, y), 
+\end{align*}
+где $p = \frac{1}{\tau}$, а $\hat f = -\frac{u}{\tau} + f(x, y)$.
+
+Функции $u(x, y), f(x, y) \in C^{\infty}_0[0, 1]^2$ можно разложить в ряд Фурье,
+взяв синусы в качестве базисных функций:
+\begin{align*}
+    u(x, y) &= \sum_{n, m = 1}^{\infty} \hat c_{nm} \phi ^{(n)}(x) \psi ^{(m)}(y), \\
+    \hat f(x, y) &= \sum_{n, m = 1}^{\infty} \hat d_{nm} \phi ^{(n)}(x) \psi ^{(m)}(y),
+\end{align*}
+где
+\begin{align*}
+    \phi ^{(n)}(x) = \sin {\pi n x}, \quad \psi ^{(m)}(y) = \sin {\pi m y}.
+\end{align*}
+Перейдем в дискретное время:
+\begin{align*}
+    u(x_i, y_j) = u_h(i, j) &= \sum_{n, m = 1}^{N_X, N_Y} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j, \\
+    \hat f(x_i, y_j) = \hat f_h(i, j) &= \sum_{n, m = 1}^{N_X, N_Y} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j,
+\end{align*}
+где
+\begin{align*}
+    \phi _{i}^{(n)} := \phi ^{(n)}(x_i) = \sin {\pi n i h_X}, \quad 
+    \psi _{j}^{(m)} := \psi ^{(m)}(x_j) = \sin {\pi m j h_Y}.
+\end{align*}
+В отчете по задаче по линейной алгебре (см. директорию "LinAlg") были вычислены собственные значения этой функции для дискретизации оператора Лапласа:
+\begin{align*}
+    -\Delta _h^X \phi _{i}^{(n)} &= \lambda^X_n \phi _{i}^{(n)}, \quad 
+    \lambda^X_n = \frac{4}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right), \\
+    -\Delta _h^Y \psi _{j}^{(m)} &= \lambda^Y_m \psi _{j}^{(m)}, \quad 
+    \lambda^Y_m = \frac{4}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right).
+\end{align*}
+С учетом этого, для схемы 
+\begin{align*}
+    -\Delta _h^X u_h(i, j) -\Delta _h^Y u_h(i, j) - p u_h(i, i)= \hat f_h(i, j)
+\end{align*}
+справедливо представление в виде ряда:
+\begin{align*}
+    -\left(\Delta _h^X + \Delta _h^Y\right) \sum_{n, m = 1}^{N_X, N_Y} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j  
+    - p \sum_{n, m = 1}^{N_X, N_Y} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j 
+    = \sum_{n, m = 1}^{N_X, N_Y} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j.
+\end{align*}
+Отсюда, учитывая то, что $\phi ^{(n)}_i$ и $\psi ^{(m)}_j$ --- собственные функции, имеем:
+\begin{align*}
+    \sum_{n, m = 1}^{N_X, N_Y} c_{nm} (\lambda^X_n +  \lambda^Y_m - p) \phi ^{(n)}_i \psi ^{(m)}_j  
+    = \sum_{n, m = 1}^{N_X, N_Y} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j,
+\end{align*}
+а значит
+\begin{align*}
+    c_{nm} = \frac{d_{nm}}{\lambda^X_n +  \lambda^Y_m - p}, \quad 1 \leq n \leq N_X, \quad 1 \leq m \leq N_Y.
+\end{align*}
+\subsection{Практический алгоритм.}
+Решить схему из раздела \ref{scheme1} можно по следующему алгоритму:
+\begin{enumerate}
+    \item На этапе $A$ известен слой $A: \ u_{i, j}^{A} \big|^{A = \text{const}} _{0 \leq i, j, \leq 1}$ и все слои до него.
+    \item Найдем коэффициенты $d_{nm}$ разложения функции $\hat f(x, y)$ в дискретный ряд Фурье: 
+    \begin{align*}
+     -\frac{u^{A}_{i, j}}{\tau} + f(t_A, x_i, y_j) =: \hat f(x_i, y_j) =: \hat f_h(i, j) &= \sum_{n, m = 1}^{N_X, N_Y} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j.
+    \end{align*}
+    \item Найдем коэффициенты $c_{nm}$ разложения функции $u^{A+1}(x, y)$ в дискретный ряд Фурье: 
+    \begin{align*}
+    u(t_{A+1}, x_i, y_j) = u_h^{A+1}(i, j) &= \sum_{n, m = 1}^{N_X, N_Y} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j,
+    \end{align*}
+    пользуясь формулой:
+    \begin{align*}
+    c_{nm} = \frac{d_{nm}}{\frac{4}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) - \frac{1}{\tau}}, 
+    \quad 1 \leq n \leq N_X, \quad 1 \leq m \leq N_Y.
+    \end{align*}
+    \item Вычислить значения 
+    $$
+    u^{A+1}(i, j) = \sum_{n, m = 1}^{N_X, N_Y} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j
+    $$ 
+    и записать их в соответсвующий слой матрицы решения.
+
+\end{enumerate}
+\end{document}

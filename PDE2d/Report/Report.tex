@@ -173,6 +173,74 @@
 С учетом того, что начальные условия даны точно и, очевидно, $|f(t_n, x_i, y_j) - f_{i,j}^n| \rightarrow 0$, получаем, что порядок аппроксимации на решении 
 данной схемы составляет $O(\tau + h_X^2 + h_Y^2)$.
 
+\section{Разложение функции в двумерный ряд Фурье}
+Функцию $u(x, y) \in C^{\infty}[0, 1]^2$ можно разложить в ряд Фурье,
+взяв синусы в качестве базисных функций:
+\begin{equation*}
+    u(x) = \sum_{m, n = 1}^{\infty} c_{mn} \sin {\pi m x} \sin {\pi n y}.
+\end{equation*}
+\par
+Перейдём к рассмотрению конечного числа узлов. Выпишем условия на сетку:
+\begin{align*}
+     & u_{ij} := u(x_i, y_j), \quad x_i = \frac{i}{N_X}, \quad y_j := \frac{j}{N_Y}\\
+     & u_{ij} = \sum_{n, m = 1}^{N_X, N_Y} c_{nm} \phi_i^{(n)} \psi_j^{(m)},                                    \\
+     & \phi_i^{(n)} := \sin{\pi n i h_X} = \sin\left(\frac{\pi n i}{N_X}\right) \\
+     & \psi_j^{(m)} := \sin{\pi m j h_Y} = \sin\left(\frac{\pi m j}{N_Y}\right) \\
+     & \phi^n := (\phi_1^n ... \phi_{N_X-1}^n), \quad \psi^m := (\psi_1^m ... \psi_{N_Y-1}^m).
+\end{align*}
+% Убедимся, что указанные функции ортогональны относительно скалярного произведения
+% ${(\phi^k, \phi^j) = \sum_{m = 1}^{N - 1}\phi_m^k \phi_m^j h}$:
+
+% \begin{align*}
+%      & (\phi^k, \phi^j) = \sum_{m = 1}^{N - 1} \phi_m^k \phi_m^j h
+%     = \sum_{m = 1}^{N - 1} \sin{\pi k (\frac{-h}{2} + m h)} \sin{\pi j (\frac{-h}{2} + m h)} h                                   \\
+%      & = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - j))} - \cos{(\pi h (m - \frac{1}{2})(k + j))} ] h.
+% \end{align*}
+
+% Заметим, что при $\alpha \neq 0$ справедливо:
+% \begin{align*}
+%      & \sum_{m = 1}^{N - 1} \cos(\alpha m - \frac{\alpha}{2}) = Re\sum_{m = 1}^{N - 1} e^{i (\alpha m - \frac{\alpha}{2})}
+%     = Re \frac{e^{\frac{i \alpha}{2}(e^{i \alpha (N - 1)} - 1)}}{e^{i \alpha - 1}}
+%     = \frac{Im [-1 + e^{i (N - 1) \alpha}]}{2 \sin(\alpha/2)}                                                              \\
+%      & = \frac{\sin{(N - 1) \alpha}}{2 \sin(\alpha/2)}.
+% \end{align*}
+
+% Отсюда при $k \neq j$:
+
+% \begin{align*}
+%      & (\phi^k, \phi^j)
+%     = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - j))} - \cos{(\pi h (m - \frac{1}{2})(k + j))} ] h                        \\
+%      & = h \left[ \frac{\sin{(N - 1) \pi h (k - j)}}{4 \sin(\pi h (k - j)/2)} - \frac{\sin{(N - 1) \pi h (k + j)}}{4 \sin(\pi h (k + j)/2)} \right] \\
+%      & = h \left[ \frac{\sin(\pi (k - j) - \pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
+%     - \frac{\sin(\pi (k + j) - \pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right]                                                                      \\
+%      & = h \left[ \frac{(-1)^{k-j}\sin(\pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
+%     - \frac{(-1)^{k+j}\sin(\pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right]                                                                          \\
+%      & = \frac{h}{2} [(-1)^{k-j}\sin(\pi h (k - j)/2) - (-1)^{k+j}\sin(\pi h (k + j)/2)] = 0.
+% \end{align*}
+
+% В ином случае,
+% \begin{align*}
+%      & (\phi^k, \phi^k)
+%     = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - k))} - \cos{(\pi h (m - \frac{1}{2})(k + k))} ] h \\
+%      & = h \left[ \frac{N - 1}{2} - \frac{\sin{2 (N - 1) \pi h k}}{4 \sin(\pi h k)} \right]
+%     = \frac{2 N - 1}{4} \frac{2}{2 N - 1} = \frac{1}{2}.
+% \end{align*}
+
+% Отсюда, очевидно, система функций $\psi_{ij}^{mn} := \phi_i^m \phi_j^n $. \par
+Искать коэффициенты будем по следующему алгоритму:
+\begin{enumerate}
+    \item Вычислим матрицу $u_{ij}:= u(x_i, y_j)$.
+    \item Зафиксируем $j$ и разложим $u^j(i) := u_{ij}$ в одномерный ряд Фурье:
+          \begin{equation*}
+              u^j(i) = \sum _{n = 1}^{N_X - 1} \phi_i^{(n)} d_n^j.
+          \end{equation*}
+          Полученные коэффициенты запишем в новую матрицу.
+    \item По вектору $d_n^j$ восстановим коэффициенты $c_{nm}$ посредством ещё одного разложения в ряд:
+          \begin{equation*}
+              d_n^j = \sum _{m = 1}^{N_Y - 1} c_{nm} \psi_j^m.
+          \end{equation*}
+\end{enumerate}
+
 
 
 \section{Алгоритм численного решения.}

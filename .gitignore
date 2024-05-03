@@ -31,3 +31,10 @@ cmake-build-debug
 LinAlg/Code/LS1
 LinAlg/Code/LS2
 LinAlg/Code/LS3
+PDE2d/Code/nm
+PDE2d/Code/app
+PDE2d/Code/approx.txt
+PDE2d/Code/error.txt
+PDE2d/Code/out.txt
+PDE2d/Code/printDependence.gpi
+PDE2d/Code/printAll.gpi

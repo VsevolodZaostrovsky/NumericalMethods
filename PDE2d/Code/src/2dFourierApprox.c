@@ -24,9 +24,9 @@ int GenerateNet(double *net, int N)
 
     if (N <= 2)
         return NET_GENERATION_ERROR;
-    h = 1 / ((double)N - 0.5);
-    x_k = h / 2;
-    net[0] = -h / 2;
+    h = 1 / ((double)N);
+    x_k = h;
+    net[0] = 0;
     net[N] = 1;
 
     for (int k = 1; k < N; k++)
@@ -38,10 +38,10 @@ int GenerateNet(double *net, int N)
 }
 
 // функции, вычисляющие и записывающие базисный вектор
-double Phi(int m, int k, int N)
+double Phi(int n, int i, int N)
 {
-    double h = 1 / (N - 0.5);
-    return sin(M_PI * m * (-h / 2 + k * h));
+    double h = 1 / ((double)N);
+    return sin(M_PI * n * i * h);
 }
 
 void WritePhiTo(int m, int N, double *ph)
@@ -54,7 +54,7 @@ void WritePhiTo(int m, int N, double *ph)
 
 int WriteCNkTo(int N, double *cNks, double *u, double *umemory, double *phimemory)
 {
-    double h = 1 / (N - 0.5);
+    double h = 1 / ((double)N);
 
     /*    if (GenerateNet(netmemory, N) == NET_GENERATION_ERROR)
         {
@@ -125,7 +125,7 @@ void FindFourierCoefs(double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
                       double *fmemory, double *net, double (*u)(double, double),
                       double *netmemory, double *umemory, double *phimemory)
 {
-    GenerateNet(net, N - 1);
+    GenerateNet(net, N-1);
     FullUMatrix(Umatrix, N, net, u);
     FullDMatrix(Dmatrix, Umatrix, N, umemory, phimemory);
     FullCMatrix(Dmatrix, Cmatrix, N, fmemory, umemory, phimemory);

@@ -125,7 +125,7 @@ void FindFourierCoefs(double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
                       double *fmemory, double *net, double (*u)(double, double),
                       double *netmemory, double *umemory, double *phimemory)
 {
-    GenerateNet(net, N);
+    GenerateNet(net, N-1);
     FullUMatrix(Umatrix, N, net, u);
     FullDMatrix(Dmatrix, Umatrix, N, umemory, phimemory);
     FullCMatrix(Dmatrix, Cmatrix, N, fmemory, umemory, phimemory);

@@ -102,17 +102,7 @@ int main(int argc, char *argv[])
     umemory = (double *)malloc((N + 5) * sizeof(double));
     phimemory = (double *)malloc((N + 5) * sizeof(double));
 
-    GenerateNet(net, N - 1);
-    printf("\n NET: \n");
-    FullUMatrix(Umatrix, N, net, u);
-    PrintMatrix(net, N);
-
-    //    printf("\n Dmatrix: \n");
-    FullDMatrix(Dmatrix, Umatrix, N, umemory, phimemory);
-    //    PrintMatrix(Dmatrix, N);
-
-    //    printf("\n Cmatrix: \n");
-    FullCMatrix(Dmatrix, Cmatrix, N, fmemory, umemory, phimemory);
+    FindFourierCoefs(Umatrix, Dmatrix, Cmatrix, N, fmemory, net, u, netmemory, umemory, phimemory);
 
     WriteResult(net, Cmatrix, N, u, fp);
 
@@ -125,37 +115,6 @@ int main(int argc, char *argv[])
     }
 
     WriteSkrypt(N, argv[2], sk);
-    // PrintMatrix(Cmatrix, N);
-
-    //    printf("\n Cmatrix: \n");
-    // PrintMatrix(Cmatrix, N);
-
-    /*    printf("net:\n");
-
-        for (int h = 0; h < N; ++h)
-        {
-            printf("%lf ", net[h]);
-        }
-        printf("\n");
-        for (int h = 1; h < N; h++)
-        {
-            printf("%lf ", FourierCompute(Cmatrix + 2 * N, N, net[h]));
-        }
-        printf("\n"); */
-
-    /*    for(int h = 1; h < N; h++) {
-            printf("%lf ", FourierCompute(Dmatrix + 2*N, N, net[h]));
-        }
-        printf("\n"); */
-
-    /*
-        printf("\n Umatrix: \n");
-        PrintMatrix(Umatrix, N);
-        printf("\n Dmatrix: \n");
-        PrintMatrix(Dmatrix, N);
-        printf("\n Cmatrix: \n");
-        PrintMatrix(Cmatrix, N);
-    */
 
     free(Umatrix);
     free(Dmatrix);

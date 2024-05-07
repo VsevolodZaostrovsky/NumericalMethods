@@ -1,10 +1,4 @@
-#include <math.h>
-
-#define NET_GENERATION_ERROR -1
-#define NET_GENERATED_WELL 0
-
-#define M_PI 3.14159265358979323846
-#define e(i, j, n) ((i - 1) * (n) + (j - 1))
+#include "2dFourierApprox.h"
 
 double FourierCompute(double *coefs, int N, double x)
 {

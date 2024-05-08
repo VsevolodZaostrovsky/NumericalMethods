@@ -5,6 +5,7 @@
 
 #define M_PI 3.14159265358979323846
 #define e(i, j, n) ((i - 1) * (n) + (j - 1))
+// #define e(i, j, n, N_x, N) ((n - 1) * (n * n) + (j - 1))
 
 int GenerateNet(double *net, int N);
 

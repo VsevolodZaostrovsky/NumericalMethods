@@ -330,5 +330,16 @@
     $$ 
     и записать их в соответсвующий слой матрицы решения.
 
+\section{Тесты.}
+\subsection{Базовая проверка адекватности.}
+Легко видеть, что функция
+ \begin{align*}
+     u(t, x, y) = e^{-2t\pi^2} \sin \pi x \sin \pi y
+ \end{align*}
+ является решением задачи \ref{diffeq1} при начальном условии
+  \begin{align*}
+     u(0, x, y) = \sin \pi x \sin \pi y.
+ \end{align*}
+ Проверим это с помощью программы.
 \end{enumerate}
 \end{document}

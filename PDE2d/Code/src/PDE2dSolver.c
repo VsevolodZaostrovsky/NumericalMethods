@@ -166,22 +166,7 @@ int main(void){
     umemory   = (double *)malloc((N_x + 5) * sizeof(double));
     phimemory = (double *)malloc((N_x + 5) * sizeof(double));
 
-    FindFourierCoefs(Umatrix, Dmatrix, uijn, N_x, fmemory, net, u0, netmemory, umemory, phimemory);
-    // printMatrix(uijn, N_x);
-    for (int G = 1; G < N; G++)
-    {
-        // printf("D from f: \n");
-        Dfromf(f, h, tau, G, Umatrix, Dmatrix, Cmatrix, fmemory, netmemory, umemory, phimemory);
-        // printMatrix(Cmatrix, N_x);
-        // printf("Answer %d layer: \n", G);
-        // CFromD(Dmatrix, Cmatrix, h, tau);
-        CFromDandLayer(uijn + G * N_x * N_x, Cmatrix, uijn + (G - 1) * N_x * N_x, h, tau);
-        // printMatrix(uijn + G * N_x * N_x, N_x);
-        // printf("Final calc - u: \n");
-        // CalculateFourierOnNet(uijn + G * N_x * N_x, Dmatrix, h);
-        // printMatrix(uijn + G * N_x * N_x, N_x);
-
-    }
+    solvePDE2d(u0, f, N_x, N, uijn, Umatrix, Dmatrix, Cmatrix, net, fmemory, netmemory, umemory, phimemory);
 
     for(int j = 0; j < N; j++)
     {

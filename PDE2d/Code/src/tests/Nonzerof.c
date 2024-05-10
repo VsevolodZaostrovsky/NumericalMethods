@@ -87,57 +87,16 @@ int main(int argc, char *argv[]){
     umemory   = (double *)malloc((N_x + 5) * sizeof(double));
     phimemory = (double *)malloc((N_x + 5) * sizeof(double));
 
-    h = 1./(double)(N_x-1);
-    tau = 1./(double)N;
-    
-    FindFourierCoefs(Umatrix, Dmatrix, uijn, N_x, fmemory, net, u0, netmemory, umemory, phimemory);
-    
-    
-    for (int G = 1; G < N; G++)
-    {
-        // printf("D from f: \n");
-        Dfromf(f, h, tau, G, Umatrix, Dmatrix, Cmatrix, fmemory, netmemory, umemory, phimemory);
-        // printf("%lf ", Cmatrix[e(2, 2, N_x)]);
-        // printf("Answer %d layer: \n", G);
-        CFromDandLayer(uijn + G * N_x * N_x, Cmatrix, uijn + (G - 1) * N_x * N_x, h, tau);
-        // printMatrix(uijn + G * N_x * N_x, N_x);
-
-                }
-
-    // printf("h=%lf tau=%lf\n\n", h, tau);
-    // for(int n = 1; n < N ; n++){
-    //     for(int i = 1; i < N_x + 1; i++){
-    //         for(int j = 1; j < N_x + 1; j++){
-    //             printf("%lf ", uijn[c(i, j, n, N_x)]);
-    //             }
-    //             printf("\n");
-    //         }
-    //         printf("\n");
-    //     }
-    // printf("\n");
+    solvePDE2d(u0, f, N_x, N,
+                // все массивы ниже - память, необходимая программе 
+                uijn, // сюда будут записаны коэффициенты фурье решения
+                Umatrix, Dmatrix, Cmatrix, net, fmemory, netmemory, umemory, phimemory);
 
     for(int n = 1; n < N ; n++){
             printf("%lf ", uijn[c(2, 2, n, N_x)]);
         }
     printf("\n");
 
-
-    // for(int j = 0; j < N; j++)
-    // {
-    //     printf("%lf ", uijn[e(2, 3, N_x) + j * N_x * N_x]);
-    // }
-    // printf("\n");
-
-    // for(int j = 0; j < N; j++)
-    // {
-    //     printf("%lf ", uijn[e(3, 2, N_x) + j * N_x * N_x]);
-    // }
-    // printf("\n");
-    // for(int j = 0; j < N; j++)
-    // {
-    //     printf("%lf ", uijn[e(3, 3, N_x) + j * N_x * N_x]);
-    // }
-    // printf("\n");
 
 
     free(Umatrix);

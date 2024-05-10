@@ -358,7 +358,7 @@
     \end{align*}
     \item После нахождения всей трехмерной матрицы коэффициентов Фурье, вычислить значения в каждой точке сетки по этой аппроксимации. 
 \end{enumerate}
-
+Был реализован этот вариант.
 \section{Тесты}
 \subsection{Базисные функции.}
 При начальном условии вида
@@ -426,10 +426,12 @@
     \item $(N, N_x, N_y) = \left\{(i, i), \quad i \in \{100, 200, 300, 400, 500\} \right\}$ --- для проверки сходимоти $O(\tau)$.
     \item $(N, N_x, N_y) = \left\{(i^2, i, i), \quad i \in \{10, 20, 30\} \right\}$ --- для проверки сходимоти $O(h_x^2 + h_y^2)$.
 \end{enumerate}
-Если $\delta(N, N_x, N_y) = \max_{n\leq N, i \leq N_x, j \leq N_y} |u(t_n, x_i, y_j) - u_h(t_n, x_i, y_j)| = O(h_x^2 + h_y^2 + \tau), $ то: 
+Если 
+$$\delta(N, N_x, N_y) = \max_{n\leq N, i \leq N_x, j \leq N_y} |u(t_n, x_i, y_j) - u_h(t_n, x_i, y_j)| = O(h_x^2 + h_y^2 + \tau),$$ 
+то: 
 \begin{enumerate}
-    \item при хорошем $h$ (в тесте взято $h_x = h_y = h = \tau  $): \\$ \ln\left(\delta(N, M)\right) \approx \ln(\tau) + \text{const},$
-    \item при плохом  $h$ (в тесте взято $h_x = h_y = h = \sqrt{\tau}$): \\$ \ln\left(\delta(N, M)\right) \approx \ln(h) + \text{const}.$
+    \item при хорошем $h$ (в тесте взято $h_x = h_y = h = \tau  $): \\$ \ln\left(\delta(N, N_x, N_y)\right) \approx \ln(\tau) + \text{const},$
+    \item при плохом  $h$ (в тесте взято $h_x = h_y = h = \sqrt{\tau}$): \\$ \ln\left(\delta(N, N_x, N_y)\right) \approx \ln(h) + \text{const}.$
 \end{enumerate}
 Из графиков \ref{t1} и \ref{t2} видно, что эти условия выполнены. 
 \begin{figure}

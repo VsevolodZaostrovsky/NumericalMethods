@@ -55,50 +55,39 @@ void CFromDandLayer(double * C, double * D, double * LastLayer, double h, double
     }
 }
 
+// void FullZeroLayer(double * uijn, double (*u0)(double, double), double h) 
+// {
+//     int N = (int)(1. / (h)) + 1;
+//     // printf("h=%lf N-x=%d\n", h, N);
 
-double u0(double x, double y)
-{
-    return sin(M_PI * x) * sin(M_PI * y);
-}
+//     for (int i = 1; i < N + 1; ++i)
+//     {
+//         for (int j = 1; j < N + 1; ++j)
+//         {
+//             if (i == 1 || i == N || j == 1 || j == N)
+//                 uijn[e(i, j, N)] = 0;
+//             else {
+//                 uijn[e(i, j, N)] = u0((double)(i-1) * h, (double)(j-1) * h);
+//             }
+//         }
+//     }
+// }
 
-double f(double x, double y, double t) 
-{
-    return 0;
-}
-
-void FullZeroLayer(double * uijn, double (*u0)(double, double), double h) 
-{
-    int N = (int)(1. / (h)) + 1;
-    // printf("h=%lf N-x=%d\n", h, N);
-
-    for (int i = 1; i < N + 1; ++i)
-    {
-        for (int j = 1; j < N + 1; ++j)
-        {
-            if (i == 1 || i == N || j == 1 || j == N)
-                uijn[e(i, j, N)] = 0;
-            else {
-                uijn[e(i, j, N)] = u0((double)(i-1) * h, (double)(j-1) * h);
-            }
-        }
-    }
-}
-
-void printMatrix(double * matrix, int N){
-    for(int i = 1; i < N + 1; i++){
-            for(int j = 1; j < N + 1; j++){
-                printf("%lf ", matrix[e(i, j, N)]);
-            }
-            printf("\n");
-        }
-        printf("\n");
-}
+// void printMatrix(double * matrix, int N){
+//     for(int i = 1; i < N + 1; i++){
+//             for(int j = 1; j < N + 1; j++){
+//                 printf("%lf ", matrix[e(i, j, N)]);
+//             }
+//             printf("\n");
+//         }
+//         printf("\n");
+// }
 
 void solvePDE2d(double (*u0)(double, double),
                 double (*f)(double, double, double), 
                 int N_x, int N,
                 // все массивы ниже - память, необходимая программе 
-                double * uijn, 
+                double * uijn, // сюда будут записаны коэффициенты фурье решения
                 double *Umatrix, double *Dmatrix, double *Cmatrix,
                 double *net, double *fmemory, double *netmemory, double *umemory, double *phimemory)
                 {
@@ -119,94 +108,3 @@ void solvePDE2d(double (*u0)(double, double),
 
                 }
         }
-
-int main(void){
-    double x = 0;
-    double y = 0;
-    double t = 0;
-    int N_x = 5;
-    int N = 5;
-    double h = 1./(double)(N_x-1);
-    double tau = 1./(double)N;
-    int G = 1;
-
-    double *Umatrix;
-    double *Dmatrix;
-    double *Cmatrix;
-    double *LastLayer;
-
-    double *netmemory;
-    double *fmemory;
-    double *net;
-    double *umemory;
-    double *phimemory;
-
-    double *uijn;
-
-
-    Umatrix   = (double *)malloc(N_x * N_x * sizeof(double));
-    Dmatrix   = (double *)malloc(N_x * N_x * sizeof(double));
-    Cmatrix   = (double *)malloc(N_x * N_x * sizeof(double));
-    LastLayer = (double *)malloc(N_x * N_x * sizeof(double));
-    uijn      = (double *)malloc(N_x * N_x * N * sizeof(double));
-
-    for(int i = 0; i < N_x * N_x; i++){
-        Umatrix[i] = 0; 
-        Dmatrix[i] = 0; 
-        Cmatrix[i] = 0; 
-        LastLayer[i] = 0;
-    }
-    for(int i = 0; i < N * N_x * N_x; i++)
-        uijn[i] = 0;
-    
-
-    netmemory = (double *)malloc((N_x + 5) * sizeof(double));
-    fmemory   = (double *)malloc((N_x + 5) * sizeof(double));
-    net       = (double *)malloc((N_x + 5) * sizeof(double));
-    umemory   = (double *)malloc((N_x + 5) * sizeof(double));
-    phimemory = (double *)malloc((N_x + 5) * sizeof(double));
-
-    solvePDE2d(u0, f, N_x, N, uijn, Umatrix, Dmatrix, Cmatrix, net, fmemory, netmemory, umemory, phimemory);
-
-    for(int j = 0; j < N; j++)
-    {
-        printf("%lf ", uijn[e(2, 2, N_x) + j * N_x * N_x]);
-    }
-    printf("\n");
-
-    // for(int n = 1; n < 2; n++){
-    //     for(int i = 1; i < N_x + 1; i++){
-    //         for(int j = 1; j < N_x + 1; j++){
-    //             printf("%lf ", uijn[c(i, j, n, N_x)]);
-    //         }
-    //         printf("\n");
-    //     }
-    //     printf("\nTrue:\n");
-    //     for(int i = 1; i < N_x + 1; i++){
-    //         for(int j = 1; j < N_x + 1; j++){
-    //             x = (double)(i-1) * h;
-    //             y = (double)(j-1) * h;
-    //             t = (double)(n-1) * tau;
-    //             printf("%lf ", sin(M_PI * x) * sin(M_PI * y) * exp(- 2* t * M_PI * M_PI));
-    //         }
-    //         printf("\n");
-    //     }
-    //     printf("\n\n");
-    // }
-
-
-    free(Umatrix);
-    free(Dmatrix);
-    free(Cmatrix);
-    free(LastLayer);
-
-    free(netmemory);
-    free(fmemory);
-    free(net);
-    free(umemory);
-    free(phimemory);
-
-    free(uijn);
-
-    return 0;
-}

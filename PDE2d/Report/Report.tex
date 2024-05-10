@@ -309,10 +309,10 @@
 \subsection{Практический алгоритм.}
 Решить схему из раздела \ref{scheme1} можно по следующему алгоритму:
 \begin{enumerate}
-    \item На этапе $G$ известен слой $G: \ u_{i, j}^{G} \big|^{G = \text{const}} _{0 \leq i, j, \leq 1}$ и все слои до него.
+    \item На этапе $G$ известен слой $G: \ u_{i, j}^{G} \big|^{G = \text{const}} _{0 \leq i, j \leq N_x, N_y}$ и все слои до него.
     \item Найдем коэффициенты $d_{nm}$ разложения функции $\hat f(x, y)$ в дискретный ряд Фурье: 
     \begin{align*}
-     \frac{u^{G}_{i, j}}{\tau} + f(t_G, x_i, y_j) =: \hat f(x_i, y_j) =: \hat f_h(i, j) &= \sum_{n, m = 1}^{N_X-1, N_Y-1} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j.
+     \frac{u^{G}_{i, j}}{\tau} + f(t_G, x_i, y_j) =: \hat f(x_i, y_j) =: \hat f_h(i, j) &= \sum_{n, m = 1}^{N_X-1, N_Y-1} \hat d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j.
     \end{align*}
     \item Найдем коэффициенты $c_{nm}$ разложения функции $u^{G+1}(x, y)$ в дискретный ряд Фурье: 
     \begin{align*}
@@ -320,7 +320,7 @@
     \end{align*}
     пользуясь формулой:
     \begin{align*}
-    c_{nm} = \frac{d_{nm}}{\frac{4}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    c_{nm} = \frac{ \hat d_{nm}}{\frac{4}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
     +  \frac{4}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + \frac{1}{\tau}}, \\
     \quad 1 \leq n \leq N_X-1, \quad 1 \leq m \leq N_Y-1.
     \end{align*}
@@ -329,17 +329,71 @@
     u^{G+1}(i, j) = \sum_{n, m = 1}^{N_X-1, N_Y-1} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j
     $$ 
     и записать их в соответсвующий слой матрицы решения.
-
-\section{Тесты.}
-\subsection{Базовая проверка адекватности.}
-Легко видеть, что функция
- \begin{align*}
-     u(t, x, y) = e^{-2t\pi^2} \sin \pi x \sin \pi y
- \end{align*}
- является решением задачи \ref{diffeq1} при начальном условии
-  \begin{align*}
-     u(0, x, y) = \sin \pi x \sin \pi y.
- \end{align*}
- Проверим это с помощью программы.
 \end{enumerate}
-\end{document}
+\subsection{Практический алгоритм --- вариант 2.}
+Решить схему из раздела \ref{scheme1} можно по следующему алгоритму:
+\begin{enumerate}
+    \item На этапе $G$ известны коэффициенты Фурье--разложения решения для фиксированного $t_G: \ u_{i, j}^{G} \big|^{G = \text{const}} _{0 \leq i, j, \leq N_x, N_y} = \sum u_{nm}^G \phi ^{(n)}_i \psi ^{(m)}_j$ и все слои до него.
+    \item Найдем коэффициенты $d_{nm}$ разложения функции $f(x, y)$ в дискретный ряд Фурье: 
+    \begin{align*}
+     f(t_G, x_i, y_j)  &= \sum_{n, m = 1}^{N_X-1, N_Y-1} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j.
+    \end{align*}
+    \item Тогда коэффициенты Фурье правой части уравнения можно найти по формуле:
+    \begin{align*}
+     &\hat f(x_i, y_j) = \frac{u^{G}_{i, j}}{\tau} + f(t_G, x_i, y_j) \\
+     &\hat f(x_i, y_j) = \frac{1}{\tau} \sum_{n, m = 1}^{N_X-1, N_Y-1}u_{nm}^G \phi ^{(n)}_i \psi ^{(m)}_j  + \sum_{n, m = 1}^{N_X-1, N_Y-1} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j = \\
+     &= \sum_{n, m = 1}^{N_X-1, N_Y-1} \left(\frac{u_{nm}^G}{\tau} + d_{nm}\right) \phi ^{(n)}_i \psi ^{(m)}_j \Rightarrow \hat d_{nm} = \frac{u_{nm}^G}{\tau} + d_{nm}.
+    \end{align*}
+    \item Найдем коэффициенты $u_{nm}^{G+1}$ разложения функции $u^{G+1}(x, y)$ в дискретный ряд Фурье: 
+    \begin{align*}
+    u(t_{G+1}, x_i, y_j) = u_h^{G+1}(i, j) &= \sum_{n, m = 1}^{N_X-1, N_Y-1} u_{nm}^{G+1} \phi ^{(n)}_i \psi ^{(m)}_j,
+    \end{align*}
+    пользуясь формулой:
+    \begin{align*}
+    u_{nm}^{G+1} = \frac{\frac{u_{nm}^G}{\tau} + d_{nm}}{\frac{4}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + \frac{1}{\tau}}, \\
+    \quad 1 \leq n \leq N_X-1, \quad 1 \leq m \leq N_Y-1.
+    \end{align*}
+    \item После нахождения всей трехмерной матрицы коэффициентов Фурье, вычислить значения в каждой точке сетки по этой аппроксимации. 
+\end{enumerate}
+
+\section{Тест на базисных функциях.}
+При начальном условии вида
+  \begin{align*}
+     u(0, x, y) = \sin \pi n x \sin \pi m y.
+ \end{align*}
+ Легко подобрать решение задачи \ref{diffeq1}:
+  \begin{align*}
+     u(t, x, y) = e^{-\pi^2 (n^2 + m^2)t} \sin \pi n x \sin \pi m y.
+ \end{align*}
+ Таким образом, можно проверить правильность вычисления коэффициента Фурье: при этом, корректная работа на базисных функциях даёт существенные основания полагать, 
+ что и в общем случае программа будет работать корректно. На них же можно вычислить порядок сходимости 
+ (ясно, что домножение на произведение синусов происходит в самом конце и сходимость не испортит). Рассматриваются $1 \leq n, m \leq 2$. Результаты представлены 
+ на графиках \ref{tbf11}--\ref{tbf22}.
+ \begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{figs/11bf_test.pdf}
+    \caption{Базисные функции}
+    \label{tbf11}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{figs/12bf_test.pdf}
+    \caption{Базисные функции}
+    \label{tbf12}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{figs/21bf_test.pdf}
+    \caption{Базисные функции}
+    \label{tbf21}
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{figs/22bf_test.pdf}
+    \caption{Базисные функции}
+    \label{tbf22}
+\end{figure}
+
+
+ \end{document}

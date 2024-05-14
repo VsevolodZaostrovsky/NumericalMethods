@@ -175,7 +175,7 @@
 С учетом того, что начальные условия даны точно и, очевидно, $|f(t_n, x_i, y_j) - f_{i,j}^n| \rightarrow 0$, получаем, что порядок аппроксимации на решении 
 данной схемы составляет $O(\tau + h_X^2 + h_Y^2)$.
 
-\section{Разложение функции в двумерный ряд Фурье}
+\section{Разложение функции в двумерный ряд Фурье.}
 Функцию $u(x, y) \in C^{\infty}[0, 1]^2$ можно разложить в ряд Фурье,
 взяв синусы в качестве базисных функций:
 \begin{equation*}
@@ -284,18 +284,18 @@
 \end{align*}
 В отчете по задаче по линейной алгебре (см. директорию "LinAlg") были вычислены собственные значения этой функции для дискретизации оператора Лапласа:
 \begin{align*}
-    -\Delta _h^X \phi _{i}^{(n)} &= \lambda^X_n \phi _{i}^{(n)}, \quad 
+    -\Lambda _h^X \phi _{i}^{(n)} &= \lambda^X_n \phi _{i}^{(n)}, \quad 
     \lambda^X_n = \frac{4}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right), \\
-    -\Delta _h^Y \psi _{j}^{(m)} &= \lambda^Y_m \psi _{j}^{(m)}, \quad 
+    -\Lambda _h^Y \psi _{j}^{(m)} &= \lambda^Y_m \psi _{j}^{(m)}, \quad 
     \lambda^Y_m = \frac{4}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right).
 \end{align*}
 С учетом этого, для схемы 
 \begin{align*}
-    -\Delta _h^X u_h(i, j) -\Delta _h^Y u_h(i, j) + p u_h(i, i)= \hat f_h(i, j)
+    -\Lambda _h^X u_h(i, j) -\Lambda _h^Y u_h(i, j) + p u_h(i, i)= \hat f_h(i, j)
 \end{align*}
 справедливо представление в виде ряда:
 \begin{align*}
-    -\left(\Delta _h^X + \Delta _h^Y\right) \sum_{n, m = 1}^{N_X-1, N_Y-1} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j  
+    -\left(\Lambda _h^X + \Lambda _h^Y\right) \sum_{n, m = 1}^{N_X-1, N_Y-1} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j  
     + p \sum_{n, m = 1}^{N_X-1, N_Y-1} c_{nm} \phi ^{(n)}_i \psi ^{(m)}_j =\\
     =   \sum_{n, m = 1}^{N_X-1, N_Y-1} d_{nm} \phi ^{(n)}_i \psi ^{(m)}_j.
 \end{align*}
@@ -308,7 +308,9 @@
 \begin{align*}
     c_{nm} = \frac{d_{nm}}{\lambda^X_n +  \lambda^Y_m + p}, \quad 1 \leq n \leq N_X-1, \quad 1 \leq m \leq N_Y-1.
 \end{align*}
-\subsection{Практический алгоритм.}
+
+\section{Практические алгоритмы.}
+\subsection{Вариант 1.}
 Решить схему из раздела \ref{scheme1} можно по следующему алгоритму:
 \begin{enumerate}
     \item На этапе $G$ известен слой $G: \ u_{i, j}^{G} \big|^{G = \text{const}} _{0 \leq i, j \leq N_x, N_y}$ и все слои до него.
@@ -332,7 +334,7 @@
     $$ 
     и записать их в соответсвующий слой матрицы решения.
 \end{enumerate}
-\subsection{Практический алгоритм --- вариант 2.}
+\subsection{Вариант 2.}
 Решить схему из раздела \ref{scheme1} можно по следующему алгоритму:
 \begin{enumerate}
     \item На этапе $G$ известны коэффициенты Фурье--разложения решения для фиксированного $t_G: \ u_{i, j}^{G} \big|^{G = \text{const}} _{0 \leq i, j, \leq N_x, N_y} = \sum u_{nm}^G \phi ^{(n)}_i \psi ^{(m)}_j$ и все слои до него.
@@ -359,6 +361,36 @@
     \item После нахождения всей трехмерной матрицы коэффициентов Фурье, вычислить значения в каждой точке сетки по этой аппроксимации. 
 \end{enumerate}
 Был реализован этот вариант.
+
+\section{Устойчивость}
+Выше получили, что для коэффициентов Фурье функции $u$ справделиво:
+\begin{align*}
+    u_{nm}^{G+1} = \frac{u_{nm}^G + d_{nm} \tau}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1}.
+\end{align*}
+Будем подниматься от $G=0$ до $G=N$:
+\begin{align*}
+    u_{nm}^{1} &= \frac{u_{nm}^0 + d_{nm} \tau}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1} = l_{nm} (u_{nm}^0 + d_{nm} \tau), \\
+    u_{nm}^{2} &= l_{nm} (u_{nm}^1 + d_{nm} \tau) = l_{nm} (l_{nm} (u_{nm}^0 + d_{nm} \tau)+ d_{nm} \tau), \\
+    \ldots \\
+    u_{nm}^{N} &=l_{nm}^N u_{nm}^0 + d_{nm} \tau \sum _{i=0}^{N-1} l_{nm}^i. 
+\end{align*}
+Здесь 
+\begin{align*}
+    l_{nm} = \frac{1}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1} \leq a < 1.
+\end{align*}
+Отсюда, получаем оценку для нормы решения:
+\begin{align*}
+    ||u||_{L_{2}}^2\leq \sum_{G, n, m} \left[a^G u_{nm}^0 + \frac{d_{nm} \tau}{1-a}\right]^2  
+    \leq \sum_{n, m} \left[\frac{u^0_{nm}}{1 - a} + \frac{d_{nm} \frac{1}{\tau}  \tau}{1-a}\right]^2 .
+\end{align*}
+Отсюда, пользуясь неравенством треугольника и положительной однородностью меры, а также домножив неравенство на $h_x h_y$, получим:
+\begin{align*}
+    ||u||_{L_{2, h}}\leq \frac{1}{1-a}\left( ||u^0||_{L_{2, h}} + ||f||_{L_{2, h}}\right) .
+\end{align*}
+Значит, схема устойчива, поскольку мы явно получили априорную оценку.
 \section{Тесты}
 \subsection{Базисные функции.}
 При начальном условии вида

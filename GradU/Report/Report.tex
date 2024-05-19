@@ -93,7 +93,7 @@
 
 \begin{center}
     {Всеволод Заостровский, 409 группа}\\
-    {\bfseries Отчёт по задаче ''Решение страшного уравнения''.\\}
+    {\bfseries Отчёт по задаче ''Решение уравнения типа теплопроводности с коэффициентами в дивергенции''.\\}
     \vspace{1cm}
 \end{center}
 
@@ -134,7 +134,7 @@
     &u(0, x) = u^0(x), \quad x \in \Omega. 
 \end{align*}
 \subsection{Общий вид матрицы уравнения.}
-Приведем схему к матричному виду:
+Преобразуем схему:
 \begin{align*}
     u^{n+1}_i - u^n_i = \tau k(x_{i + \frac{1}{2}}) \frac{u^{n+1}_{i+1} - u^{n+1}_{i}}{h^2} - \tau k(x_{i- \frac{1}{2}}) \frac{u^{n+1}_{i} - u^{n+1}_{i-1}}{h^2}.\\
     u^{n+1}_i - u^n_i = 
@@ -149,28 +149,116 @@
 \end{equation}
 Матрица примет вид: \\
 $$A = \begin{pmatrix}
-    C   & B_- & 0     & 0   & 0   & \ldots & 0 \\
-    B_+ & C   & B_-   & 0   & 0   & \ldots & 0 \\
-    0   & B_+ & C     & B_- & 0   & \ldots & 0 \\
-    0   & 0   & B_+   & C   & B_- & \ldots & 0 \\
+    c   & b_+ & 0     & 0   & 0   & \ldots & 0 \\
+    b_- & c   & b_+   & 0   & 0   & \ldots & 0 \\
+    0   & b_- & c     & b_+ & 0   & \ldots & 0 \\
+    0   & 0   & b_-   & c   & b_+ & \ldots & 0 \\
     \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\
-    0   & 0   & 0    & \ldots & B_+ & C & B_- \\
-    0   & 0   & 0     & \ldots & 0 & B_+ & C \\
+    0   & 0   & 0    & \ldots & b_- & c & b_+ \\
+    0   & 0   & 0     & \ldots & 0 & b_- & c \\
 \end{pmatrix}, \text{где}
 \left\{\begin{array}{l}
- C = 1 + \frac{\tau}{h^2} (k(x_{i + \frac{1}{2}}) + k(x_{i - \frac{1}{2}})), \\
- B_+ = k(x_{i + \frac{1}{2}}) \frac{\tau}{h^2}, \\
- B_- = k(x_{i - \frac{1}{2}}) \frac{\tau}{h^2}.
+ c = 1 + \frac{\tau}{h^2} (k(x_{i + \frac{1}{2}}) + k(x_{i - \frac{1}{2}})), \\
+ b_+ = -k(x_{i + \frac{1}{2}}) \frac{\tau}{h^2}, \\
+ b_- = -k(x_{i - \frac{1}{2}}) \frac{\tau}{h^2}.
 \end{array}\right. 
 $$
-\subsection{Решение.}
-Методом прогонки...
+\subsection{Решение схемы.}
+Итоговый вид интересующей нас системы:
+\begin{align*}
+    A u^{n+1} = u^n, \quad u^n := (u^n_0, u^n_1, \ldots u^n_{N_X}).
+\end{align*}
+Как видно, эту системы легко решить методом прогонки: двигаясь от 0-го слоя к $N$-му. Несколько сложнее дела обстоят с двумерной схемой, которая описана ниже.
 
 \section{Алгоритм решения двумерной схемы.}
 \subsection{Дискретизация.}
+Уравнение будем приближать посредством следующей схемы:
 \begin{align*}
-    \frac{u^{n+1}_i - u^n_i}{\tau} &= \frac{k(x_{i + \frac{1}{2}, j}) \frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h} - k(x_{i- \frac{1}{2}, j}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h}}{h} + \\
-    &+  \frac{k(x_{i, j + \frac{1}{2}}) \frac{u^{n+1}_{i, j+1} - u^{n+1}_{i, j}}{h} - k(x_{i, j- \frac{1}{2}}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i, j-1}}{h}}{h}.
+    \frac{u^{n+1}_i - u^n_i}{\tau} &= \frac{k(x_{i + \frac{1}{2}, j}) \frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h_X} - k(x_{i- \frac{1}{2}, j}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h_X}}{h_X} + \\
+    &+  \frac{k(x_{i, j + \frac{1}{2}}) \frac{u^{n+1}_{i, j+1} - u^{n+1}_{i, j}}{h_Y} - k(x_{i, j- \frac{1}{2}}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i, j-1}}{h_Y}}{h_Y}.
 \end{align*}
-
+Краевые условия:
+\begin{align*} 
+    &u(t, x, y) \big| _{(x, y) \in \partial \Omega} = 0, \quad \Omega = [0,1] \times [0, 1]. \\
+    &u(0, x, y) = u^0(x, y), \quad x \in \Omega. 
+\end{align*}
+\subsection{Общий вид матрицы уравнения.} \label{generalmatrix2d}
+Для придания выкладкам хоть сколько-нибудь приемлемого вида, здесь и далее считаем $h_X = h_Y = h, \quad N_X = N_Y$.
+Пользуясь вычислениями из предыдущего раздела, получим:
+\begin{align*}
+    u^{n+1}_{i, j} - u^n_{i, j} = \tau k(x_{i + \frac{1}{2}}, y_j) \frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h^2} - \tau k(x_{i- \frac{1}{2}}, y_j) \frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h^2} + \\
+    + \tau k(x_{i, y_{j + \frac{1}{2}}}) \frac{u^{n+1}_{i, j+1} - u^{n+1}_{i, j}}{h^2} - \tau k(x_{i}, y_{j - \frac{1}{2}}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i, j-1}}{h^2}. \\
+    u^{n+1}_{i, j} - u^n_{i, j} = - u^{n+1}_{i, j} \frac{\tau}{h^2} \left(k(x_{i + \frac{1}{2}}, y_{j}) + k(x_{i - \frac{1}{2}}, y_{j}) + k(x_{i}, y_{j+ \frac{1}{2}}) + k(x_{i}, y_{j- \frac{1}{2}})\right) +\\
+    + \tau k(x_{i + \frac{1}{2}}, y_{j}) \frac{u^{n+1}_{i+1,j} }{h^2} 
+    + \tau k(x_{i- \frac{1}{2}}, y_{j}) \frac{u^{n+1}_{i-1, j}}{h^2}
+    + \tau k(x_{i}, y_{j+ \frac{1}{2}}) \frac{u^{n+1}_{i,j+1} }{h^2} 
+    + \tau k(x_{i}, y_{j- \frac{1}{2}}) \frac{u^{n+1}_{i, j-1}}{h^2}. 
+\end{align*}
+Итоговая схема выглядит следующим образом:
+\begin{align*}
+    &u^{n+1}_{i, j}\left(1 + \frac{\tau}{h^2} \left(k(x_{i + \frac{1}{2}}, y_{j}) + k(x_{i - \frac{1}{2}}, y_{j}) + k(x_{i}, y_{j+ \frac{1}{2}}) + k(x_{i}, y_{j- \frac{1}{2}})\right)\right) -\\
+    &+ \frac{\tau }{h^2} \left[- u^{n+1}_{i+1,j} k(x_{i + \frac{1}{2}}, y_{j}) 
+    - u^{n+1}_{i-1, j} k(x_{i- \frac{1}{2}}, y_{j})
+    - u^{n+1}_{i,j+1} k(x_{i}, y_{j+ \frac{1}{2}}) 
+    - u^{n+1}_{i, j-1} k(x_{i}, y_{j- \frac{1}{2}}) \right]\\ &= u^n_{i, j}.
+\end{align*}
+Эту схему можно записать в огромную ( $\R ^{(N_X+1)^4}$) разреженную блочную матрицу вида:
+$$A = \begin{pmatrix}
+    I   & 0   & 0     & 0   & 0   & \ldots & 0 \\
+    D_-   & B   & D_+   & 0   & 0   & \ldots & 0 \\
+    0   & D_-   & B     & D_+ & 0   & \ldots & 0 \\
+    0   & 0   & D_-   & B   & D_+ & \ldots & 0 \\
+    \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\
+    0   & 0   & 0    & \ldots & D_- & B & D_+ \\
+    0   & 0   & 0     & \ldots & 0 & 0 & I \\
+\end{pmatrix},
+$$
+описание блоков:
+\begin{enumerate}
+    \item[Блок $C$:] $$C = \begin{pmatrix}
+    c   & b_+ & 0     & 0   & 0   & \ldots & 0 \\
+    b_- & c   & b_+   & 0   & 0   & \ldots & 0 \\
+    0   & b_- & c     & b_+ & 0   & \ldots & 0 \\
+    0   & 0   & b_-   & c   & b_+ & \ldots & 0 \\
+    \ldots & \ldots & \ldots & \ldots & \ldots & \ldots & \ldots \\
+    0   & 0   & 0    & \ldots & b_- & c & b_+ \\
+    0   & 0   & 0     & \ldots & 0 & b_- & c \\
+\end{pmatrix},
+$$
+в матрице $C$:
+$$
+\left\{\begin{array}{l}
+ c = 1 + \frac{\tau}{h^2} \left(k(x_{i + \frac{1}{2}}, y_{j}) + k(x_{i - \frac{1}{2}}, y_{j}) + k(x_{i}, y_{j+ \frac{1}{2}}) + k(x_{i}, y_{j- \frac{1}{2}})\right), \\
+ b_+ = -k(x_{i + \frac{1}{2}}, y_j) \frac{\tau}{h^2}, \\
+ b_- = -k(x_{i - \frac{1}{2}}, y_j) \frac{\tau}{h^2};
+\end{array}\right. 
+$$
+\item[Блок $I$:] $I$ --- единичная матрица размера $(N_X+1)\times(N_X+1)$; 
+\item[Блок $D_-$:] $D_- = -k(x_{i}, y_{j- \frac{1}{2}}) \frac{\tau}{h^2} I =: d_- I$;
+\item[Блок $D_+$:] $D_- = -k(x_{i}, y_{j+ \frac{1}{2}}) \frac{\tau}{h^2} I =: d_+ I$.
+\end{enumerate}
+Итоговый вид уравнения:
+\begin{align*}
+    A u^{n+1} = u^n. 
+\end{align*}
+По предыдущему слою мы будем находить следующий, начиная с 0-го слоя, который нам дан, по условию. Отметим, что мы хотим построить трёхмерную матрицу $U = (u^n_{i, j})^{0 \leq n \leq N} _{0 \leq i, j \leq N_X}$, но форма записи матрицы $A$ предполагаем, что множество $(u^n_{i, j})^{n=\text{const}} _{0 \leq i, j \leq N_X}$ вытягивается в вектор $u^{n}$:
+    \begin{align*}
+        u^n = (u^n_{0,0}, u^n_{1,0}, u^n_{2,0}, \ldots u^n_{0, 1}, u^n_{0, 2}, \ldots u^n_{0, N_X}, u^n_{1, N_X}, \ldots u^n_{N_X, N_X})^T
+    \end{align*}
+\subsection{Решение схемы.}
+Для решения этой системы также можно применять прогонку (точнее, её более общую модификацию). Мы применим итеративный алгоритм решения с предобуславливателем, который подробно опишем ниже. Общий вид таких алгоритмов:
+\begin{align*}
+    B \frac{u^{n+1, k+1} - u^{n+1, k+1}}{\theta} + A u^{n+1, k} = b^n.
+\end{align*}
+В нашем случае, 
+\begin{enumerate}
+    \item[$A$] --- матрица, описанная в разделе \ref{generalmatrix2d}. Следует отметить, что эта матрица пятидиагональная, так что, несмотря на то, что формально она принадлежит пространству $\R ^{(N_X+1)^4}$, для её хранения требуется лишь $5 * (N_X+1)^2$ памяти (по массиву для каждой из 5 диагоналей), а умножение матрицы на вектор требует $10 * (N_X+1)^2$ арифметических операций.
+    \item[$u^{n, k}$] --- результат после $k$-ой итерации процесса для $n$ слоя ответа. Отметим, что мы считаем $u^{n, 0} = u^n$.
+    \item[$\theta$] --- итерационный параметр. Наивысшая (в некотором смысле) скорость сходимости достигается при $\theta = \frac{2}{m + M}$, где $M$ и $m$ --- соответственно, максимальное и минимальное собственные значения матрицы. 
+    \item[$B$] --- предобуславливатель, берётся разным для разных задач. Мы рассмотрим $B = A \big|_{k(x_i, y_j) = \frac{k(x_0, y_0)+k(x_{N_X}, y_{N_X})}{2}}$. Обращать $B$ мы будем при помощи метода Фурье.
+\end{enumerate}
+Получим явное выражение $u^{n+1, k+1}(u^{n+1, k})$:
+\begin{align*}
+    u^{n+1, k+1} = u^{n+1, k} + B^{-1}(b^n - A u^{n+1, k}).
+\end{align*}
  \end{document}

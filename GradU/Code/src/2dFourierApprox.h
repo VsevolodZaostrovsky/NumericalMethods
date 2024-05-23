@@ -35,3 +35,5 @@ double FullFurierCompute(double x, double y,
                          double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
                          double *fmemory, double *net, double (*u)(double, double),
                          double *netmemory, double *umemory, double *phimemory);
+
+void CalcFourierMatrix(double * ans, double *Cmatrix, int N);

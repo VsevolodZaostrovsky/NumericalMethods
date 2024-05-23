@@ -146,3 +146,15 @@ double FullFurierCompute(double x, double y,
     FindFourierCoefs(Umatrix, Dmatrix, Cmatrix, N, fmemory, net, u, netmemory, umemory, phimemory);
     return Calc2DFourier(Cmatrix, N, x, y);
 }
+
+void CalcFourierMatrix(double * ans, double *Cmatrix, int N)
+{
+    double h = 1./(double)(N - 1);
+    for (int m = 1; m < N + 1; ++m)
+    {
+        for (int n = 1; n < N + 1; ++n)
+        {
+            ans[e(m, n, N)] = Calc2DFourier(Cmatrix, N, (m-1) * h, (n-1) * h);
+        }
+    }
+}

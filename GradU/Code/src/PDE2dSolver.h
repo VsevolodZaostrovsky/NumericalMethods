@@ -18,4 +18,4 @@ void CFromDandLayer(double * C, double * D, double * LastLayer, double h, double
 
 void Dfromf(double (*f)(double, double, double), double h, double tau, int G,
                            double *Umatrix, double *Dmatrix, double *Cmatrix,
-                           double *fmemory, double *netmemory, double *umemory, double *phimemory);
+                           double *fmemory, double *umemory, double *phimemory);

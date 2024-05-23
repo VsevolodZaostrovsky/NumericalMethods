@@ -3,7 +3,7 @@
 
 void Dfromf(double (*f)(double, double, double), double h, double tau, int G,
                            double *Umatrix, double *Dmatrix, double *Cmatrix,
-                           double *fmemory, double *netmemory, double *umemory, double *phimemory){
+                           double *fmemory, double *umemory, double *phimemory){
     
 
     
@@ -55,34 +55,6 @@ void CFromDandLayer(double * C, double * D, double * LastLayer, double h, double
     }
 }
 
-// void FullZeroLayer(double * uijn, double (*u0)(double, double), double h) 
-// {
-//     int N = (int)(1. / (h)) + 1;
-//     // printf("h=%lf N-x=%d\n", h, N);
-
-//     for (int i = 1; i < N + 1; ++i)
-//     {
-//         for (int j = 1; j < N + 1; ++j)
-//         {
-//             if (i == 1 || i == N || j == 1 || j == N)
-//                 uijn[e(i, j, N)] = 0;
-//             else {
-//                 uijn[e(i, j, N)] = u0((double)(i-1) * h, (double)(j-1) * h);
-//             }
-//         }
-//     }
-// }
-
-// void printMatrix(double * matrix, int N){
-//     for(int i = 1; i < N + 1; i++){
-//             for(int j = 1; j < N + 1; j++){
-//                 printf("%lf ", matrix[e(i, j, N)]);
-//             }
-//             printf("\n");
-//         }
-//         printf("\n");
-// }
-
 void solvePDE2d(double (*u0)(double, double),
                 double (*f)(double, double, double), 
                 int N_x, int N,
@@ -100,7 +72,7 @@ void solvePDE2d(double (*u0)(double, double),
     for (int G = 1; G < N; G++)
     {
         // printf("D from f: \n");
-        Dfromf(f, h, tau, G, Umatrix, Dmatrix, Cmatrix, fmemory, netmemory, umemory, phimemory);
+        Dfromf(f, h, tau, G, Umatrix, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
         // printMatrix(Cmatrix, N_x);
         // printf("Answer %d layer: \n", G);
         CFromDandLayer(uijn + G * N_x * N_x, Cmatrix, uijn + (G - 1) * N_x * N_x, h, tau);

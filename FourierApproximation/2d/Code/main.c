@@ -8,7 +8,11 @@
 
 double u(double x, double y)
 {
-    return x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y);
+    if (x > 0.4 && x < 0.6 && y > 0.4 && y < 0.6)
+        return 1;
+    else
+        return 0;
+    // return x * (1 - x) * y * (1 - y) * cos(x * x) * cos(y * y);
 }
 
 void PrintMatrix(double *Matrix, int N)
@@ -120,7 +124,7 @@ int main(int argc, char *argv[])
     //    printf("\n Cmatrix: \n");
     FullCMatrix(Dmatrix, Cmatrix, N, fmemory, umemory, phimemory);
 
-    WriteResult(net, Cmatrix, N, u, fp);
+    // WriteResult(net, Cmatrix, N, u, fp);
 
     if ((sk = fopen("printAll.gpi", "w+")) == NULL)
     {
@@ -130,7 +134,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    WriteSkrypt(N, argv[2], sk);
+    // WriteSkrypt(N, argv[2], sk);
+
     // PrintMatrix(Cmatrix, N);
 
     //    printf("\n Cmatrix: \n");

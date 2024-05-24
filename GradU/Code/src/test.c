@@ -36,8 +36,8 @@ int main(int argc, char *argv[]){
     double *phimemory;
     double *uijn;
 
-    N_x = 20;
-    N = 400;
+    N_x = 3;
+    N = 1;
 
         if (argc < 3)
     {
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     N_x = atoi(argv[1]);
     N = atoi(argv[2]);
 
-            if (N < 3 || N_x < 3)
+            if (N < 1 || N_x < 3)
     {
         printf("Wrong parameters, must be:\n");
         printf("N >= 3 M >= 3\n");
@@ -92,11 +92,19 @@ int main(int argc, char *argv[]){
             LastMemory[e(i, j, N_x)] = sin(M_PI * (i-1) * h) * sin(M_PI * (j-1) * h);
         }
     }
-    printf("Im here \n");
+    // printf("Im here \n");
     solveByR(1.0, h, tau, uijn, LastMemory, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
 
-        // for(int n = 1; n < N ; n++){
-        // for(int i = 1; i < N_x; i++){
+            for(int n = 1; n < N +1 ; n++){
+        for(int i = 1; i < N_x + 1; i++){
+            for(int j = 1; j < N_x + 1; j++){
+                printf("%lf %lf \n", uijn[c(i, j, n, N_x)], LastMemory[c(i, j, n, N_x)]);
+            }
+        }
+        }
+
+        // for(int n = 1; n < N +1 ; n++){
+        // for(int i = 1; i < N_x + 1; i++){
         //     for(int j = 1; j < N_x; j++){
         //         printf("%lf %lf %lf %lf %lf\n", tau * (n-1), (i-1) * h, (j-1) * h, uijn[c(i, j, n, N_x)], exp(-2 * M_PI * M_PI * tau * (n-1)) * sin(M_PI * h * (i-1)) * sin(M_PI * h * (j-1)));
         //     }

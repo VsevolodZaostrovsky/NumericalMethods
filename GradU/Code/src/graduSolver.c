@@ -17,7 +17,7 @@ void CFromD(double * C, double * D, double h, double tau)
             else {
                 sinPih_n = sin(M_PI * (double)(n-1) * h * 0.5);
                 sinPih_m = sin(M_PI * (double)(m-1) * h * 0.5);
-                // C[e(n, m, N)] = D[e(n, m, N)] / (4 * (sinPih_n * sinPih_n + sinPih_m * sinPih_m) / (h * h) + 1. / tau);
+                // C[e(n, m, N_x)] = (D[e(n, m, N_x)] + LastLayer[e(n, m, N_x)] / tau) / (4 / (h * h) * (sinPih_n * sinPih_n + sinPih_m * sinPih_m) + 1. / tau );
                 C[e(n, m, N_x)] = (D[e(n, m, N_x)]) / (4 / (h * h) * (sinPih_n * sinPih_n + sinPih_m * sinPih_m) + 1. / tau );
             }
         }
@@ -45,10 +45,11 @@ void solveByR(double k, double h, double tau, // параметры, опред�
 
     FullCMatrix(Dmatrix, Cmatrix, N_x, fmemory, umemory, phimemory);
 
-
     CFromD(Dmatrix, Cmatrix, h, k * tau);
+    for(int j  = 0; j < N_x * N_x; j++) printf("%lf \n", Dmatrix[j]);
 
     CalcFourierMatrix(u, Dmatrix, N_x);
+
 }
 
 void multAb_kfunc(double tau, double h, double (*k)(double, double), double * b, double * ans)
@@ -103,7 +104,6 @@ void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(do
             bmemory[i] = U[i] - bmemory[i];
             errorNorm += bmemory[i] * bmemory[i];
         }
-        errorNorm /= N_x * N_x;
 
 
         solveByR(k_const, h, tau, // параметры, определяющие систему, которую нужно решить
@@ -116,7 +116,7 @@ void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(do
             Unext[i] = theta * Unext[i] + LastMemory[i];
         
         iteration ++;
-        printf("iteration %d error %lf\n", iteration, errorNorm);
+        // printf("iteration %d error %lf\n", iteration, errorNorm);
         if(iteration > 10000) {
             printf("max iter reached \n\n\n\n");
             break;

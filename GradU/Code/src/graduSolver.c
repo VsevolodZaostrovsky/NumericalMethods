@@ -37,16 +37,26 @@ void solveByR(double k, double h, double tau, // параметры, опред�
     {
         for (int j = 1; j < N_x + 1; ++j)
         {
-            RightPart[e(i, j, N_x)] = RightPart[e(i, j, N_x)] / k;
+            if (i == 1 || i == N_x || j == 1 || j == N_x)
+                RightPart[e(i, j, N_x)] = 0;
+            else
+                RightPart[e(i, j, N_x)] = RightPart[e(i, j, N_x)] / k;
         }
     }
 
     FullDMatrix(Dmatrix, RightPart, N_x, umemory, phimemory);
 
     FullCMatrix(Dmatrix, Cmatrix, N_x, fmemory, umemory, phimemory);
+    // for(int j  = 0; j < N_x; j++) {
+    //     for(int i  = 0; i < N_x; i++) { 
+    //         printf("%lf ", Cmatrix[j * N_x + i]);
+    //     }
+    //     printf("\n");
+    // }
+    // printf("\n");
 
     CFromD(Dmatrix, Cmatrix, h, k * tau);
-    for(int j  = 0; j < N_x * N_x; j++) printf("%lf \n", Dmatrix[j]);
+    // for(int j  = 0; j < N_x * N_x; j++) printf("%lf \n", Dmatrix[j]);
 
     CalcFourierMatrix(u, Dmatrix, N_x);
 
@@ -61,7 +71,8 @@ void multAb_kfunc(double tau, double h, double (*k)(double, double), double * b,
     for(int i = 1; i < N_x + 1; i++) {
         for(int j = 1; j < N_x + 1; j++){
             if (i == 1 || i == N_x || j == 1 || j == N_x) ans[e(i, j, N_x)] = 0;
-            else ans[e(i, j, N_x)] = b[e(i, j, N_x)] * (
+            else 
+                ans[e(i, j, N_x)] = b[e(i, j, N_x)] * (
                     taurev + (
                         k((i-1) * h + h * 0.5, (j-1) * h) 
                       + k((i-1) * h - h * 0.5, (j-1) * h)
@@ -84,7 +95,7 @@ void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(do
 {
     int N_x = (int)(1. / (h)) + 1;
     double k_const = (k(0.05,0.05) + k(0.5, 0.5) + k(0.95, 0.95)) / 3.;
-    double theta = 1.;
+    double theta = 1. / 17.;
     double errorNorm = 100;
     int iteration = 0;
     // printf("k: %lf\n", k_const);
@@ -101,9 +112,10 @@ void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(do
         {
             // printf("i%d b%lf \n", i, bmemory[i]);
             LastMemory[i] = Unext[i];
-            bmemory[i] = U[i] - bmemory[i];
-            errorNorm += bmemory[i] * bmemory[i];
+            bmemory[i] = U[i] / tau - bmemory[i];
+            errorNorm += (U[i] / tau - bmemory[i]) * ((U[i] / tau - bmemory[i]));
         }
+        // printf("iteration %d error %lf\n", iteration, errorNorm);
 
 
         solveByR(k_const, h, tau, // параметры, определяющие систему, которую нужно решить
@@ -116,9 +128,12 @@ void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(do
             Unext[i] = theta * Unext[i] + LastMemory[i];
         
         iteration ++;
-        // printf("iteration %d error %lf\n", iteration, errorNorm);
-        if(iteration > 10000) {
-            printf("max iter reached \n\n\n\n");
+        if(iteration > 10) {
+            // printf("max iter reached \n\n\n\n");
+            for(int i = 0; i < N_x * N_x; i++)
+            {
+            // printf("b%lf \n", Unext[i]);
+            }
             break;
         }
     }

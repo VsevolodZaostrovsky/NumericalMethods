@@ -36,8 +36,8 @@ int main(int argc, char *argv[]){
     double *phimemory;
     double *uijn;
 
-    N_x = 3;
-    N = 1;
+    N_x = 5;
+    N = 100;
 
         if (argc < 3)
     {
@@ -73,6 +73,7 @@ int main(int argc, char *argv[]){
         Dmatrix[i] = 0; 
         Cmatrix[i] = 0; 
         LastMemory[i] = 0;
+        U[i] = 0;
     }
     for(int i = 0; i < N * N_x * N_x; i++)
         uijn[i] = 0;
@@ -83,33 +84,28 @@ int main(int argc, char *argv[]){
     net       = (double *)malloc((N_x + 5) * sizeof(double));
     umemory   = (double *)malloc((N_x + 5) * sizeof(double));
     phimemory = (double *)malloc((N_x + 5) * sizeof(double));
-    // printf("tau %lf h %lf", tau, h); 
-
-    // solvePDEgradu(uijn, N, N_x, k, u0, bmemory, LastMemory, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
+    // printf("tau %lf h %lf \n\n", tau, h); 
 
     for(int i = 1; i < N_x + 1; i++){
         for(int j = 1; j < N_x + 1; j++){
-            LastMemory[e(i, j, N_x)] = sin(M_PI * (i-1) * h) * sin(M_PI * (j-1) * h);
+            U[e(i, j, N_x)] = sin(M_PI * (i-1) * h) * sin(M_PI * (j-1) * h);
         }
     }
-    // printf("Im here \n");
-    solveByR(1.0, h, tau, uijn, LastMemory, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
+    // for(int i = 0; i < N_x * N_x; i++)
+    //     {
+    //         printf("u%lf \n", U[i]);
+    //     }
 
-            for(int n = 1; n < N +1 ; n++){
+    solvePDEgradu(uijn, N, N_x, k, u0, bmemory, LastMemory, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
+
+    for(int n = 1; n < N + 1; n++){
         for(int i = 1; i < N_x + 1; i++){
             for(int j = 1; j < N_x + 1; j++){
-                printf("%lf %lf \n", uijn[c(i, j, n, N_x)], LastMemory[c(i, j, n, N_x)]);
+                printf("%lf %lf %lf %lf %lf\n", tau * (n-1), (i-1) * h, (j-1) * h, uijn[c(i, j, n, N_x)], exp(- 2. * M_PI * M_PI * tau * (n-1)) * u0((i-1) * h, (j-1) * h));
             }
         }
         }
 
-        // for(int n = 1; n < N +1 ; n++){
-        // for(int i = 1; i < N_x + 1; i++){
-        //     for(int j = 1; j < N_x; j++){
-        //         printf("%lf %lf %lf %lf %lf\n", tau * (n-1), (i-1) * h, (j-1) * h, uijn[c(i, j, n, N_x)], exp(-2 * M_PI * M_PI * tau * (n-1)) * sin(M_PI * h * (i-1)) * sin(M_PI * h * (j-1)));
-        //     }
-        // }
-        // }
 
 free(Umatrix);
 free(Dmatrix);

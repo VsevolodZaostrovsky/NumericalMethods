@@ -183,7 +183,7 @@ $$
     &u(0, x, y) = u^0(x, y), \quad x \in \Omega. 
 \end{align*}
 \subsection{Общий вид матрицы уравнения.} \label{generalmatrix2d}
-Для придания выкладкам хоть сколько-нибудь приемлемого вида, здесь и далее считаем $h_X = h_Y = h, \quad N_X = N_Y$.
+Для придания выкладкам хоть сколько-нибудь приемлемого вида, здесь и далее считаем $h_X = h_Y = h = \frac{1}{N_X - 1}, \quad N_X = N_Y$.
 Пользуясь вычислениями из предыдущего раздела, получим:
 \begin{align*}
     u^{n+1}_{i, j} - u^n_{i, j} = \tau k(x_{i + \frac{1}{2}}, y_j) \frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h^2} - \tau k(x_{i- \frac{1}{2}}, y_j) \frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h^2} + \\
@@ -196,13 +196,13 @@ $$
 \end{align*}
 Итоговая схема выглядит следующим образом:
 \begin{align*}
-    &u^{n+1}_{i, j}\left(1 + \frac{\tau}{h^2} \left(k(x_{i + \frac{1}{2}}, y_{j}) + k(x_{i - \frac{1}{2}}, y_{j}) + k(x_{i}, y_{j+ \frac{1}{2}}) + k(x_{i}, y_{j- \frac{1}{2}})\right)\right) -\\
-    &+ \frac{\tau }{h^2} \left[- u^{n+1}_{i+1,j} k(x_{i + \frac{1}{2}}, y_{j}) 
+    &u^{n+1}_{i, j}\left(\frac{1}{\tau} + \frac{1}{h^2} \left(k(x_{i + \frac{1}{2}}, y_{j}) + k(x_{i - \frac{1}{2}}, y_{j}) + k(x_{i}, y_{j+ \frac{1}{2}}) + k(x_{i}, y_{j- \frac{1}{2}})\right)\right) -\\
+    &+ \frac{1}{h^2} \left[- u^{n+1}_{i+1,j} k(x_{i + \frac{1}{2}}, y_{j}) 
     - u^{n+1}_{i-1, j} k(x_{i- \frac{1}{2}}, y_{j})
     - u^{n+1}_{i,j+1} k(x_{i}, y_{j+ \frac{1}{2}}) 
-    - u^{n+1}_{i, j-1} k(x_{i}, y_{j- \frac{1}{2}}) \right]\\ &= u^n_{i, j}.
+    - u^{n+1}_{i, j-1} k(x_{i}, y_{j- \frac{1}{2}}) \right]\\ &= \frac{u^n_{i, j}}{\tau}.
 \end{align*}
-Эту схему можно записать в огромную ( $\R ^{(N_X+1)^4}$) разреженную блочную матрицу вида:
+Эту схему можно записать в огромную ( $\R ^{N_X^4}$) разреженную блочную матрицу вида:
 $$A = \begin{pmatrix}
     I   & 0   & 0     & 0   & 0   & \ldots & 0 \\
     D_-   & C   & D_+   & 0   & 0   & \ldots & 0 \\
@@ -228,18 +228,18 @@ $$
 в матрице $C$:
 $$
 \left\{\begin{array}{l}
- c = 1 + \frac{\tau}{h^2} \left(k(x_{i + \frac{1}{2}}, y_{j}) + k(x_{i - \frac{1}{2}}, y_{j}) + k(x_{i}, y_{j+ \frac{1}{2}}) + k(x_{i}, y_{j- \frac{1}{2}})\right), \\
- b_+ = -k(x_{i + \frac{1}{2}}, y_j) \frac{\tau}{h^2}, \\
- b_- = -k(x_{i - \frac{1}{2}}, y_j) \frac{\tau}{h^2};
+ c = \frac{1}{\tau} + \frac{1}{h^2} \left(k(x_{i + \frac{1}{2}}, y_{j}) + k(x_{i - \frac{1}{2}}, y_{j}) + k(x_{i}, y_{j+ \frac{1}{2}}) + k(x_{i}, y_{j- \frac{1}{2}})\right), \\
+ b_+ = -k(x_{i + \frac{1}{2}}, y_j) \frac{1}{h^2}, \\
+ b_- = -k(x_{i - \frac{1}{2}}, y_j) \frac{1}{h^2};
 \end{array}\right. 
 $$
-\item[Блок $I$:] $I$ --- единичная матрица размера $(N_X+1)\times(N_X+1)$; 
+\item[Блок $I$:] $I$ --- единичная матрица размера $N_X\times N_X$; 
 \item[Блок $D_-$:] $D_- = -k(x_{i}, y_{j- \frac{1}{2}}) \frac{\tau}{h^2} I =: d_- I$;
 \item[Блок $D_+$:] $D_- = -k(x_{i}, y_{j+ \frac{1}{2}}) \frac{\tau}{h^2} I =: d_+ I$.
 \end{enumerate}
 Итоговый вид уравнения:
 \begin{align*}
-    A u^{n+1} = u^n. 
+    A u^{n+1} = \frac{u^n}{\tau}. 
 \end{align*}
 По предыдущему слою мы будем находить следующий, начиная с 0-го слоя, который нам дан, по условию. Отметим, что мы хотим построить трёхмерную матрицу $U = (u^n_{i, j})^{0 \leq n \leq N} _{0 \leq i, j \leq N_X}$, но форма записи матрицы $A$ предполагаем, что множество $(u^n_{i, j})^{n=\text{const}} _{0 \leq i, j \leq N_X}$ вытягивается в вектор $u^{n}$:
     \begin{align*}

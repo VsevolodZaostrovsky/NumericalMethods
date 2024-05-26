@@ -261,16 +261,19 @@ $$
 \begin{enumerate}
     \item Заметим, что:
     \begin{align*}
-        B \frac{u^{n+1, p+1} - u^{n+1, p+1}}{\theta} + A u^{n+1, p} = b^n\Leftrightarrow 
+        B \frac{u^{n+1, p+1} - u^{n+1, p+1}}{\theta} + A u^{n+1, p} = \frac{u^{n}}{\tau}\Leftrightarrow 
         \left\{\begin{array}{l}
-            B y^{p+1} = b - A x^p, \\
-            x^{p+1} = x^p + \tau y^{p+1}.
+            B y^{p+1} = \frac{u^{n}}{\tau} - A u^{n+1, p}, \\
+            u^{n+1, p+1} = u^{n+1, p} + \theta y^{p+1}.
         \end{array}\right.
     \end{align*}
     \item За $O(N^2)$ вычислим вектор $b - A x^p$.
     \item С помощью метода Фурье за $O(N^3)$ решим систему $B y^{p+1} = b - A x^p$. Схема при этом принимает вид:
 \begin{align*}
-    &\frac{u^{n+1}_{i,j}}{k \tau} - \frac{u^{n+1}_{i+1, j} - 2 u^{n+1}_{i, j}- u^{n+1}_{i-1, j}}{h^2} -  \frac{u^{n+1}_{i, j+1} - 2 u^{n+1}_{i, j}- u^{n+1}_{i, j-1}}{h^2} =\\&= \underbrace{f(x_i, y_j)}_{= (b-Ax^p)/k\big|_{i,j}}.
+    &\frac{u^{n+1}_{i,j}}{k \tau} - 
+    \frac{u^{n+1}_{i+1, j} - 2 u^{n+1}_{i, j}- u^{n+1}_{i-1, j}}{h^2} -  
+    \frac{u^{n+1}_{i, j+1} - 2 u^{n+1}_{i, j}- u^{n+1}_{i, j-1}}{h^2} =\\&= 
+    \underbrace{f(x_i, y_j)}_{= (\frac{u^{n}}{\tau} - A u^{n+1, p})/k\big|_{i,j}} = \frac{u^{n}}{k\tau} - \frac{1}{k} A u^{n+1, p}.
 \end{align*}
 
     \item Следующий вектор в итеративной процедуре вычислим по формуле $x^{k+1} = x^k + \tau y^{k+1}$.
@@ -280,7 +283,7 @@ $$
 \begin{enumerate} 
     \item Нужно решить уравнение:
     \begin{align*}
-        A u^{n+1} = u^n.
+        A u^{n+1} = \frac{u^n}{\tau}.
     \end{align*}
     Для этого:
     \begin{enumerate}

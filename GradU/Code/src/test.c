@@ -84,17 +84,13 @@ int main(int argc, char *argv[]){
     net       = (double *)malloc((N_x + 5) * sizeof(double));
     umemory   = (double *)malloc((N_x + 5) * sizeof(double));
     phimemory = (double *)malloc((N_x + 5) * sizeof(double));
-    // printf("tau %lf h %lf \n\n", tau, h); 
+    printf("tau %lf h %lf \n\n", tau, h); 
 
     for(int i = 1; i < N_x + 1; i++){
         for(int j = 1; j < N_x + 1; j++){
             U[e(i, j, N_x)] = sin(M_PI * (i-1) * h) * sin(M_PI * (j-1) * h);
         }
     }
-    // for(int i = 0; i < N_x * N_x; i++)
-    //     {
-    //         printf("u%lf \n", U[i]);
-    //     }
 
     solvePDEgradu(uijn, N, N_x, k, u0, bmemory, LastMemory, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
 
@@ -105,6 +101,14 @@ int main(int argc, char *argv[]){
             }
         }
         }
+
+
+    // for(int i = 0; i < N_x * N_x; i++) LastMemory[i] = i * i;
+    // multAb_kfunc(tau, h, k, LastMemory, bmemory);
+    // for(int i = 0; i < N_x * N_x; i++) printf("%lf ", LastMemory[i] );
+    //  printf("\n" );
+    //  for(int i = 0; i < N_x * N_x; i++) printf("%lf ", bmemory[i] );
+    //  printf("\n" );
 
 
 free(Umatrix);

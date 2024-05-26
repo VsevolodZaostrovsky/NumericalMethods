@@ -147,14 +147,14 @@ double FullFurierCompute(double x, double y,
     return Calc2DFourier(Cmatrix, N, x, y);
 }
 
-void CalcFourierMatrix(double * ans, double *Cmatrix, int N)
+void CalcFourierMatrix(double * ans, double *Cmatrix, double h)
 {
-    double h = 1./(double)(N - 1);
+    int N = (int)(1. / (h)) + 1;
     for (int m = 1; m < N + 1; ++m)
     {
         for (int n = 1; n < N + 1; ++n)
         {
-            ans[e(m, n, N)] = Calc2DFourier(Cmatrix, N, (m-1) * h, (n-1) * h);
+            ans[e(n, m, N)] = Calc2DFourier(Cmatrix, N, (m-1) * h, (n-1) * h);
         }
     }
 }

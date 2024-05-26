@@ -70,7 +70,35 @@ void multAb_kfunc(double tau, double h, double (*k)(double, double), double * b,
 
     for(int i = 1; i < N_x + 1; i++) {
         for(int j = 1; j < N_x + 1; j++){
-            if (i == 1 || i == N_x || j == 1 || j == N_x) ans[e(i, j, N_x)] = 0;
+            if (i == 1 || i == N_x ) ans[e(i, j, N_x)] = b[e(i, j, N_x)];
+            else if (j == 1) ans[e(i, j, N_x)] = b[e(i, j, N_x)] * (
+                    taurev + (
+                        k((i-1) * h + h * 0.5, (j-1) * h) 
+                      + k((i-1) * h - h * 0.5, (j-1) * h)
+                      + k((i-1) * h          , (j-1) * h + h * 0.5)
+                      + k((i-1) * h          , (j-1) * h - h * 0.5)
+                        ) * h2rev
+                    ) 
+                    -(
+                        b[e(i + 1, j    , N_x)] * k((i-1) * h + h * 0.5, (j-1) * h) 
+                      + b[e(i - 1, j    , N_x)] * k((i-1) * h - h * 0.5, (j-1) * h)
+                      + b[e(i    , j + 1, N_x)] * k((i-1) * h          , (j-1) * h + h * 0.5)
+                    //   + b[e(i    , j - 1, N_x)] * k((i-1) * h          , (j-1) * h - h * 0.5)
+                    ) * h2rev;
+            else if (j == N_x ) ans[e(i, j, N_x)] = b[e(i, j, N_x)] * (
+                    taurev + (
+                        k((i-1) * h + h * 0.5, (j-1) * h) 
+                      + k((i-1) * h - h * 0.5, (j-1) * h)
+                      + k((i-1) * h          , (j-1) * h + h * 0.5)
+                      + k((i-1) * h          , (j-1) * h - h * 0.5)
+                        ) * h2rev
+                    ) 
+                    -(
+                        b[e(i + 1, j    , N_x)] * k((i-1) * h + h * 0.5, (j-1) * h) 
+                      + b[e(i - 1, j    , N_x)] * k((i-1) * h - h * 0.5, (j-1) * h)
+                    //   + b[e(i    , j + 1, N_x)] * k((i-1) * h          , (j-1) * h + h * 0.5)
+                      + b[e(i    , j - 1, N_x)] * k((i-1) * h          , (j-1) * h - h * 0.5)
+                    ) * h2rev;
             else 
                 ans[e(i, j, N_x)] = b[e(i, j, N_x)] * (
                     taurev + (
@@ -90,52 +118,52 @@ void multAb_kfunc(double tau, double h, double (*k)(double, double), double * b,
     }
 }
 
-void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(double, double), double * bmemory, double * LastMemory,
-    double *Dmatrix, double *Cmatrix, double *fmemory, double *umemory, double *phimemory)
+void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(double, double), double * bmemory,
+ double * LastMemory, double *Dmatrix, double *Cmatrix, double *fmemory, double *umemory, double *phimemory)
 {
     int N_x = (int)(1. / (h)) + 1;
     double k_const = (k(0.05,0.05) + k(0.5, 0.5) + k(0.95, 0.95)) / 3.;
-    double theta = 1. / 17.;
+    double theta = 1.;
     double errorNorm = 100;
     int iteration = 0;
     // printf("k: %lf\n", k_const);
 
     for(int i = 0; i < N_x * N_x; i++)
-            Unext[i] = U[i];
+        LastMemory[i] = 0;
 
-    while(errorNorm > 0.000001)
+    LastMemory[3] = 0.027486;
+    LastMemory[4] = 0.123686;
+    LastMemory[5] = 0.027486;
+
+    // printf("tau %lf h %lf \n\n", tau, h); 
+
+    while(errorNorm > 0.000001 && iteration < 1)
     {
         errorNorm = 0;
+        multAb_kfunc(tau, h, k, LastMemory, bmemory);
+        // printf("right\n");
+        solveByR(k_const, h, tau, Unext, bmemory, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
+        for(int i = 0; i < N_x * N_x; i++) printf("%lf ", LastMemory[i]);
+        printf("solution \n");
+        for(int i = 0; i < N_x * N_x; i++) printf("%lf ", Unext[i]);
+        
+        for(int i = 0; i < N_x * N_x; i++)  bmemory[i] = U[i] / tau - bmemory[i];
+
+        solveByR(k_const, h, tau, Unext, bmemory, Dmatrix, Cmatrix, fmemory, umemory, phimemory);
+        
+        for(int i = 0; i < N_x * N_x; i++)  Unext[i] = LastMemory[i] + theta * Unext[i];
+
+        for(int i = 0; i < N_x * N_x; i++)  LastMemory[i] = Unext[i];
 
         multAb_kfunc(tau, h, k, Unext, bmemory);
-        for(int i = 0; i < N_x * N_x; i++)
-        {
-            // printf("i%d b%lf \n", i, bmemory[i]);
-            LastMemory[i] = Unext[i];
-            bmemory[i] = U[i] / tau - bmemory[i];
-            errorNorm += (U[i] / tau - bmemory[i]) * ((U[i] / tau - bmemory[i]));
+
+        for(int i = 0; i < N_x * N_x; i++){  
+            errorNorm += (bmemory[i] - U[i] / tau) * (bmemory[i] - U[i] / tau);
+            // printf("wrror: %lf \n", bmemory[i] - U[i] / tau);
         }
-        // printf("iteration %d error %lf\n", iteration, errorNorm);
 
-
-        solveByR(k_const, h, tau, // параметры, определяющие систему, которую нужно решить
-                  Unext,                     // сюда будет записан ответ
-                  bmemory,              // массив, содержащий правую часть уравнения
-                  Dmatrix, Cmatrix, fmemory, umemory, phimemory);
-
-        
-        for(int i = 0; i < N_x * N_x; i++)
-            Unext[i] = theta * Unext[i] + LastMemory[i];
-        
-        iteration ++;
-        if(iteration > 10) {
-            // printf("max iter reached \n\n\n\n");
-            for(int i = 0; i < N_x * N_x; i++)
-            {
-            // printf("b%lf \n", Unext[i]);
-            }
-            break;
-        }
+        printf("ernorm: %lf \n", errorNorm);
+        iteration++;
     }
     
 }

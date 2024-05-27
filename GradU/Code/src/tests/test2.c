@@ -4,11 +4,12 @@
 #include "../graduSolver.h"
 
 double k(double x, double y){
-    return x;
+    if(x < 1e-2 || x > 1 - 1e-2) return 0;
+    return 1 / (sin(M_PI*x)*sin(M_PI*x))*cos(2 * M_PI * x) / (4*M_PI*M_PI);
 }
 
 double u0(double x, double y) {
-    return y * x * x;
+    return sin(M_PI * x) * sin(M_PI * y);
 }
 
 
@@ -116,7 +117,7 @@ int main(int argc, char *argv[]){
     for(int n = 1; n < N + 1; n++){
         for(int i = 1; i < N_x + 1; i++){
             for(int j = 1; j < N_x + 1; j++){
-                printf("%lf %lf %lf %lf %lf\n", tau * (n-1), (i-1) * h, (j-1) * h, uijn[c(i, j, n, N_x)], exp(4. * tau * (n-1)) * u0((i-1) * h, (j-1) * h));
+                printf("%lf %lf %lf %lf %lf\n", tau * (n-1), (i-1) * h, (j-1) * h, uijn[c(i, j, n, N_x)], exp(tau * (n-1)) * sin((j-1) * h * M_PI) * sin(M_PI*(i-1) * h));
             }
         }
         }

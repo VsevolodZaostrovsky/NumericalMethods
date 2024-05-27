@@ -1,14 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "graduSolver.h"
+#include "../graduSolver.h"
 
 double k(double x, double y){
-    return 1;
+    return x;
 }
 
 double u0(double x, double y) {
-    return sin(M_PI * x) * sin(M_PI * y);
+    return y * x * x;
 }
 
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]){
     for(int n = 1; n < N + 1; n++){
         for(int i = 1; i < N_x + 1; i++){
             for(int j = 1; j < N_x + 1; j++){
-                printf("%lf %lf %lf %lf %lf\n", tau * (n-1), (i-1) * h, (j-1) * h, uijn[c(i, j, n, N_x)], exp(- 2. * M_PI * M_PI * tau * (n-1)) * u0((i-1) * h, (j-1) * h));
+                printf("%lf %lf %lf %lf %lf\n", tau * (n-1), (i-1) * h, (j-1) * h, uijn[c(i, j, n, N_x)], exp(4. * tau * (n-1)) * u0((i-1) * h, (j-1) * h));
             }
         }
         }

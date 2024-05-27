@@ -320,5 +320,17 @@ $$
 \end{figure}
 
 \subsection{Непостоянный $k$}
-
+Рассмотрим $k(x,y) = x$:
+\begin{equation*} 
+    u_t(t, x) = \operatorname{div} (x \operatorname{grad} u(t, x)) = u_x + x(u_{xx}+u_{yy}).
+\end{equation*}
+Если рассмотреть краевое условие:
+\begin{align*} 
+    &u(t, x, y) \big| _{x \in \partial \Omega} = 0, \quad \Omega = [0,1]\times [0,1]. \\
+    &u(0, x, y) = e^x \sin y, \quad x \in \Omega. 
+\end{align*}
+То можно (мне повезло) угадать решение:
+$$
+u(t, x, y) = e^t e^x \sin y.
+$$
  \end{document}

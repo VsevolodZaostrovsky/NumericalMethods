@@ -1,7 +1,7 @@
 #include "2dFourierApprox.h"
-#include "PDE2dSolver.h"
+// #include "PDE2dSolver.h"
 #include <math.h>
-
+#define c(i, j, n, N) ((n - 1) * N * N + (j - 1) * N + i - 1)
 
 void CFromD(double * C, double * D, double h, double tau) ;
 

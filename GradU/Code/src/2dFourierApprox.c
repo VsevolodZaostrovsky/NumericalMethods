@@ -128,9 +128,9 @@ void FindFourierCoefs(double *Umatrix, double *Dmatrix, double *Cmatrix, int N,
 double Calc2DFourier(double *Cmatrix, int N, double x, double y)
 {
     double ans = 0;
-    for (int m = 1; m < N + 1; ++m)
+    for (int m = 2; m < N; ++m)
     {
-        for (int n = 1; n < N + 1; ++n)
+        for (int n = 2; n < N; ++n)
         {
             ans += Cmatrix[e(m, n, N)] * sin(M_PI * (m - 1) * x) * sin(M_PI * (n - 1) * y);
         }
@@ -147,9 +147,9 @@ double FullFurierCompute(double x, double y,
     return Calc2DFourier(Cmatrix, N, x, y);
 }
 
-void CalcFourierMatrix(double * ans, double *Cmatrix, double h)
+void CalcFourierMatrix(double * ans, double *Cmatrix, int N)
 {
-    int N = (int)(1. / (h)) + 1;
+    double h = 1. / (double)(N - 1);
     for (int m = 1; m < N + 1; ++m)
     {
         for (int n = 1; n < N + 1; ++n)

@@ -322,15 +322,24 @@ $$
 \subsection{Непостоянный $k$}
 Рассмотрим $k(x,y) \neq \text{const}$:
 \begin{equation*} 
-    u_t(t, x) = \operatorname{div} (k(x,y) \operatorname{grad} u(t, x)) = u_x + x(u_{xx}+u_{yy}).
+    u_t(t, x) = \operatorname{div} (k(x,y) \operatorname{grad} u(t, x)) = k_x u_x + k_y u_y + k(u_{xx}+u_{yy}).
 \end{equation*}
-Если рассмотреть краевое условие:
+Попробуем подогнать краевые условия и $k$ под мою любимую функцию:
+$$
+u(t, x, y) = e^t \sin \pi x \sin \pi y.
+$$
+Подставим её в уравнение:
 \begin{align*} 
-    &u(t, x, y) \big| _{x \in \partial \Omega} = 0, \quad \Omega = [0,1]\times [0,1]. \\
-    &u(0, x, y) = e^x \sin y, \quad x \in \Omega. 
+    & e^t \sin \pi x \sin \pi y = \pi k_x e^t \cos \pi x \sin \pi y + \pi k_y e^t \sin \pi x \cos \pi y 
+    -2 \pi ^2 k e^t \sin \pi x \sin \pi y, \\
+    & 1 = \pi k_x \ctg \pi x  + \pi k_y \ctg \pi y 
+    -2 \pi ^2 k.
 \end{align*}
-То можно (мне повезло) угадать решение:
-$$
-u(t, x, y) = e^t e^x \sin y.
-$$
+Согласно Wolfram Mathematica\footnote{Я бы с удовольствием избавил себя от изнурительного подбора решения для тестов, 
+но решать данное уравнение аналитически Wolfram отказывается. Численно он его решить должен, но с аппроксимацией будет 
+неудобно работать.}, часть решений диффура описывается соотношением:
+\begin{align*} 
+    k(x,y) = \frac{4 \pi ^2 \phi(\frac{2 \cos \pi y}{\pi \cos \pi x})-\cos 2 \pi x}{4 \pi ^2 \cos ^2 \pi x }.
+\end{align*}
+К сожалению, решение получилось разрывным и от этого разрыва никак не избавиться, так что просить компьютер считать такую функцию довольно бессмысленно.    
  \end{document}

@@ -106,12 +106,12 @@ void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(do
     double * bmemory, double * LastMemory,
     double *Dmatrix, double *Cmatrix, double *fmemory, double *umemory, double *phimemory){
         int N_x = (int)(1. / (h)) + 1;
-        double k_const = (k(0, 0) + k(0.5, 0.5) + k(1, 1)) / 3.;
-        double theta = 1.;
+        double k_const = (k(0.25, 0.25) + k(0.5, 0.5) + k(0.75, 0.75)) / 3.;
+        double theta = 0.9;
         double error = 10;
         int iterations = 0;
 
-        while(iterations < 1000 && error > 0.0001){
+        while(iterations < 1000 && error > 0.000001){
         error = 0;
         multAb_kfunc(tau, h, k, LastMemory, bmemory);
         for(int i = 0; i < N_x * N_x; i++) bmemory[i] = U[i] / tau - bmemory[i];
@@ -129,6 +129,7 @@ void UnextFromU(double * Unext, double * U, double tau, double h, double (*k)(do
         iterations++;
         // printf("iter %d error %lf\n", iterations, error);
         }
+        // if (iterations > 10) printf("iter %d error %lf\n", iterations, error);
     }
 
 void solvePDEgradu(double * uijn, int N, int N_x, double (*k)(double, double), double (*u0)(double, double), double * bmemory, double * LastMemory,

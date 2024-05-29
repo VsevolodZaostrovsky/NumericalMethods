@@ -5,7 +5,8 @@
 
 void CFromD(double * C, double * D, double h, double tau) ;
 
-
+void DfromRight(double * Umatrix, double h, double tau,  double *Dmatrix, double *Cmatrix,
+                           double *fmemory, double *umemory, double *phimemory);
 
 void solveByR(double k, double h, double tau, // параметры, определяющие систему, которую нужно решить
               double * u,                     // сюда будет записан ответ

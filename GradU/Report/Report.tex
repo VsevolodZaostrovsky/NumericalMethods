@@ -174,7 +174,7 @@ $$
 \subsection{Дискретизация.}
 Уравнение будем приближать посредством следующей схемы:
 \begin{align*}
-    \frac{u^{n+1}_i - u^n_i}{\tau} &= \frac{k(x_{i + \frac{1}{2}, j}) \frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h_X} - k(x_{i- \frac{1}{2}, j}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h_X}}{h_X} + \\
+    \frac{u^{n+1}_{i,j} - u^n_{i,j}}{\tau} &= \frac{k(x_{i + \frac{1}{2}, j}) \frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h_X} - k(x_{i- \frac{1}{2}, j}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h_X}}{h_X} + \\
     &+  \frac{k(x_{i, j + \frac{1}{2}}) \frac{u^{n+1}_{i, j+1} - u^{n+1}_{i, j}}{h_Y} - k(x_{i, j- \frac{1}{2}}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i, j-1}}{h_Y}}{h_Y}.
 \end{align*}
 Краевые условия:
@@ -182,7 +182,31 @@ $$
     &u(t, x, y) \big| _{(x, y) \in \partial \Omega} = 0, \quad \Omega = [0,1] \times [0, 1]. \\
     &u(0, x, y) = u^0(x, y), \quad x \in \Omega. 
 \end{align*}
-\subsection{Общий вид матрицы уравнения.} \label{generalmatrix2d}
+
+\subsection{Теоретическая корректность схемы.}
+\subsubsection{Аппроксимация.}
+В прошлых отчетах было показано, что:
+\begin{align*}
+    &\frac{u^{n+1}_{i,j} - u^n_{i,j}}{\tau} = u_t(t_{n+1}, x_i, y_j) + O(\tau), \\
+    &\frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h_X} = u_x(t_{n+1}, x_i + \frac{h_X}{2}, y_j) + \frac{h^2}{12}u_{xxx}(t_{n+1}, x_i + \frac{h_X}{2}, y_j) + O(h_X^3), \\
+    &\frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h_X} = u_x(t_{n+1}, x_i - \frac{h_X}{2}, y_j) - \frac{h^2}{12}u_{xxx}(t_{n+1}, x_i - \frac{h_X}{2}, y_j) + O(h_X^3), \\
+    &\frac{u^{n+1}_{i, j+1} - u^{n+1}_{i, j}}{h_Y} = u_x(t_{n+1}, x_i, y_j+ \frac{h_Y}{2})  + \frac{h^2}{12}u_{xxx}(t_{n+1}, x_i, y_j+ \frac{h_Y}{2})+ O(h_Y^3), \\
+    &\frac{u^{n+1}_{i, j} - u^{n+1}_{i, j-1}}{h_Y} = u_x(t_{n+1}, x_i, y_j- \frac{h_Y}{2})  - \frac{h^2}{12}u_{xxx}(t_{n+1}, x_i, y_j- \frac{h_Y}{2})+ O(h_Y^3).
+\end{align*}
+Отсюда имеем:
+\begin{align*}
+    &\frac{k(x_{i + \frac{1}{2}, j}) \frac{u^{n+1}_{i+1, j} - u^{n+1}_{i, j}}{h_X} 
+    - k(x_{i- \frac{1}{2}, j}) \frac{u^{n+1}_{i, j} - u^{n+1}_{i-1, j}}{h_X}}{h_X} =\\
+    &= \frac{k(x_{i + \frac{1}{2}, j})}{h_X} \left(u_x(t_{n+1}, x_i + \frac{h_X}{2}, y_j) + \frac{h_X^2}{12}u_{xxx}(t_{n+1}, x_i + \frac{h_X}{2}, y_j) + O(h_X^3)\right) - \\
+    &- \frac{k(x_{i- \frac{1}{2}, j}) }{h_X}\left(u_x(t_{n+1}, x_i - \frac{h_X}{2}, y_j) -  \frac{h_X^2}{12}u_{xxx}(t_{n+1}, x_i - \frac{h_X}{2}, y_j) + O(h_X^3)\right) = \\
+    &=\frac{k(x_{i + \frac{1}{2}, j}) u_x(t_{n+1}, x_i + \frac{h_X}{2}, y_j) - k(x_{i- \frac{1}{2}, j})u_x(t_{n+1}, x_i - \frac{h_X}{2}, y_j)}{h_X} + O(h_X^2) +\\
+    &+\frac{h_X^2}{12} \frac{k(x_{i + \frac{1}{2}, j}) u_{xxx}(t_{n+1}, x_i + \frac{h_X}{2}, y_j) 
+    - k(x_{i- \frac{1}{2}, j}) u_{xxx}(t_{n+1}, x_i - \frac{h_X}{2}, y_j)}{h_X} = \\
+    &= \frac{\partial}{\partial x} \left(k(x_i, y_j)u_{x}(t_{n+1}, x_i, y_j)\right) 
+    + \frac{h_X^2}{12} \frac{\partial}{\partial x} \left(k(x_i, y_j)u_{xxx}(t_{n+1}, x_i, y_j)\right) + O(h_X^2).
+\end{align*}
+Для второй дроби аналогично получается та же оценка. Итого, имеем порядок аппроксимации $O(\tau + h_X^2 + h_Y^2)$.
+\subsubsection{Устойчивость.}
 Для придания выкладкам хоть сколько-нибудь приемлемого вида, здесь и далее считаем $h_X = h_Y = h = \frac{1}{N_X - 1}, \quad N_X = N_Y$.
 Пользуясь вычислениями из предыдущего раздела, получим:
 \begin{align*}
@@ -202,6 +226,37 @@ $$
     - u^{n+1}_{i,j+1} k(x_{i}, y_{j+ \frac{1}{2}}) 
     - u^{n+1}_{i, j-1} k(x_{i}, y_{j- \frac{1}{2}}) \right]\\ &= \frac{u^n_{i, j}}{\tau}.
 \end{align*}
+Отсюда имеем:
+\begin{align*}
+    &u^{n+1}_{i, j} \left(1 + \frac{\tau}{h^2} 
+    \left(
+        k(x_{i + \frac{1}{2}}, y_{j}) +
+        k(x_{i- \frac{1}{2}}, y_{j}) +
+        k(x_{i}, y_{j+ \frac{1}{2}}) +
+        k(x_{i}, y_{j- \frac{1}{2}})
+    \right)\right) - \\
+    &- \frac{\tau}{h^2} \left(
+      u^{n+1}_{i+1,j} k(x_{i + \frac{1}{2}}, y_{j}) 
+    + u^{n+1}_{i-1, j} k(x_{i- \frac{1}{2}}, y_{j})
+    + u^{n+1}_{i,j+1} k(x_{i}, y_{j+ \frac{1}{2}}) 
+    + u^{n+1}_{i, j-1} k(x_{i}, y_{j- \frac{1}{2}})\right) = \\ 
+    &= u^{n}_{i, j}. 
+\end{align*}
+Выше мы раскладывали разности $u$ в соседних узлах сетки в ряд Тейлора, воспользуемся этим:
+\begin{align*}
+    &k(x_{i + \frac{1}{2}}, y_{j}) \left(u^{n+1}_{i, j} - u^{n+1}_{i+1,j} \right) +
+     k(x_{i- \frac{1}{2}}, y_{j}) \left(u^{n+1}_{i, j} - u^{n+1}_{i-1, j}\right) +\\
+    &+
+    k(x_{i}, y_{j+ \frac{1}{2}}) \left(u^{n+1}_{i, j} - u^{n+1}_{i,j+1} \right) +
+    k(x_{i}, y_{j- \frac{1}{2}}) \left(u^{n+1}_{i, j} - u^{n+1}_{i, j-1}\right) =\\
+    &= k(x_{i + \frac{1}{2}}, y_{j}) \left(- h u_x(t_{n+1}, x_i + \frac{h}{2}, y_j) - \frac{h^3}{12}u_{xxx}(t_{n+1}, x_i + \frac{h}{2}, y_j) + O(h^3) \right) + \\
+    &+ k(x_{i - \frac{1}{2}}, y_{j}) \left(- h u_x(t_{n+1}, x_i - \frac{h}{2}, y_j) + \frac{h^3}{12}u_{xxx}(t_{n+1}, x_i - \frac{h}{2}, y_j) + O(h^3) \right) + \\
+    &+ k(x_{i}, y_{j+ \frac{1}{2}})  \left(- h u_x(t_{n+1}, x_i, y_j + \frac{h}{2}) - \frac{h^3}{12}u_{xxx}(t_{n+1}, x_i, y_j + \frac{h}{2}) + O(h^3) \right) + \\
+    &+ k(x_{i}, y_{j - \frac{1}{2}}) \left(- h u_x(t_{n+1}, x_i, y_j - \frac{h}{2}) + \frac{h^3}{12}u_{xxx}(t_{n+1}, x_i, y_j - \frac{h}{2}) + O(h^3) \right).
+\end{align*}
+
+\subsection{Общий вид матрицы уравнения.} \label{generalmatrix2d}
+
 Эту схему можно записать в огромную ( $\R ^{N_X^4}$) разреженную блочную матрицу вида:
 $$A = \begin{pmatrix}
     I   & 0   & 0     & 0   & 0   & \ldots & 0 \\
@@ -268,7 +323,7 @@ $$
             u^{n+1, p+1} = u^{n+1, p} + \theta y^{p+1}.
         \end{array}\right.
     \end{align*}
-    \item За $O(N^2)$ вычислим вектор $b - A x^p$.
+    \item За $O(N^2)$ вычислим вектор $\frac{u^{n}}{\tau} - A u^{n+1, p}$.
     \item С помощью метода Фурье за $O(N^3)$ решим систему $B y^{p+1} = b - A x^p$. Схема при этом принимает вид:
 \begin{align*}
     &\frac{u^{n+1}_{i,j}}{k \tau} - 

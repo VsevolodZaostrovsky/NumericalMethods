@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "../graduSolver.h"
+#include "tests.h"
 
 double k(double x, double y){
     return 1;

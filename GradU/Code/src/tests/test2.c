@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "../graduSolver.h"
+#include "tests.h"
 
 double k(double x, double y){
     if(x > 0.5 - 1e-2 || x < 0.5 + 1e-2) return 10000;

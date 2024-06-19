@@ -93,7 +93,8 @@
 
 \begin{center}
     {Всеволод Заостровский, 409 группа}\\
-    {\bfseries Отчёт по задаче '' Метод Фурье для уравнения теплопроводности для двумерного оператора Лапласа''.\\}
+    {\bfseries Отчёт по задаче '' Метод Фурье для уравнения 
+    теплопроводности для двумерного оператора Лапласа''.\\}
     \vspace{1cm}
 \end{center}
 
@@ -131,7 +132,8 @@
 Исходной задаче (см. раздел \ref{diffeq1}) предлагается сопоставлять следующую схему:
 \begin{align*}
     &\frac{u_{i, j}^{n+1} - u_{i, j}^n}{\tau} = \frac{u_{i+1, j}^{n+1} - 2 u_{i, j}^{n+1} + u_{i-1, j}^{n+1}}{h_X^2} + 
-    \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} + u_{i, j-1}^{n+1}}{h_Y^2} + f(t_{n}, x_{i+1}, y_{j+1}), \\
+    \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} 
+    + u_{i, j-1}^{n+1}}{h_Y^2} + f(t_{n+1}, x_{i+1}, y_{j+1}), \\
     & i = 1 \ldots N_X, \quad j = 1 \ldots N_Y, \quad n = 1 \ldots N-1.
 \end{align*}
 Краевые условия примут вид:
@@ -168,12 +170,52 @@
 Подставив эти выражения в дифференциальное уравнение, получим:
 \begin{align*}
     &||\frac{u_{i, j}^{n+1} - u_{i, j}^n}{\tau} - \frac{u_{i+1, j}^{n+1} - 2 u_{i, j}^{n+1} + u_{i-1, j}^{n+1}}{h_X^2} - 
-    \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} + u_{i, j-1}^{n+1}}{h_Y^2} - f(t_{n}, x_{i+1}, y_{j+1})|| = \\
-    &= ||- u_{xx}(t_n, x_{i}, y_j) - u_{yy}(t_n, x_{i}, y_j) + u_t(t_{n}, x_i, y_j) - f(t_{n}, x_{i+1}, y_{j+1}) + O(\ldots)||=\\ &=
+    \frac{u_{i, j+1}^{n+1} - 2 u_{i, j}^{n+1} + u_{i, j-1}^{n+1}}{h_Y^2}
+     - f(t_{n+1}, x_{i+1}, y_{j+1})|| = \\
+    &= ||- u_{xx}(t_{n+1}, x_{i}, y_j) - u_{yy}(t_{n+1}, x_{i}, y_j) + 
+    u_t(t_{n+1}, x_i, y_j) - f(t_{n+1}, x_{i+1}, y_{j+1}) + O(\ldots)||=\\ 
+    &=
      O(\tau + h_X^2 + h_Y^2).
 \end{align*}
-С учетом того, что начальные условия даны точно и, очевидно, $|f(t_n, x_i, y_j) - f_{i,j}^n| \rightarrow 0$, получаем, что порядок аппроксимации на решении 
+С учетом того, что начальные условия даны точно и, очевидно, 
+$|f(t_{n+1}, x_i, y_j) - f_{i,j}^{n+1}| \rightarrow 0$, получаем, что порядок аппроксимации на решении 
 данной схемы составляет $O(\tau + h_X^2 + h_Y^2)$.
+
+\section{Устойчивость}
+Выше получили, что для коэффициентов Фурье функции $u$ справделиво:
+\begin{align*}
+    u_{nm}^{G+1} = \frac{u_{nm}^G + d_{nm} \tau}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1}.
+\end{align*}
+Будем подниматься от $G=0$ до $G=N$:
+\begin{align*}
+    u_{nm}^{1} &= \frac{u_{nm}^0 + d_{nm} \tau}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1} = l_{nm} (u_{nm}^0 + d_{nm} \tau), \\
+    u_{nm}^{2} &= l_{nm} (u_{nm}^1 + d_{nm} \tau) = l_{nm} (l_{nm} (u_{nm}^0 + d_{nm} \tau)+ d_{nm} \tau), \\
+    \ldots \\
+    u_{nm}^{N} &=l_{nm}^N u_{nm}^0 + d_{nm} \tau \sum _{i=0}^{N-1} l_{nm}^i. 
+\end{align*}
+Здесь 
+\begin{align*}
+    l_{nm} = \frac{1}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
+    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1} \leq a < 1.
+\end{align*}
+Отсюда, получаем оценку для нормы решения:
+\begin{align*}
+    ||u||_{L_{2}}^2\leq \sum_{G, n, m} \left[a^G u_{nm}^0 + \frac{d_{nm} \tau}{1-a}\right]^2  
+    \leq \sum_{n, m} \left[\frac{u^0_{nm}}{1 - a} + \frac{d_{nm} \frac{1}{\tau}  \tau}{1-a}\right]^2 .
+\end{align*}
+Отсюда, пользуясь неравенством треугольника и положительной однородностью меры, а также домножив неравенство на $h_x h_y$, получим:
+\begin{align*}
+    ||u||_{L_{2, h}}\leq \frac{1}{1-a}\left( ||u^0||_{L_{2, h}} + ||f||_{L_{2, h}}\right) .
+\end{align*}
+Значит, схема устойчива, поскольку мы явно получили априорную оценку. 
+
+
+Устойчивость и аппроксимация доказаны для разных метрик, что, формально, 
+не позволяет сделать вывод о порядке сходимости схемы. Однако, эта проблема
+легко преодолевается: из оценок в равномерной метрике мгновенно следуют оценки 
+в $L_2$-метрике. Таким образом, имеем сходимость схемы в $L_2$-метрике.
 
 \section{Разложение функции в двумерный ряд Фурье.}
 Функцию $u(x, y) \in C^{\infty}[0, 1]^2$ можно разложить в ряд Фурье,
@@ -362,35 +404,6 @@
 \end{enumerate}
 Был реализован этот вариант.
 
-\section{Устойчивость}
-Выше получили, что для коэффициентов Фурье функции $u$ справделиво:
-\begin{align*}
-    u_{nm}^{G+1} = \frac{u_{nm}^G + d_{nm} \tau}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
-    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1}.
-\end{align*}
-Будем подниматься от $G=0$ до $G=N$:
-\begin{align*}
-    u_{nm}^{1} &= \frac{u_{nm}^0 + d_{nm} \tau}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
-    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1} = l_{nm} (u_{nm}^0 + d_{nm} \tau), \\
-    u_{nm}^{2} &= l_{nm} (u_{nm}^1 + d_{nm} \tau) = l_{nm} (l_{nm} (u_{nm}^0 + d_{nm} \tau)+ d_{nm} \tau), \\
-    \ldots \\
-    u_{nm}^{N} &=l_{nm}^N u_{nm}^0 + d_{nm} \tau \sum _{i=0}^{N-1} l_{nm}^i. 
-\end{align*}
-Здесь 
-\begin{align*}
-    l_{nm} = \frac{1}{\frac{4 \tau}{h_X^2} \sin ^2\left(\frac{\pi n h_X}{2}\right)
-    +  \frac{4 \tau}{h_Y^2} \sin ^2\left(\frac{\pi m h_Y}{2}\right) + 1} \leq a < 1.
-\end{align*}
-Отсюда, получаем оценку для нормы решения:
-\begin{align*}
-    ||u||_{L_{2}}^2\leq \sum_{G, n, m} \left[a^G u_{nm}^0 + \frac{d_{nm} \tau}{1-a}\right]^2  
-    \leq \sum_{n, m} \left[\frac{u^0_{nm}}{1 - a} + \frac{d_{nm} \frac{1}{\tau}  \tau}{1-a}\right]^2 .
-\end{align*}
-Отсюда, пользуясь неравенством треугольника и положительной однородностью меры, а также домножив неравенство на $h_x h_y$, получим:
-\begin{align*}
-    ||u||_{L_{2, h}}\leq \frac{1}{1-a}\left( ||u^0||_{L_{2, h}} + ||f||_{L_{2, h}}\right) .
-\end{align*}
-Значит, схема устойчива, поскольку мы явно получили априорную оценку.
 \section{Тесты}
 \subsection{Базисные функции.}
 При начальном условии вида

@@ -154,12 +154,12 @@ ${(\phi^k, \phi^j) = \sum_{m = 1}^{N - 1}\phi_m^k \phi_m^j h}$:
 \begin{align*}
     & (\phi^k, \phi^j) 
     = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - j))} - \cos{(\pi h (m - \frac{1}{2})(k + j))} ] h \\
-    & = h \left[ \frac{\sin{(N - 1) \pi h (k - j)}}{4 \sin(\pi h (k - j)/2)} - \frac{\sin{(N - 1) \pi h (k + j)}}{4 \sin(\pi h (k + j)/2)} \right] \\
-    & = h \left[ \frac{\sin(\pi (k - j) - \pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
-        - \frac{\sin(\pi (k + j) - \pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right] \\
-    & = h \left[ \frac{(-1)^{k-j}\sin(\pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
-    - \frac{(-1)^{k+j}\sin(\pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right] \\
-    & = \frac{h}{2} [(-1)^{k-j}\sin(\pi h (k - j)/2) - (-1)^{k+j}\sin(\pi h (k + j)/2)] = 0.
+    & = h \left[ \frac{\sin{(N - 0.5 - 0.5) \pi h (k - j)}}{4 \sin(\pi h (k - j)/2)} - \frac{\sin{(N - 0.5 - 0.5) \pi h (k + j)}}{4 \sin(\pi h (k + j)/2)} \right] \\
+    & = h \left[ \frac{\sin(\pi (k - j) - 0.5 \pi h (k - j))}{4 \sin(\pi h (k - j)/2)}
+        - \frac{\sin(\pi (k + j) - 0.5 \pi h (k + j))}{4 \sin(\pi h (k + j)/2)}\right] \\
+    & = h \left[ \frac{(-1)^{k-j}\sin(\pi h (k - j)/2)}{4 \sin(\pi h (k - j)/2)}
+    - \frac{(-1)^{k+j}\sin(\pi h (k + j)/2)}{4 \sin(\pi h (k + j)/2)}\right] \\
+    & = \frac{h}{4} [(-1)^{k-j} - (-1)^{k+j}] = 0.
 \end{align*}
 
 В ином случае, 
@@ -167,7 +167,9 @@ ${(\phi^k, \phi^j) = \sum_{m = 1}^{N - 1}\phi_m^k \phi_m^j h}$:
     & (\phi^k, \phi^k) 
     = \frac{1}{2} \sum_{m = 1}^{N - 1} [ \cos{(\pi h (m - \frac{1}{2})(k - k))} - \cos{(\pi h (m - \frac{1}{2})(k + k))} ] h \\
     & = h \left[ \frac{N - 1}{2} - \frac{\sin{2 (N - 1) \pi h k}}{4 \sin(\pi h k)} \right] 
-    = \frac{2 N - 1}{4} \frac{2}{2 N - 1} = \frac{1}{2}.
+    =h \left[ \frac{N - 1}{2} - \frac{\sin{(2 - \frac{2}{2 N - 1} )\pi k}}{4 \sin(\pi h k)} \right] \\
+    & =h \left[ \frac{N - 1}{2} - \frac{\sin(\pi h k)}{4 \sin(\pi h k)} \right] 
+    = h\left(\frac{N-1}{2}+\frac{1}{4}\right)  = \frac{2}{2 N - 1} \frac{2 N - 1}{4} = \frac{1}{2}.
 \end{align*}
 
 Теперь, пользуясь ортогональностью, можно выписать формулу $m$-го коэффициента:

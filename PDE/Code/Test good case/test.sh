@@ -1,4 +1,5 @@
 #!/bin/bash
+cd ..
 mkdir build
 
 cd build
@@ -10,7 +11,6 @@ valgrind ./PDE 200 200 > h200t200.txt
 valgrind ./PDE 300 300 > h300t300.txt
 valgrind ./PDE 400 400 > h400t400.txt
 valgrind ./PDE 500 500 > h500t500.txt
-
 
 valgrind ./PDE 10 100 > h10t100.txt
 valgrind ./PDE 20 400 > h20t400.txt

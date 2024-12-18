@@ -2,7 +2,7 @@
 
 double func(double t, double x){ return 0; }
 
-double p(double x){ return -15.; }
+double p(double x){ return -10.; }
 
 double u0(double x){ return sin(M_PI * x); }
 
